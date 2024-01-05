@@ -1,3 +1,101 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+::-webkit-scrollbar-track {
+    @apply w-1 h-1 rounded-full;
+}
+::-webkit-scrollbar-track-piece {
+    @apply w-1 h-1 bg-white rounded-full;
+}
+::-webkit-scrollbar-thumb {
+    @apply w-1 h-1 bg-black rounded-full;
+}
+::-webkit-scrollbar-button {
+    @apply w-1 h-1 rounded-full;
+}
+::-webkit-scrollbar {
+    @apply w-1 h-1 bg-transparent rounded-full;
+}
+::-webkit-scrollbar-corner {
+    @apply w-1 h-1 rounded-full;
+}
+.nav-icons {
+    @apply block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-full;
+}
+.nav-icons img{
+    @apply w-8 h-8 rounded-full;
+}
+.logo {
+    @apply block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-full;
+}
+.logo img {
+    @apply w-36 h-36 rounded-full;
+}
+.valid {
+    @apply border-black;
+}
+.invalid {
+    @apply border-red-500;
+}
+
+.body-mail {
+    @apply antialiased text-black bg-black;
+}
+.mail-wrapper1 {
+    @apply w-screen h-screen max-w-sm md:max-w-lg max-h-[100vh] mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center
+}
+.mail-wrapper2 {
+    @apply w-full h-fit max-h-full pr-2 overflow-y-auto overflow-x-clip;
+}
+.mail-wrapper3 {
+    @apply w-full h-fit p-2 bg-gray-50/90 backdrop-blur-sm border-0 border-transparent rounded-lg;
+}
+.mail-bg-color {
+    @apply w-fit h-fit mx-auto bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-lg;
+}
+.mail-bg-image {
+    @apply w-fit h-fit bg-local bg-repeat pr-1 border-0 border-transparent rounded-lg;
+}
+.table {
+    @apply table-fixed container h-fit mx-auto p-4 flex flex-col space-x-0 space-y-4 font-mono border-0 border-transparent rounded-lg;
+}
+.thead {
+    @apply w-1/2 h-fit mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center items-center bg-white border-0 border-transparent rounded-lg;
+}
+.thead-tr1 {
+    @apply w-full h-fit flex flex-row space-x-2 space-y-0 justify-center;
+}
+.thead-tr1-th2-a {
+    @apply block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-full;
+}
+.thead-tr1-th2-a-img {
+    @apply w-36 h-auto rounded-full;
+}
+.thead-tr2 {
+    @apply w-full h-fit flex flex-row space-x-2 space-y-0 justify-center;
+}
+.thead-tr2-th2-a {
+    @apply text-xl font-extrabold;
+}
+.tbody {
+    @apply w-full h-fit p-2 flex flex-col space-x-0 space-y-4 bg-white border-0 border-transparent rounded-lg;
+}
+.tbody-tr1-td1 {
+    @apply text-xl font-bold;
+}
+.tbody-tr2 {
+    @apply break-words text-justify;
+}
+.tbody-tr3 {
+    @apply w-full h-fit flex flex-row space-x-2 space-y-0 justify-center;
+}
+.tbody-tr3-td2 {
+    @apply block p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-lg;
+}
+.tbody-tr3-td2-a {
+    @apply block p-2 align-middle bg-white/90 border-0 border-transparent rounded-lg;
+}
+.tbody-tr5 {
+    @apply w-full h-fit flex flex-row space-x-2 space-y-0 justify-center text-center;
+}

@@ -8,8 +8,11 @@
         @vite(['resources/js/app.js'])
         <title>{{ $title ?? 'Page Title' }}</title>
     </head>
-    <body>
-        {{ $slot }}
+    <body class="antialiased">
+        <div>
+            {{ $slot }}
+            <x-nav/>
+        </div>
         @livewireScriptConfig 
     </body>
 </html>
