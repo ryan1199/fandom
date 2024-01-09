@@ -1,42 +1,42 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Livewire;
 
 use App\Mail\VerificationRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Title;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
-class RegisterController extends Controller
+#[Title('Register')]
+class Register extends Component
 {
-    public function view()
+    #[Validate()]
+    public $username = '';
+    public $email = '';
+    public $password = '';
+    public $password_confirmation = '';
+    public function rules()
     {
-        if(Auth::check())
-        {
-            return redirect()->route('home');
-        } else {
-            return view('register');
-        }
-    }
-    public function process(Request $request)
-    {
-        $validator = Validator::make(data: $request->all(), rules: [
+        return [
             'username' => ['required','alpha_dash:ascii','max:100', Rule::unique('users', 'username')],
             'email' => ['required', 'email:rfc,dns', Rule::unique('users', 'email')],
             'password' => ['required', 'confirmed', Password::min(8), 'max:100'],
             'password_confirmation' => ['required', 'same:password'],
-        ]);
-        if($validator->fails())
-        {
-            return redirect()->route('register.view')->withErrors($validator)->withInput();
-        }
-        $validated = $validator->validated();
+        ];
+    }
+    public function render()
+    {
+        return view('livewire.register');
+    }
+    public function register()
+    {
+        $validated = $this->validate();
         $user = User::create([
             'username' => $validated['username'],
             'email' => $validated['email'],
@@ -44,7 +44,6 @@ class RegisterController extends Controller
             'ticket' => Str::random(100),
         ]);
         Mail::to($user->email)->send(new VerificationRequest($user));
-        session()->flash('success', 'Done, please check your email, we send you email varification link');
-        return redirect()->route('home');
+        return redirect()->route('home')->with('success', 'Done, now you need to verify your email address, check your email address');
     }
 }

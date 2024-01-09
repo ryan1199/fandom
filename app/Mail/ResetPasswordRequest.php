@@ -42,7 +42,7 @@ class ResetPasswordRequest extends Mailable implements ShouldQueue
         return new Content(
             html: 'mail.reset-password',
             with: [
-                'url' => route('reset-password.new', $this->user->ticket)
+                'url' => route('new-password', $this->user->ticket)
             ]
         );
     }

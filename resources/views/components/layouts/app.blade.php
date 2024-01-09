@@ -3,16 +3,12 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        @livewireStyles
         @vite('resources/css/app.css')
         @vite(['resources/js/app.js'])
-        <title>{{ $title ?? 'Page Title' }}</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <title>{{ $title ?? 'Page Title' }} - {{ config('app.name') }}</title>
     </head>
-    <body class="antialiased">
-        <div>
-            {{ $slot }}
-            <x-nav/>
-        </div>
-        @livewireScriptConfig 
+    <body class="antialiased bg-black font-mono overflow-clip">
+        {{ $slot }}
     </body>
 </html>

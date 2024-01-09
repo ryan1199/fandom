@@ -13,7 +13,7 @@
                 <th></th>
                 <th>
                 <a href="{{ route('home') }}" class="thead-tr1-th2-a">
-                <img src="logo.svg" alt="{{ config('app.name') }} icon" title="{{ config('app.name') }}" class="thead-tr1-th2-a-img">
+                <img src="{{ asset('logo.svg') }}" alt="{{ config('app.name') }} icon" title="{{ config('app.name') }}" class="thead-tr1-th2-a-img">
                 </a>
                 </th>
                 <th></th>

@@ -1,20 +1,20 @@
-<nav class="w-fit h-[48px] p-1 flex flex-row space-x-2 space-y-0 justify-center items-center bg-gray-50/90 backdrop-blur-sm border border-transparent rounded-full">
+<nav class="w-fit h-[48px] p-1 flex flex-row space-x-2 space-y-0 justify-center items-center bg-gray-50/90 backdrop-blur-sm border-0 border-transparent rounded-full">
     <a href="{{ route('home') }}" class="nav-icons">
-        <img src="logo.svg" alt="Home icon" title="Home">
+        <img src="{{ asset('logo.svg') }}" alt="Home icon" title="Home">
     </a>
     @guest
-        <a href="{{ route('login.view') }}" class="nav-icons">
-            <img src="login.svg" alt="Login icon" title="Login">
+        <a wire:navigate.hover href="{{ route('login') }}" class="nav-icons">
+            <img src="{{ asset('login.svg') }}" alt="Login icon" title="Login">
         </a>
-        <a href="{{ route('register.view') }}" class="nav-icons">
-            <img src="register.svg" alt="Register icon" title="Register">
+        <a wire:navigate.hover href="{{ route('register') }}" class="nav-icons">
+            <img src="{{ asset('register.svg') }}" alt="Register icon" title="Register">
         </a>
     @endguest
     @auth
         <form action="{{ route('logout') }}" method="post">
             @csrf
             <button type="submit" class="nav-icons">
-                <img src="logout.svg" alt="Logout icon" title="Logout">
+                <img src="{{ asset('logout.svg') }}" alt="Logout icon" title="Logout">
             </button>
         </form>
     @endauth
