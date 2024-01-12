@@ -25,7 +25,7 @@
     @apply block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-full;
 }
 .nav-icons img{
-    @apply w-8 h-8 rounded-full;
+    @apply block w-8 h-8 rounded-full;
 }
 .logo {
     @apply block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-full;
