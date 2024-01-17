@@ -1,7 +1,7 @@
 <div class="w-screen h-screen max-w-sm md:max-w-lg max-h-[100vh] mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center items-center relative z-0">
     <livewire:alert/>
     <div class="w-full h-fit max-h-[calc(100%-48px)] overflow-clip">
-        <div class="w-full h-fit p-2 bg-gray-50/90 backdrop-blur-sm border-0 border-transparent rounded-lg">
+        <div class="w-full h-fit p-2 bg-white opacity-90 backdrop-blur-sm border-0 border-transparent rounded-lg">
             <div wire:scroll class="w-full h-full max-h-[calc(100vh-96px)] pr-1 font-mono overflow-y-scroll overflow-x-clip">
                 <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-black border-0 border-transparent rounded-lg">
                     <div class="bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500">
@@ -21,12 +21,12 @@
                         <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-center">
                             <label for="username" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center">
                                 <span class="basis-2/12 text-black text-base font-medium text-left">Username</span>
-                                <input wire:model="username" type="text" id="username" class="form-input basis-8/12 md:basis-9/12 border @error('username') invalid @else valid @enderror rounded-lg">
+                                <input wire:model="username" type="text" id="username" class="form-input accent-black caret-black basis-8/12 md:basis-9/12 border @error('username') invalid @else valid @enderror rounded-lg">
                             </label>
                             <label for="password" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center">
                                 <span class="basis-2/12 text-black text-base font-medium text-left">Password</span>
                                 <div x-data="{ type: 'password', get isPassword() { return this.type === 'password' }, get isText() { return this.type === 'text' }}" class="basis-8/12 md:basis-9/12 flex flex-row space-x-2 space-y-0 items-center">
-                                    <input wire:model="password" :type="type" id="password" class="w-full form-input border @error('password') invalid @else valid @enderror rounded-lg">
+                                    <input wire:model="password" :type="type" id="password" class="w-full form-input accent-black caret-black border @error('password') invalid @else valid @enderror rounded-lg">
                                     <svg x-show="isPassword" x-on:click="type = 'text'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-10 h-10 aspect-square p-2 border border-black rounded-lg">
                                         <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                                         <path fill-rule="evenodd" d="M1.323 11.447C2.811 6.976 7.028 3.75 12.001 3.75c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113-1.487 4.471-5.705 7.697-10.677 7.697-4.97 0-9.186-3.223-10.675-7.69a1.762 1.762 0 0 1 0-1.113ZM17.25 12a5.25 5.25 0 1 1-10.5 0 5.25 5.25 0 0 1 10.5 0Z" clip-rule="evenodd" />
@@ -40,7 +40,7 @@
                             </label>
                             <div class="flex flex-col sm:flex-row space-x-0 sm:space-x-2 space-y-2 sm:space-y-0 items-stretch sm:items-center">
                                 <label for="remember" class="w-fit h-fit p-2 shrink-0 flex flex-row space-x-2 space-y-0 justify-start items-center border @error('remember') invalid @else valid @enderror rounded-lg">
-                                    <input wire:model="remember" type="checkbox" id="remember" class="p-2 form-checkbox border border-black rounded-sm cursor-pointer">
+                                    <input wire:model="remember" type="checkbox" id="remember" class="p-2 form-checkbox accent-black border border-black rounded-sm cursor-pointer">
                                     <span class="text-black text-base font-medium text-left cursor-pointer">Remember me</span>
                                 </label>
                                 <button type="submit" class="w-full h-fit self-center p-2 text-base text-black bg-white border border-black rounded-lg">Login</button>

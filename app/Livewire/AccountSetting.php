@@ -32,12 +32,13 @@ class AccountSetting extends Component
     }
     public function updateAccount()
     {
+        // check (user['id] === Auth::id())
         $validated = $this->validate();
         User::where('id', $this->user['id'])->update([
             'password' => Hash::make($validated['password'])
         ]);
-        // 
         $this->reset(['password','password_confirmation']);
         $this->dispatch('alert', 'success', 'Done, new changes saved')->to(Alert::class);
+        $this->dispatch('load_user', $this->user['username']);
     }
 }

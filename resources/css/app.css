@@ -44,13 +44,13 @@
     @apply antialiased text-black bg-black;
 }
 .mail-wrapper1 {
-    @apply w-screen h-screen max-w-sm md:max-w-lg max-h-[100vh] mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center
+    @apply w-screen h-screen max-w-sm md:max-w-lg max-h-[100vh] mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center;
 }
 .mail-wrapper2 {
     @apply w-full h-fit max-h-full pr-2 overflow-y-auto overflow-x-clip;
 }
 .mail-wrapper3 {
-    @apply w-full h-fit p-2 bg-gray-50/90 backdrop-blur-sm border-0 border-transparent rounded-lg;
+    @apply w-full h-fit p-2 bg-white/90 backdrop-blur-sm border-0 border-transparent rounded-lg;
 }
 .mail-bg-color {
     @apply w-fit h-fit mx-auto bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-lg;

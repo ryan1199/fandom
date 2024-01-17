@@ -8,7 +8,12 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <title>{{ $title ?? 'Page Title' }} | {{ config('app.name') }}</title>
     </head>
-    <body class="antialiased bg-black font-mono overflow-clip">
+    <body 
+        @if (Auth::check() && session()->has(Auth::user()->username . '-preference'))
+            class="antialiased bg-[{{ session()->get(Auth::user()->username . '-preference')['color_secondary'] }}] font-[{{ session()->get(Auth::user()->username . '-preference')['selected_font_family'] }}] overflow-clip"
+        @else
+            class="antialiased bg-black font-mono overflow-clip"
+        @endif>
         {{ $slot }}
     </body>
 </html>

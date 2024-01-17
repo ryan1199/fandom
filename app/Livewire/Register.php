@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Mail\VerificationRequest;
+use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -42,6 +43,9 @@ class Register extends Component
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'ticket' => Str::random(100),
+        ]);
+        Profile::create([
+            'user_id' => $user->id
         ]);
         Mail::to($user->email)->send(new VerificationRequest($user));
         return redirect()->route('home')->with('success', 'Done, now you need to verify your email address, check your email address');

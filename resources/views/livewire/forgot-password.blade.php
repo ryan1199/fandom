@@ -1,7 +1,7 @@
 <div class="w-screen h-screen max-w-sm md:max-w-lg max-h-[100vh] mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center items-center">
     <livewire:alert/>
     <div class="w-full h-fit max-h-[calc(100%-48px)] overflow-clip">
-        <div class="w-full h-fit p-2 bg-gray-50/90 backdrop-blur-sm border-0 border-transparent rounded-lg">
+        <div class="w-full h-fit p-2 bg-white opacity-90 backdrop-blur-sm border-0 border-transparent rounded-lg">
             <div wire:scroll class="w-full h-full max-h-[calc(100vh-96px)] pr-1 font-mono overflow-y-auto overflow-x-clip">
                 <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-black border-0 border-transparent rounded-lg">
                     <div class="bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500">
