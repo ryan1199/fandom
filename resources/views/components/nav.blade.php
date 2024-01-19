@@ -1,6 +1,6 @@
 {{-- [{{ session()->get(Auth::user()->username . '-preference')['color_primary'] }}] --}}
 @guest
-    <nav class="w-fit h-[48px] p-1 flex flex-row space-x-2 space-y-0 justify-center items-center bg-white opacity-90 backdrop-blur-sm border-0 border-transparent rounded-full">
+    <nav class="w-fit h-[48px] p-1 flex flex-row space-x-2 space-y-0 justify-center items-center bg-white opacity-90 backdrop-blur-sm border-0 border-transparent rounded-full select-none">
         <a wire:navigate.hover href="{{ route('home') }}" class="block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-full">
             <img src="{{ asset('logo.svg') }}" alt="Home icon" title="Home" class="block w-8 h-8 rounded-full">
         </a>
@@ -13,7 +13,7 @@
     </nav>
 @endguest
 @auth
-    <nav class="w-fit h-[48px] p-1 flex flex-row space-x-2 space-y-0 justify-center items-center bg-[{{ session()->get(Auth::user()->username . '-preference')['color_primary'] }}] opacity-90 backdrop-blur-sm border-0 border-transparent rounded-full">
+    <nav class="w-fit h-[48px] p-1 flex flex-row space-x-2 space-y-0 justify-center items-center bg-[{{ session()->get(Auth::user()->username . '-preference')['color_primary'] }}] opacity-90 backdrop-blur-sm border-0 border-transparent rounded-full select-none">
         <a wire:navigate.hover href="{{ route('home') }}" class="block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-[{{ session()->get(Auth::user()->username . '-preference')['color_1'] }}] via-[{{ session()->get(Auth::user()->username . '-preference')['color_2'] }}] to-[{{ session()->get(Auth::user()->username . '-preference')['color_3'] }}] border-0 border-transparent rounded-full">
             <img src="{{ asset('logo.svg') }}" alt="Home icon" title="Home" class="block w-8 h-8 rounded-full">
         </a>

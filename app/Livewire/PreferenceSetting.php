@@ -20,58 +20,9 @@ class PreferenceSetting extends Component
     public $color_secondary = '#000000';
     public $color_text = '#000000';
     #[Locked]
-    // public $available_font_families = [
-    //     'Arial',
-    //     'Verdana',
-    //     'Tahoma',
-    //     'Trebuchet MS',
-    //     'Times New Roman',
-    //     'Georgia',
-    //     'Garamond',
-    //     'Courier New',
-    //     'Brush Script MT'
-    // ];
     public $available_font_families = [
         'sans','serif','mono'
     ];
-    // public $available_font_families = [
-    //     'Arial',
-    //     'Baskerville',
-    //     'Bodoni MT',
-    //     'Calibri',
-    //     'Calisto MT',
-    //     'Cambria',
-    //     'Candara',
-    //     'Century Gothic',
-    //     'Consolas',
-    //     'Copperplate',
-    //     'Courier New',
-    //     'Dejavu Sans',
-    //     'Didot',
-    //     'Franklin Gothic',
-    //     'Garamond',
-    //     'Georgia',
-    //     'GillSans',
-    //     'GoudyOld Style',
-    //     'Helvetica Neue',
-    //     'Impact',
-    //     'Lucida Bright',
-    //     'Lucida Handwriting',
-    //     'Lucida Sans',
-    //     'MS Sans Serif',
-    //     'Optima',
-    //     'Palatino',
-    //     'Perpetua',
-    //     'Rage',
-    //     'Rockwell',
-    //     'Script MT',
-    //     'Segoescript',
-    //     'Segoe UI',
-    //     'Snell Roundhand',
-    //     'Tahoma',
-    //     'Trebuchet MS',
-    //     'Verdana'
-    // ];
     public $font_size = 16;
     public $selected_font_family = 'mono';
     public function rules()
@@ -109,8 +60,11 @@ class PreferenceSetting extends Component
     }
     public function updatePreference()
     {
-        // check (user['id] === Auth::id())
+        $user = User::where('id', $this->user['id'])->first();
+        $this->authorize('update', $user);
+
         $this->validate();
+
         session()->put($this->user['username'] . '-preference', [
             'color_1' => $this->color_1,
             'color_2' => $this->color_2,
@@ -121,9 +75,28 @@ class PreferenceSetting extends Component
             'font_size' => $this->font_size,
             'selected_font_family' => $this->selected_font_family
         ]);
+
         $this->reset(['color_1','color_2','color_3','color_primary','color_secondary','color_text','font_size','selected_font_family',]);
-        $this->dispatch('alert', 'success', 'Done, new preferences saved')->to(Alert::class);
         $this->dispatch('load_user', $this->user['username']);
         return redirect()->route('user', $this->user)->with('success', 'Done, new preferences saved');
+    }
+    public function resetPreference()
+    {
+        $user = User::where('id', $this->user['id'])->first();
+        $this->authorize('update', $user);
+
+        session()->put(key: Auth::user()->username . '-preference', value: [
+            'color_1' => '#f97316',
+            'color_2' => '#ec4899',
+            'color_3' => '#6366f1',
+            'color_primary' => '#ffffff',
+            'color_secondary' => '#000000',
+            'color_text' => '#000000',
+            'font_size' => 16,
+            'selected_font_family' => 'mono'
+        ]);
+
+        $this->dispatch('load_user', $this->user['username']);
+        return redirect()->route('user', $this->user)->with('success', 'Done, your preferences are reseted');
     }
 }

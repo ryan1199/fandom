@@ -16,6 +16,7 @@ class User extends Component
     public $user = [];
     public $state = false;
     protected $listeners = ['refreshComponent' => '$refresh'];
+    
     public function mount(ModelsUser $user)
     {
         $this->loadUser($user->username);
@@ -27,12 +28,13 @@ class User extends Component
     #[On('load_user')]
     public function loadUser($username)
     {
-        // dd($username);
         $user = ModelsUser::where('username', $username)->with([
             'profile','avatar.image','cover.image'
         ])->first();
+
         $this->user = $user;
         $this->state = true;
+
         $this->reset('state');
     }
     public function updatedState($value)

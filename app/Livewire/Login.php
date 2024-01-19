@@ -44,9 +44,9 @@ class Login extends Component
             if(session()->missing(Auth::user()->username . '-preference'))
             {
                 session()->put(key: Auth::user()->username . '-preference', value: [
-                    'color_1' => '#9090ff',
-                    'color_2' => '#bbbbff',
-                    'color_3' => '#c8c8ff',
+                    'color_1' => '#f97316',
+                    'color_2' => '#ec4899',
+                    'color_3' => '#6366f1',
                     'color_primary' => '#ffffff',
                     'color_secondary' => '#000000',
                     'color_text' => '#000000',

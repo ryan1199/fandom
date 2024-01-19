@@ -38,16 +38,20 @@ class ProfileSetting extends Component
     }
     public function updatedCover($value)
     {
+        $user = User::where('id', $this->user['id'])->first();
+        $this->authorize('update', $user);
+        
         $validated = Validator::make(data:[
             'cover' => $this->cover
         ], rules:[
             'cover' => 'required|image|max:10240'
         ])->validate();
-        // check (user['id] === Auth::id())
-        $user = User::where('id', $this->user['id'])->first();
+        
         Storage::deleteDirectory('covers/' . $user->username);
+
         $cover_name = $user->username . "/cover-" . $user->username . "." . $this->cover->extension();
         $this->cover->storeAs('covers', $cover_name, 'public');
+
         $image = new Image(['url' => $cover_name]);
         $cover = Cover::firstOrCreate(
             ['user_id' => $user->id],
@@ -58,21 +62,27 @@ class ProfileSetting extends Component
         Profile::where('user_id', $user->id)->update([
             'cover_id' => $cover->id,
         ]);
+
         $this->reset(['cover']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
         $this->dispatch('load_user', $user->username);
     }
     public function updatedAvatar($value)
     {
+        $user = User::where('id', $this->user['id'])->first();
+        $this->authorize('update', $user);
+        
         $validated = Validator::make(data:[
             'avatar' => $this->avatar
         ], rules:[
             'avatar' => 'required|image|max:10240'
         ]);
-        $user = User::where('id', $this->user['id'])->first();
+
         Storage::deleteDirectory('avatars/' . $user->username);
+
         $avatar_name = $user->username . "/avatar-" . $user->username . "." . $this->avatar->extension();
         $this->avatar->storeAs('avatars', $avatar_name, 'public');
+
         $image = new Image(['url' => $avatar_name]);
         $avatar = Avatar::firstOrCreate(
             ['user_id' => $user->id],
@@ -83,36 +93,45 @@ class ProfileSetting extends Component
         Profile::where('user_id', $user->id)->update([
             'avatar_id' => $avatar->id,
         ]);
+
         $this->reset(['avatar']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
         $this->dispatch('load_user', $user->username);
     }
     public function updatedStatus($value)
     {
+        $user = User::where('id', $this->user['id'])->first();
+        $this->authorize('update', $user);
+        
         $validated = Validator::make(data:[
             'status' => $this->status
         ], rules:[
             'status' => 'required|max:50'
         ])->validate();
-        $user = User::where('id', $this->user['id'])->first();
+
         Profile::where('user_id', $user->id)->update([
             'status' => $validated['status'],
         ]);
+
         $this->reset(['status']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
         $this->dispatch('load_user', $user->username);
     }
     public function updatedDescription($value)
     {
+        $user = User::where('id', $this->user['id'])->first();
+        $this->authorize('update', $user);
+        
         $validated = Validator::make(data:[
             'description' => $this->description
         ], rules:[
             'description' => 'required|max:100'
         ])->validate();
-        $user = User::where('id', $this->user['id'])->first();
+
         Profile::where('user_id', $user->id)->update([
             'description' => $validated['description'],
         ]);
+        
         $this->reset(['description']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
         $this->dispatch('load_user', $user->username);
