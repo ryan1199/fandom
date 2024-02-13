@@ -13,14 +13,14 @@
             <div class="w-full h-fit max-h-full pr-2 overflow-y-auto overflow-x-clip">
                 <div class="w-full h-fit p-2 bg-white/90 backdrop-blur-sm border-0 border-transparent rounded-lg">
                     <div class="w-fit h-fit mx-auto bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-lg">
-                        <div class="w-fit h-fit bg-local bg-repeat p-2 border-0 border-transparent rounded-lg" style="background-image: url('{{ asset('email_cover.svg') }}')">
+                        <div class="w-fit h-fit bg-repeat bg-auto bg-center p-2 border-0 border-transparent rounded-lg" style="background-image: url('{{ asset('bg-black.svg') }}')">
                             <table border="0" cellpadding="0" height="100" width="100%" class="table-fixed container h-fit mx-auto p-4 flex flex-col space-x-0 space-y-4 font-mono border-0 border-transparent rounded-lg">
                                 <thead class="w-1/2 h-fit mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center items-center bg-white border-0 border-transparent rounded-lg">
                                     <tr class="w-full h-fit flex flex-row space-x-2 space-y-0 justify-center">
                                         <th></th>
                                         <th>
                                             <a href="{{ route('home') }}" class="block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-full">
-                                                <img src="{{ asset('logo.svg') }}" alt="{{ config('app.name') }} icon" title="{{ config('app.name') }}" class="w-36 h-auto rounded-full">
+                                                <img src="{{ asset('logo-black.svg') }}" alt="{{ config('app.name') }} icon" title="{{ config('app.name') }}" class="w-36 h-auto rounded-full">
                                             </a>
                                         </th>
                                         <th></th>

@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    @apply bg-repeat bg-contain bg-center bg-blue-300;
+}
 [x-cloak] { display: none !important; }
 ::-webkit-scrollbar-track {
     @apply w-1 h-1 rounded-full;

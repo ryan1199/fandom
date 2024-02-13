@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\LogoutController;
+use App\Livewire\FandomDetails;
+use App\Livewire\FandomList;
 use App\Livewire\ForgotPassword;
 use App\Livewire\Home;
 use App\Livewire\Login;
@@ -30,7 +32,8 @@ Route::get('/verification', Verification::class)->middleware(['throttle:verifica
 Route::get('/verification/{ticket}', Verification::class)->middleware(['throttle:verification','no_auth','valid_ticket'])->name('verification.verify');
 Route::post('/logout', [LogoutController::class, 'process'])->middleware(['throttle:logout','auth'])->name('logout');
 Route::get('/user/{user}', User::class)->middleware('auth')->name('user');
-Route::view('/test', 'home')->name('test');
+Route::get('/fandom-list', FandomList::class)->name('fandom-list');
+Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-details');
 Route::fallback(function () {
     return redirect()->route('home');
 });

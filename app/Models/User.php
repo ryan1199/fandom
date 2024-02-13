@@ -4,7 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -49,16 +51,20 @@ class User extends Authenticatable
     {
         return 'username';
     }
-    public function avatar(): HasOne
+    public function avatar(): MorphOne
     {
-        return $this->hasOne(Avatar::class);
+        return $this->morphOne(Avatar::class, 'avatarable');
     }
-    public function cover(): HasOne
+    public function cover(): MorphOne
     {
-        return $this->hasOne(Cover::class);
+        return $this->morphOne(Cover::class, 'coverable');
     }
     public function profile(): HasOne
     {
         return $this->hasOne(Profile::class);
+    }
+    public function members(): HasMany
+    {
+        return $this->hasMany(Member::class);
     }
 }

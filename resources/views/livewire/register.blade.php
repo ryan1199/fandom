@@ -1,11 +1,11 @@
 <div class="w-screen h-screen max-w-sm md:max-w-lg max-h-[100vh] mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center items-center">
     <livewire:alert/>
-    <div class="w-full h-fit max-h-[calc(100%-48px)] overflow-clip">
-        <div class="w-full h-fit p-2 bg-white opacity-90 backdrop-blur-sm border-0 border-transparent rounded-lg">
-            <div wire:scroll class="w-full h-full max-h-[calc(100vh-96px)] pr-1 font-mono overflow-y-scroll overflow-x-clip">
+    <div class="w-full h-fit max-h-[calc(100%-64px-16px)] overflow-clip">
+        <div class="w-full h-fit p-4 bg-white/10 backdrop-blur-sm border-0 border-transparent rounded-lg">
+            <div wire:scroll class="w-full h-full max-h-[calc(100vh-64px-48px-16px)] pr-1 font-mono overflow-y-auto overflow-x-clip">
                 <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-black border-0 border-transparent rounded-lg">
-                    <div class="bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 select-none">
-                        <img src="{{ asset('register_cover.svg') }}" alt="Register image" title="Register image" class="w-full h-full max-h-[30vh] object-cover block">
+                    <div class="bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 rounded-lg select-none">
+                        <div style="background-image: url('{{ asset('register-cover-black.svg') }}')" class="w-full h-20 bg-repeat bg-center rounded-lg"></div>
                     </div>
                     {{-- rule --}}
                     <div class="w-full h-full p-2 flex flex-col space-x-0 space-y-2 text-sm bg-white border border-black rounded-lg select-none">
@@ -34,15 +34,15 @@
                     <form wire:submit="register" method="post" class="w-full h-fit p-0 bg-white border border-black rounded-lg">
                         @csrf
                         <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-center">
-                            <label for="username" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center">
+                            <label for="username" class="flex flex-col md:flex-row space-x-0 space-y-2 md:space-x-2 space- md:space-y-0 justify-between items-stretch md:items-center">
                                 <span class="basis-2/12 text-black text-base font-medium text-left select-none">Username</span>
                                 <input wire:model="username" type="text" id="username" class="form-input basis-8/12 md:basis-9/12 border @error('username') invalid @else valid @enderror rounded-lg" required>
                             </label>
-                            <label for="email" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center">
+                            <label for="email" class="flex flex-col md:flex-row space-x-0 space-y-2 md:space-x-2 space- md:space-y-0 justify-between items-stretch md:items-center">
                                 <span class="basis-2/12 text-black text-base font-medium text-left select-none">Email</span>
                                 <input wire:model="email" type="email" id="email" class="form-input basis-8/12 md:basis-9/12 border @error('email') invalid @else valid @enderror rounded-lg" required>
                             </label>
-                            <label for="password" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center">
+                            <label for="password" class="flex flex-col md:flex-row space-x-0 space-y-2 md:space-x-2 space- md:space-y-0 justify-between items-stretch md:items-center">
                                 <span class="basis-2/12 text-black text-base font-medium text-left select-none">Password</span>
                                 <div x-data="{ type: 'password', get isPassword() { return this.type === 'password' }, get isText() { return this.type === 'text' }}" class="basis-8/12 md:basis-9/12 flex flex-row space-x-2 space-y-0 items-center">
                                     <input wire:model="password" :type="type" id="password" class="w-full form-input border @error('password') invalid @else valid @enderror rounded-lg" required>
@@ -57,7 +57,7 @@
                                     </svg>
                                 </div>
                             </label>
-                            <label for="password_confirmation" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center">
+                            <label for="password_confirmation" class="flex flex-col md:flex-row space-x-0 space-y-2 md:space-x-2 space- md:space-y-0 justify-between items-stretch md:items-center">
                                 <span class="basis-2/12 text-black text-base font-medium text-left select-none">Confirm Password</span>
                                 <div x-data="{ type: 'password', get isPassword() { return this.type === 'password' }, get isText() { return this.type === 'text' }}" class="basis-8/12 md:basis-9/12 flex flex-row space-x-2 space-y-0 items-center">
                                     <input wire:model="password_confirmation" :type="type" id="password_confirmation" class="w-full form-input border @error('password_confirmation') invalid @else valid @enderror rounded-lg" required>
@@ -76,9 +76,9 @@
                         </div>
                     </form>
                     <div class="w-full h-hit p-2 text-black text-center bg-white border border-black rounded-lg">
-                        <div class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 sm:space-y-0 justify-between items-center select-none">
-                            <a wire:navigate.hover href="{{ route('forgot-password') }}" class="block w-full sm:w-fit h-fit p-2 bg-white border border-black rounded-lg transition-all duration-100 hover:opacity-50 active:duration-75 active:scale-[.95]">Reset Password</a>
-                            <a wire:navigate.hover href="{{ route('verification.send') }}" class="block w-full sm:w-fit h-fit p-2 bg-white border border-black rounded-lg transition-all duration-100 hover:opacity-50 active:duration-75 active:scale-[.95]">Resend Email Verification</a>
+                        <div class="flex flex-col md:flex-row space-x-0 space-y-2 md:space-x-2 md:space-y-0 justify-between items-center select-none">
+                            <a wire:navigate.hover href="{{ route('forgot-password') }}" class="block w-full md:w-fit h-fit p-2 bg-white border border-black rounded-lg transition-all duration-100 hover:opacity-50 active:duration-75 active:scale-[.95]">Reset Password</a>
+                            <a wire:navigate.hover href="{{ route('verification.send') }}" class="block w-full md:w-fit h-fit p-2 bg-white border border-black rounded-lg transition-all duration-100 hover:opacity-50 active:duration-75 active:scale-[.95]">Resend Email Verification</a>
                         </div>
                     </div>
                 </div>

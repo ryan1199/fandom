@@ -6,16 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Avatar extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id'
+        'avatarable_id','avatarable_type'
     ];
-    public function user(): BelongsTo
+    public function avatarable(): MorphTo
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
     public function image(): MorphOne
     {

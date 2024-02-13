@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('avatars', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->morphs('avatarable');
             $table->timestamps();
         });
     }

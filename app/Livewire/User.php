@@ -15,11 +15,52 @@ class User extends Component
     public $preference_modal = false;
     public $user = [];
     public $state = false;
+    public $preferences = [];
     protected $listeners = ['refreshComponent' => '$refresh'];
     
     public function mount(ModelsUser $user)
     {
         $this->loadUser($user->username);
+        if(session()->has('preference-' . Auth::user()->username))
+        {
+            $this->preferences = session()->get('preference-' . Auth::user()->username);
+        } else {
+            $this->preferences = [
+                'color_1' => '#f97316',
+                'color_2' => '#ec4899',
+                'color_3' => '#6366f1',
+                'color_primary' => '#ffffff',
+                'color_secondary' => '#000000',
+                'color_text' => '#000000',
+                'font_size' => 16,
+                'selected_font_family' => 'mono',
+                'create_fandom_modal_position' => [
+                    'left' => 0,
+                    'right' => 0,
+                    'top' => 0,
+                    'bottom' => 0
+                ],
+                'account_settings_modal_position' => [
+                    'left' => 0,
+                    'right' => 0,
+                    'top' => 0,
+                    'bottom' => 0
+                ],
+                'profile_settings_modal_position' => [
+                    'left' => 0,
+                    'right' => 0,
+                    'top' => 0,
+                    'bottom' => 0
+                ],
+                'preference_settings_modal_position' => [
+                    'left' => 0,
+                    'right' => 0,
+                    'top' => 0,
+                    'bottom' => 0
+                ]
+            ];
+            session()->put('preference-' . Auth::user()->username, $this->preferences);
+        }
     }
     public function render()
     {
@@ -28,9 +69,9 @@ class User extends Component
     #[On('load_user')]
     public function loadUser($username)
     {
-        $user = ModelsUser::where('username', $username)->with([
-            'profile','avatar.image','cover.image'
-        ])->first();
+        $user = ModelsUser::with([
+            'profile','avatar.image','cover.image','members.fandom','members.role'
+        ])->where('username', $username)->first();
 
         $this->user = $user;
         $this->state = true;
@@ -40,5 +81,12 @@ class User extends Component
     public function updatedState($value)
     {
         $this->dispatch('refreshComponent')->self();
+    }
+    public function updated($property)
+    {
+        if(Auth::check())
+        {
+            session()->put('last-active-' . Auth::user()->username, now());
+        }
     }
 }

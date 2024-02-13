@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Profile;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -26,6 +27,10 @@ class DatabaseSeeder extends Seeder
         ]);
         Profile::create([
             'user_id' => $user->id
+        ]);
+        Role::insert([
+            ['name' => 'Member', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Manager', 'created_at' => now(), 'updated_at' => now()]
         ]);
     }
 }
