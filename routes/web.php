@@ -7,6 +7,7 @@ use App\Livewire\ForgotPassword;
 use App\Livewire\Home;
 use App\Livewire\Login;
 use App\Livewire\NewPassword;
+use App\Livewire\Post;
 use App\Livewire\Register;
 use App\Livewire\User;
 use App\Livewire\Verification;
@@ -34,6 +35,7 @@ Route::post('/logout', [LogoutController::class, 'process'])->middleware(['throt
 Route::get('/user/{user}', User::class)->middleware('auth')->name('user');
 Route::get('/fandom-list', FandomList::class)->name('fandom-list');
 Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-details');
+Route::get('/post', Post::class)->name('post');
 Route::fallback(function () {
     return redirect()->route('home');
 });

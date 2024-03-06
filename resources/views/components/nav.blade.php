@@ -1,5 +1,5 @@
 @guest
-    <div class="w-fit h-fit p-4 bg-white/10 backdrop-blur-sm border-0 border-transparent rounded-full">
+    <div class="w-fit h-fit p-4 bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-full">
         <nav class="w-fit h-[48px] p-1 flex flex-row space-x-2 space-y-0 justify-center items-center bg-[{{ $preferences['color_primary'] }}] backdrop-blur-sm border-0 border-transparent rounded-full select-none">
             <a wire:navigate.hover href="{{ route('home') }}" class="block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-[{{ $preferences['color_1'] }}] via-[{{ $preferences['color_2'] }}] to-[{{ $preferences['color_3'] }}] border-0 border-transparent rounded-full">
                 <img src="{{ asset('home-black.svg') }}" alt="Home icon" title="Home" class="block w-8 h-8 rounded-full">
@@ -17,7 +17,7 @@
     </div>
 @endguest
 @auth
-    <div class="w-fit h-fit p-4 bg-white/10 backdrop-blur-sm border-0 border-transparent rounded-full">
+    <div class="w-fit h-fit p-4 bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-full">
         <nav class="w-fit h-[48px] p-1 flex flex-row space-x-2 space-y-0 justify-center items-center bg-[{{ $preferences['color_primary'] }}] backdrop-blur-sm border-0 border-transparent rounded-full select-none">
             <a wire:navigate.hover href="{{ route('home') }}" class="block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-[{{ $preferences['color_1'] }}] via-[{{ $preferences['color_2'] }}] to-[{{ $preferences['color_3'] }}] border-0 border-transparent rounded-full">
                 <img src="{{ asset('home-black.svg') }}" alt="Home icon" title="Home" class="block w-8 h-8 rounded-full">

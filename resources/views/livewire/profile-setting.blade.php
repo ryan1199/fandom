@@ -1,4 +1,4 @@
-<div wire:ignore x-cloak x-show="profile_modal" x-transition.duration.500ms.scale.origin id="profileSettings" class="w-10/12 md:w-1/3 h-fit border-0 border-transparent rounded-lg absolute z-10" :style="{ left: {{ $profile_settings_modal_position['left'] }}+'px', right: {{ $profile_settings_modal_position['right'] }}+'px',top: {{ $profile_settings_modal_position['top'] }}+'px' ,bottom: {{ $profile_settings_modal_position['bottom'] }}+'px' }">
+<div wire:ignore x-cloak x-show="profile_modal" x-transition.duration.500ms.scale.origin id="profileSettings" class="w-10/12 md:w-1/3 h-fit p-4 bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-lg absolute z-10" :style="{ left: {{ $profile_settings_modal_position['left'] }}+'px', right: {{ $profile_settings_modal_position['right'] }}+'px',top: {{ $profile_settings_modal_position['top'] }}+'px' ,bottom: {{ $profile_settings_modal_position['bottom'] }}+'px' }">
     <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-[{{ $preferences['color_secondary'] }}] border-0 border-transparent rounded-lg">
         <div class="w-full h-fit flex flex-row justify-between items-center text-[{{ $preferences['color_text'] }}] text-center bg-[{{ $preferences['color_primary'] }}] border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
             <div id="profileSettingsHeader" class="w-full p-2 cursor-move">
@@ -10,33 +10,33 @@
                 </svg>
             </div>
         </div>
-        <div class="bg-gradient-to-tr from-[{{ session()->get('preference-' . Auth::user()->username)['color_1'] }}] via-[{{ session()->get('preference-' . Auth::user()->username)['color_2'] }}] to-[{{ session()->get('preference-' . Auth::user()->username)['color_3'] }}] rounded-lg select-none">
+        <div class="bg-gradient-to-tr from-[{{ $preferences['color_1'] }}] via-[{{ $preferences['color_2'] }}] to-[{{ $preferences['color_3'] }}] rounded-lg select-none">
             <div style="background-image: url('{{ asset('profile-settings-cover-black.svg') }}')" class="w-full h-20 bg-repeat bg-center rounded-lg"></div>
         </div>
         @if ($errors->any())
-            <div class="w-full h-full p-2 bg-[{{ session()->get('preference-' . Auth::user()->username)['color_primary'] }}] border border-red-500 rounded-lg">
-                <ul class="list-inside list-disc flex flex-col space-x-0 space-y-2 text-[{{ session()->get('preference-' . Auth::user()->username)['font_size'] . 'px' }}] text-red-500">
+            <div class="w-full h-full p-2 bg-[{{ $preferences['color_primary'] }}] border border-red-500 rounded-lg">
+                <ul class="list-inside list-disc flex flex-col space-x-0 space-y-2 text-[{{ $preferences['font_size'] . 'px' }}] text-red-500">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
             </div>
         @endif
-        <form wire:submit class="w-full h-fit p-0 bg-[{{ session()->get('preference-' . Auth::user()->username)['color_primary'] }}] border border-[{{ session()->get('preference-' . Auth::user()->username)['color_secondary'] }}] rounded-lg">
+        <form wire:submit class="w-full h-fit p-0 bg-[{{ $preferences['color_primary'] }}] border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
             <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-center">
-                <label for="cover" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center text-[{{ session()->get('preference-' . Auth::user()->username)['color_text'] }}] text-[{{ session()->get('preference-' . Auth::user()->username)['font_size'] .'px' }}]">
+                <label for="cover" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center text-[{{ $preferences['color_text'] }}] text-[{{ $preferences['font_size'] .'px' }}]">
                     <span class="basis-2/12 font-medium text-left select-none">Cover</span>
-                    <input wire:model.blur="cover" name="cover" type="file" id="cover" class="w-full form-input file:text-center file:align-middle file:p-2 file:bg-gradient-to-tr file:from-[{{ session()->get('preference-' . Auth::user()->username)['color_1'] }}] file:via-[{{ session()->get('preference-' . Auth::user()->username)['color_2'] }}] file:to-[{{ session()->get('preference-' . Auth::user()->username)['color_3'] }}] file:border file:border-[{{ session()->get('preference-' . Auth::user()->username)['color_secondary'] }}] file:rounded-lg border @error('cover') invalid @else valid @enderror rounded-lg cursor-pointer file:cursor-pointer file:transition-all file:duration-100 hover:file:opacity-50 file:active:duration-75 file:active:scale-[.95]">
+                    <input wire:model.blur="cover" name="cover" type="file" id="cover" class="w-full form-input file:text-center file:align-middle file:p-2 file:bg-gradient-to-tr file:from-[{{ $preferences['color_1'] }}] file:via-[{{ $preferences['color_2'] }}] file:to-[{{ $preferences['color_3'] }}] file:border file:border-[{{ $preferences['color_secondary'] }}] file:rounded-lg border @error('cover') invalid @else valid @enderror rounded-lg cursor-pointer file:cursor-pointer file:transition-all file:duration-100 hover:file:opacity-50 file:active:duration-75 file:active:scale-[.95]">
                 </label>
-                <label for="avatar" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center text-[{{ session()->get('preference-' . Auth::user()->username)['color_text'] }}] text-[{{ session()->get('preference-' . Auth::user()->username)['font_size'] .'px' }}]">
+                <label for="avatar" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center text-[{{ $preferences['color_text'] }}] text-[{{ $preferences['font_size'] .'px' }}]">
                     <span class="basis-2/12 font-medium text-left select-none">Avatar</span>
-                    <input wire:model.blur="avatar" name="avatar" type="file" id="avatar" class="w-full form-input file:text-center file:align-middle file:p-2 file:bg-gradient-to-tr file:from-[{{ session()->get('preference-' . Auth::user()->username)['color_1'] }}] file:via-[{{ session()->get('preference-' . Auth::user()->username)['color_2'] }}] file:to-[{{ session()->get('preference-' . Auth::user()->username)['color_3'] }}] file:border file:border-[{{ session()->get('preference-' . Auth::user()->username)['color_secondary'] }}] file:rounded-lg border @error('avatar') invalid @else valid @enderror rounded-lg cursor-pointer file:cursor-pointer file:transition-all file:duration-100 hover:file:opacity-50 file:active:duration-75 file:active:scale-[.95]">
+                    <input wire:model.blur="avatar" name="avatar" type="file" id="avatar" class="w-full form-input file:text-center file:align-middle file:p-2 file:bg-gradient-to-tr file:from-[{{ $preferences['color_1'] }}] file:via-[{{ $preferences['color_2'] }}] file:to-[{{ $preferences['color_3'] }}] file:border file:border-[{{ $preferences['color_secondary'] }}] file:rounded-lg border @error('avatar') invalid @else valid @enderror rounded-lg cursor-pointer file:cursor-pointer file:transition-all file:duration-100 hover:file:opacity-50 file:active:duration-75 file:active:scale-[.95]">
                 </label>
-                <label for="status" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center text-[{{ session()->get('preference-' . Auth::user()->username)['color_text'] }}] text-[{{ session()->get('preference-' . Auth::user()->username)['font_size'] .'px' }}]">
+                <label for="status" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center text-[{{ $preferences['color_text'] }}] text-[{{ $preferences['font_size'] .'px' }}]">
                     <span class="basis-2/12 font-medium text-left select-none">Status</span>
                     <input wire:model.blur="status" type="text" id="status" placeholder="What are you feeling right now ?" class="w-full form-input border @error('status') invalid @else valid @enderror rounded-lg">
                 </label>
-                <label for="description" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center text-[{{ session()->get('preference-' . Auth::user()->username)['color_text'] }}] text-[{{ session()->get('preference-' . Auth::user()->username)['font_size'] .'px' }}]">
+                <label for="description" class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 space- sm:space-y-0 justify-between items-stretch sm:items-center text-[{{ $preferences['color_text'] }}] text-[{{ $preferences['font_size'] .'px' }}]">
                     <span class="basis-2/12 font-medium text-left select-none">Description</span>
                     <input wire:model.blur="description" type="text" id="description" placeholder="Describe your self" class="w-full form-input border @error('description') invalid @else valid @enderror rounded-lg">
                 </label>

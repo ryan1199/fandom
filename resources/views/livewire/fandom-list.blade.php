@@ -1,10 +1,10 @@
 <div @auth x-data="{ create_fandom_modal: @entangle('create_fandom_modal').live }" @endauth class="w-screen h-screen max-h-[100vh] mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center items-center relative z-0">
     <livewire:alert/>
     <div class="container h-fit max-h-[calc(100%-48px)] overflow-clip">
-        <div class="w-full h-fit p-4 bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-lg relative">
+        <div class="w-full h-fit relative">
             <div wire:scroll class="w-full h-fit max-h-[calc(100vh-96px)] grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 grid-flow-row-dense auto-rows-max auto-cols-max gap-4 overflow-y-auto">
                 @foreach ($fandoms as $fandom)
-                    <div class="w-full h-fit max-h-[calc(100vh-50vh)] pr-1 grid grid-cols-1 grid-rows-1 content-stretch overflow-clip">
+                    <div class="w-full h-fit max-h-[calc(100vh-50vh)] p-4 grid grid-cols-1 grid-rows-1 content-stretch overflow-clip bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-lg">
                         <div class="w-full h-full p-2 bg-[{{ $preferences['color_secondary'] }}] border-0 border-transparent rounded-lg">
                             <div wire:scroll class="w-full h-full max-h-[calc(100vh-50vh)] flex flex-col space-x-0 space-y-2 border-0 border-transparent rounded-lg overflow-y-auto">
                                 <div class="w-full h-full max-h-[calc(15vh-8px)] sm:max-h-[calc(10vh-8px)] bg-gradient-to-tr from-[{{ $preferences['color_1'] }}] via-[{{ $preferences['color_2'] }}] to-[{{ $preferences['color_3'] }}] relative rounded-lg">
@@ -38,7 +38,7 @@
                     </div>
                 @endforeach
                 @auth
-                    <div class="w-full h-fit max-h-[calc(100vh-50vh)] pr-1 flex flex-col space-x-0 space-y-2 overflow-clip">
+                    <div class="w-full h-fit max-h-[calc(100vh-50vh)] p-4 flex flex-col space-x-0 space-y-2 overflow-clip bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-lg">
                         <div class="w-full h-fit p-2 bg-[{{ $preferences['color_secondary'] }}] border-0 border-transparent rounded-lg">
                             <div wire:scroll class="w-full h-full max-h-[calc(100vh-50vh)] overflow-y-auto">
                                 <div class="w-full h-fit p-2 flex flex-row space-x-2 space-y-0 text-[{{ $preferences['color_text'] }}] text-center bg-[{{ $preferences['color_primary'] }}] border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
@@ -62,7 +62,7 @@
         </div>
     </div>
     @auth
-        <div wire:ignore x-cloak x-show="create_fandom_modal" x-transition.duration.500ms.scale.origin id="createFandom" class="w-10/12 md:w-1/2 h-fit max-h-[calc(100vh-96px)] overflow-clip absolute z-10" :style="{ left: {{ $create_fandom_modal_position['left'] }}+'px', right: {{ $create_fandom_modal_position['right'] }}+'px',top: {{ $create_fandom_modal_position['top'] }}+'px' ,bottom: {{ $create_fandom_modal_position['bottom'] }}+'px' }">
+        <div wire:ignore x-cloak x-show="create_fandom_modal" x-transition.duration.500ms.scale.origin id="createFandom" class="w-10/12 md:w-1/2 h-fit max-h-[calc(100vh-96px)] p-4 bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm overflow-clip border-0 border-transparent rounded-lg absolute z-10" :style="{ left: {{ $create_fandom_modal_position['left'] }}+'px', right: {{ $create_fandom_modal_position['right'] }}+'px',top: {{ $create_fandom_modal_position['top'] }}+'px' ,bottom: {{ $create_fandom_modal_position['bottom'] }}+'px' }">
             {{-- create fandom --}}
             <div wire:scroll class="w-full h-fit max-h-[calc(100vh-96px)] pr-1 flex flex-col space-x-0 space-y-2 overflow-y-auto overflow-x-clip">
                 <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-[{{ $preferences['color_secondary'] }}] border-0 border-transparent rounded-lg">

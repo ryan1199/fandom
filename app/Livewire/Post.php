@@ -2,22 +2,20 @@
 
 namespace App\Livewire;
 
-use App\Models\Fandom;
 use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\On;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
-class FandomDetails extends Component
+#[Title('Post')]
+class Post extends Component
 {
-    public $fandom = [];
-    public $time;
-    public $timeNow;
-    public $timePast;
     public $preferences = [];
-    public $tab = 'post';
-    public function mount(Fandom $fandom)
+    public function render()
     {
-        $this->loadFandomDetails($fandom->name);
+        return view('livewire.post');
+    }
+    public function mount()
+    {
         if(Auth::check())
         {
             $this->preferences = session()->get('preference-' . Auth::user()->username);
@@ -57,28 +55,9 @@ class FandomDetails extends Component
                 ]
             ];
         }
-        $this->time = session()->get('last-active' . Auth::user()->username);
-        session()->put('last-active' . Auth::user()->username, now());
     }
-    public function render()
+    public function createPost()
     {
-        return view('livewire.fandom-details')->title($this->fandom['name']);
-    }
-    #[On('load_fandom_details')]
-    public function loadFandomDetails($name)
-    {
-        $fandom = Fandom::with(['avatar.image','cover.image','members.user.profile','members.user.cover.image','members.user.avatar.image','members.role'])->where('name', $name)->first();
-        $this->fandom = $fandom;
-    }
-    public function updated($property)
-    {
-        if(Auth::check())
-        {
-            session()->put('last-active-' . Auth::user()->username, now());
-        }
-    }
-    public function checkTime()
-    {
-        $this->time = session()->get('last-active' . Auth::user()->username);
+        $this->dispatch('create_post')->to(PostCreateEdit::class);
     }
 }
