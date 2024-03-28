@@ -12,20 +12,17 @@ class Alert extends Component
     public $type = '';
     public function mount()
     {
-        if(session()->has('success'))
-        {
+        if (session()->has('success')) {
             $this->type = 'success';
             $this->message = session()->get('success');
             $this->open = true;
         }
-        if(session()->has('error'))
-        {
+        if (session()->has('error')) {
             $this->type = 'error';
             $this->message = session()->get('error');
             $this->open = true;
         }
-        if(session()->has('normal'))
-        {
+        if (session()->has('normal')) {
             $this->type = 'normal';
             $this->message = session()->get('normal');
             $this->open = true;

@@ -16,8 +16,7 @@ class Home extends Component
     }
     public function mount()
     {
-        if(Auth::check())
-        {
+        if (Auth::check()) {
             $this->preferences = session()->get('preference-' . Auth::user()->username);
         } else {
             $this->preferences = [
@@ -58,8 +57,7 @@ class Home extends Component
     }
     public function updated($property)
     {
-        if(Auth::check())
-        {
+        if (Auth::check()) {
             session()->put('last-active-' . Auth::user()->username, now());
         }
     }

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\User as LivewireUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -12,7 +13,7 @@ use Livewire\Component;
 
 class AccountSetting extends Component
 {
-    public $user = [];
+    public $user;
     public $preferences = [];
     public $account_settings_modal_position = [];
     #[Validate()]
@@ -38,31 +39,29 @@ class AccountSetting extends Component
     }
     public function updateAccount()
     {
-        $user = User::where('id', $this->user['id'])->first();
-        $this->authorize('update', $user);
+        $this->authorize('update', $this->user);
 
         $validated = $this->validate();
 
-        User::where('id', $this->user['id'])->update([
+        User::where('id', $this->user->id)->update([
             'password' => Hash::make($validated['password'])
         ]);
-        
-        $this->reset(['password','password_confirmation']);
+
+        $this->reset(['password', 'password_confirmation']);
         $this->dispatch('alert', 'success', 'Done, new changes saved')->to(Alert::class);
-        $this->dispatch('load_user', $this->user['username']);
+        $this->dispatch('load_user', $this->user->username)->to(LivewireUser::class);
     }
     public function deleteAccount()
     {
-        $user = User::where('id', $this->user['id'])->first();
-        $this->authorize('update', $user);
+        $this->authorize('update', $this->user);
         dd('yes from account');
-        session()->forget('preference-' . Auth::user()->username);
+        // delete all related
+        session()->forget('preference-' . $this->user->username);
     }
     public function updated($property)
     {
-        if(Auth::check())
-        {
-            session()->put('last-active-' . Auth::user()->username, now());
+        if (Auth::check()) {
+            session()->put('last-active-' . $this->user->username, now());
         }
     }
     #[On('save_account_settings_modal_position')]
@@ -82,8 +81,8 @@ class AccountSetting extends Component
             'top' => $data['top'],
             'bottom' => $data['bottom']
         ];
-        $preferences = session()->get('preference-' . Auth::user()->username);
-        session()->put('preference-' . Auth::user()->username, [
+        $preferences = session()->get('preference-' . $this->user->username);
+        session()->put('preference-' . $this->user->username, [
             'color_1' => $preferences['color_1'],
             'color_2' => $preferences['color_2'],
             'color_3' => $preferences['color_3'],
@@ -102,6 +101,7 @@ class AccountSetting extends Component
             'profile_settings_modal_position' => $preferences['profile_settings_modal_position'],
             'preference_settings_modal_position' => $preferences['preference_settings_modal_position']
         ]);
-        $this->preferences = session()->get('preference-' . Auth::user()->username);
+        $this->preferences = session()->get('preference-' . $this->user->username);
+        $this->mount($this->user, $this->preferences);
     }
 }

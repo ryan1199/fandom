@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Fandom extends Model
@@ -12,7 +13,7 @@ class Fandom extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name','slug','description'
+        'name', 'slug', 'description'
     ];
     public function getRouteKeyName()
     {
@@ -29,5 +30,9 @@ class Fandom extends Model
     public function cover(): MorphOne
     {
         return $this->morphOne(Cover::class, 'coverable');
+    }
+    public function publishes(): MorphMany
+    {
+        return $this->morphMany(Publish::class, 'publishable');
     }
 }

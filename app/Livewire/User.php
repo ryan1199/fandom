@@ -13,16 +13,15 @@ class User extends Component
     public $account_modal = false;
     public $profile_modal = false;
     public $preference_modal = false;
-    public $user = [];
+    public $user;
     public $state = false;
     public $preferences = [];
     protected $listeners = ['refreshComponent' => '$refresh'];
-    
+
     public function mount(ModelsUser $user)
     {
         $this->loadUser($user->username);
-        if(session()->has('preference-' . Auth::user()->username))
-        {
+        if (session()->has('preference-' . Auth::user()->username)) {
             $this->preferences = session()->get('preference-' . Auth::user()->username);
         } else {
             $this->preferences = [
@@ -70,7 +69,7 @@ class User extends Component
     public function loadUser($username)
     {
         $user = ModelsUser::with([
-            'profile','avatar.image','cover.image','members.fandom','members.role'
+            'profile', 'avatar.image', 'cover.image', 'members.fandom', 'members.role'
         ])->where('username', $username)->first();
 
         $this->user = $user;
@@ -84,8 +83,7 @@ class User extends Component
     }
     public function updated($property)
     {
-        if(Auth::check())
-        {
+        if (Auth::check()) {
             session()->put('last-active-' . Auth::user()->username, now());
         }
     }

@@ -5,7 +5,9 @@
 body {
     @apply bg-repeat bg-contain bg-center bg-blue-300;
 }
-[x-cloak] { display: none !important; }
+[x-cloak] {
+    display: none !important;
+}
 ::-webkit-scrollbar-track {
     @apply w-1 h-1 rounded-full;
 }
@@ -27,7 +29,7 @@ body {
 .nav-icons {
     @apply block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-full;
 }
-.nav-icons img{
+.nav-icons img {
     @apply block w-8 h-8 rounded-full;
 }
 .logo {

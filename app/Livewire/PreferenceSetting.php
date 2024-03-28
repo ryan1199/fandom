@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Livewire\User as LivewireUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -13,7 +14,7 @@ use Livewire\Component;
 class PreferenceSetting extends Component
 {
     #[Validate()]
-    public $user = [];
+    public $user;
     public $color_1 = '#000000';
     public $color_2 = '#000000';
     public $color_3 = '#000000';
@@ -67,12 +68,11 @@ class PreferenceSetting extends Component
     }
     public function updatePreference()
     {
-        $user = User::where('id', $this->user['id'])->first();
-        $this->authorize('update', $user);
+        $this->authorize('update', $this->user);
 
         $this->validate();
 
-        session()->put('preference-' . $this->user['username'], [
+        session()->put('preference-' . $this->user->username, [
             'color_1' => $this->color_1,
             'color_2' => $this->color_2,
             'color_3' => $this->color_3,
@@ -87,16 +87,18 @@ class PreferenceSetting extends Component
             'preference_settings_modal_position' => $this->preference_settings_modal_position
         ]);
 
+        $this->preferences = session()->get('preference-' . $this->user->username);
+        $this->mount($this->user, $this->preferences);
+
         $this->reset(['color_1','color_2','color_3','color_primary','color_secondary','color_text','font_size','selected_font_family',]);
-        $this->dispatch('load_user', $this->user['username']);
+        $this->dispatch('load_user', $this->user->username)->to(LivewireUser::class);
         return redirect()->route('user', $this->user)->with('success', 'Done, new preferences saved');
     }
     public function resetPreference()
     {
-        $user = User::where('id', $this->user['id'])->first();
-        $this->authorize('update', $user);
+        $this->authorize('update', $this->user);
 
-        session()->put(key: 'preference-' . Auth::user()->username, value: [
+        session()->put(key: 'preference-' . $this->user->username, value: [
             'color_1' => '#f97316',
             'color_2' => '#ec4899',
             'color_3' => '#6366f1',
@@ -131,14 +133,17 @@ class PreferenceSetting extends Component
             ]
         ]);
 
-        $this->dispatch('load_user', $this->user['username']);
+        $this->preferences = session()->get('preference-' . $this->user->username);
+        $this->mount($this->user, $this->preferences);
+
+        $this->dispatch('load_user', $this->user->username);
         return redirect()->route('user', $this->user)->with('success', 'Done, your preferences are reseted');
     }
     public function updated($property)
     {
         if(Auth::check())
         {
-            session()->put('last-active-' . Auth::user()->username, now());
+            session()->put('last-active-' . $this->user->username, now());
         }
     }
     #[On('save_preference_settings_modal_position')]
@@ -158,8 +163,8 @@ class PreferenceSetting extends Component
             'top' => $data['top'],
             'bottom' => $data['bottom']
         ];
-        $preferences = session()->get('preference-' . Auth::user()->username);
-        session()->put('preference-' . Auth::user()->username, [
+        $preferences = session()->get('preference-' . $this->user->username);
+        session()->put('preference-' . $this->user->username, [
             'color_1' => $preferences['color_1'],
             'color_2' => $preferences['color_2'],
             'color_3' => $preferences['color_3'],
@@ -178,6 +183,7 @@ class PreferenceSetting extends Component
                 'bottom' => $data['bottom']
             ]
         ]);
-        $this->preferences = session()->get('preference-' . Auth::user()->username);
+        $this->preferences = session()->get('preference-' . $this->user->username);
+        $this->mount($this->user, $this->preferences);
     }
 }

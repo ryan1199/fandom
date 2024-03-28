@@ -9,7 +9,9 @@ use Livewire\Component;
 
 class FandomDetails extends Component
 {
-    public $fandom = [];
+    public $fandom;
+    public $members;
+    public $publishes;
     public $time;
     public $timeNow;
     public $timePast;
@@ -18,8 +20,7 @@ class FandomDetails extends Component
     public function mount(Fandom $fandom)
     {
         $this->loadFandomDetails($fandom->name);
-        if(Auth::check())
-        {
+        if (Auth::check()) {
             $this->preferences = session()->get('preference-' . Auth::user()->username);
         } else {
             $this->preferences = [
@@ -57,28 +58,32 @@ class FandomDetails extends Component
                 ]
             ];
         }
-        $this->time = session()->get('last-active' . Auth::user()->username);
-        session()->put('last-active' . Auth::user()->username, now());
+        // $this->time = session()->get('last-active' . Auth::user()->username);
+        // session()->put('last-active' . Auth::user()->username, now());
     }
     public function render()
     {
-        return view('livewire.fandom-details')->title($this->fandom['name']);
+        return view('livewire.fandom-details')->title($this->fandom->name);
     }
     #[On('load_fandom_details')]
     public function loadFandomDetails($name)
     {
-        $fandom = Fandom::with(['avatar.image','cover.image','members.user.profile','members.user.cover.image','members.user.avatar.image','members.role'])->where('name', $name)->first();
+        $fandom = Fandom::with(['avatar.image', 'cover.image', 'members.user.profile', 'members.user.cover.image', 'members.user.avatar.image', 'members.role', 'publishes.post.user'])->where('name', $name)->first();
         $this->fandom = $fandom;
+        $publishes = collect($fandom->publishes)->sortByDesc('created_at');
+        $this->publishes = $publishes->take(5);
+        $members = collect($fandom->members)->pluck('user.id');
+        $this->members = $members->toArray();
     }
-    public function updated($property)
-    {
-        if(Auth::check())
-        {
-            session()->put('last-active-' . Auth::user()->username, now());
-        }
-    }
-    public function checkTime()
-    {
-        $this->time = session()->get('last-active' . Auth::user()->username);
-    }
+    // public function updated($property)
+    // {
+    //     if(Auth::check())
+    //     {
+    //         session()->put('last-active-' . Auth::user()->username, now());
+    //     }
+    // }
+    // public function checkTime()
+    // {
+    //     $this->time = session()->get('last-active' . Auth::user()->username);
+    // }
 }

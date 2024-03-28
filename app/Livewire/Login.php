@@ -21,7 +21,7 @@ class Login extends Component
     public function rules()
     {
         return [
-            'username' => ['required','alpha_dash:ascii','max:100'],
+            'username' => ['required', 'alpha_dash:ascii', 'max:100'],
             'password' => ['required', Password::min(8)],
             'remember' => ['boolean']
         ];
@@ -71,16 +71,14 @@ class Login extends Component
     {
         $validated = $this->validate();
         $validated['remember'] = $validated['remember'] === true ? true : false;
-        if(Auth::attemptWhen([
-            'username' => $validated['username'], 
+        if (Auth::attemptWhen([
+            'username' => $validated['username'],
             'password' => $validated['password']
         ], function (User $user) {
             return $user->email_verified_at !== null;
-        }, $validated['remember']))
-        {
+        }, $validated['remember'])) {
             $request->session()->regenerate();
-            if(session()->missing('preference-' . Auth::user()->username))
-            {
+            if (session()->missing('preference-' . Auth::user()->username)) {
                 session()->put(key: 'preference-' . Auth::user()->username, value: $this->preferences);
             }
             session()->put('last-active-' . Auth::user()->username, now());

@@ -9,6 +9,7 @@ use App\Models\Image;
 use App\Models\Profile;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -24,10 +25,10 @@ class ProfileSetting extends Component
     public $avatar;
     public $status = '';
     public $description = '';
-    public $user = [];
+    public $user;
     public $preferences = [];
     public $profile_settings_modal_position = [];
-    
+
     public function mount(User $user, $preferences)
     {
         $this->user = $user;
@@ -40,113 +41,114 @@ class ProfileSetting extends Component
     }
     public function updatedCover($value)
     {
-        $user = User::with('cover')->where('id', $this->user['id'])->first();
-        $this->authorize('update', $user);
-        
-        $validated = Validator::make(data:[
+        $this->authorize('update', $this->user);
+
+        $validated = Validator::make(data: [
             'cover' => $this->cover
-        ], rules:[
+        ], rules: [
             'cover' => 'required|image|max:10240'
         ])->validate();
         
+        $user = User::with('cover')->where('id', $this->user->id)->first();
         Storage::deleteDirectory('covers/' . $user->username);
 
         $cover_name = $user->username . "/cover-" . $user->username . "." . $this->cover->extension();
         $this->cover->storeAs('covers', $cover_name, 'public');
 
-        $image = new Image(['url' => $cover_name]);
-        if($user->cover === null)
-        {
-            $cover = $user->cover()->create([]);
-        } else {
-            $cover = $user->cover;
-        }
-        $cover->image()->delete();
-        $cover->image()->save($image);
-        Profile::where('user_id', $user->id)->update([
-            'cover_id' => $cover->id,
-        ]);
+        DB::transaction(function () use ($cover_name, $user) {
+            $image = new Image(['url' => $cover_name]);
+            if ($user->cover === null) {
+                $cover = $user->cover()->create([]);
+            } else {
+                $cover = $user->cover;
+            }
+            $cover->image()->delete();
+            $cover->image()->save($image);
+            Profile::where('user_id', $user->id)->update([
+                'cover_id' => $cover->id,
+            ]);
+        });
 
         $this->reset(['cover']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
-        $this->dispatch('load_user', $user->username);
+        $this->dispatch('load_user', $user->username)->to(LivewireUser::class);
     }
     public function updatedAvatar($value)
     {
-        $user = User::with('avatar')->where('id', $this->user['id'])->first();
-        $this->authorize('update', $user);
-        
-        $validated = Validator::make(data:[
+        $this->authorize('update', $this->user);
+
+        $validated = Validator::make(data: [
             'avatar' => $this->avatar
-        ], rules:[
+        ], rules: [
             'avatar' => 'required|image|max:10240'
         ]);
-
+        
+        $user = User::with('avatar')->where('id', $this->user->id)->first();
         Storage::deleteDirectory('avatars/' . $user->username);
 
         $avatar_name = $user->username . "/avatar-" . $user->username . "." . $this->avatar->extension();
         $this->avatar->storeAs('avatars', $avatar_name, 'public');
 
-        $image = new Image(['url' => $avatar_name]);
-        if($user->avatar === null)
-        {
-            $avatar = $user->avatar()->create([]);
-        } else {
-            $avatar = $user->avatar;
-        }
-        $avatar->image()->delete();
-        $avatar->image()->save($image);
-        Profile::where('user_id', $user->id)->update([
-            'avatar_id' => $avatar->id,
-        ]);
+        DB::transaction(function () use ($avatar_name, $user) {
+            $image = new Image(['url' => $avatar_name]);
+            if ($user->avatar === null) {
+                $avatar = $user->avatar()->create([]);
+            } else {
+                $avatar = $user->avatar;
+            }
+            $avatar->image()->delete();
+            $avatar->image()->save($image);
+            Profile::where('user_id', $user->id)->update([
+                'avatar_id' => $avatar->id,
+            ]);
+        });
 
         $this->reset(['avatar']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
-        $this->dispatch('load_user', $user->username);
+        $this->dispatch('load_user', $user->username)->to(LivewireUser::class);
     }
     public function updatedStatus($value)
     {
-        $user = User::where('id', $this->user['id'])->first();
-        $this->authorize('update', $user);
-        
-        $validated = Validator::make(data:[
+        $this->authorize('update', $this->user);
+
+        $validated = Validator::make(data: [
             'status' => $this->status
-        ], rules:[
+        ], rules: [
             'status' => 'required|max:50'
         ])->validate();
-
+        
+        $user = User::where('id', $this->user->id)->first();
         Profile::where('user_id', $user->id)->update([
             'status' => $validated['status'],
         ]);
 
         $this->reset(['status']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
-        $this->dispatch('load_user', $user->username);
+        $this->dispatch('load_user', $user->username)->to(LivewireUser::class);
     }
     public function updatedDescription($value)
     {
-        $user = User::where('id', $this->user['id'])->first();
-        $this->authorize('update', $user);
-        
-        $validated = Validator::make(data:[
+        $this->authorize('update', $this->user);
+
+        $validated = Validator::make(data: [
             'description' => $this->description
-        ], rules:[
+        ], rules: [
             'description' => 'required|max:100'
         ])->validate();
-
+        
+        $user = User::where('id', $this->user->id)->first();
         Profile::where('user_id', $user->id)->update([
             'description' => $validated['description'],
         ]);
-        
+
         $this->reset(['description']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
-        $this->dispatch('load_user', $user->username);
+        $this->dispatch('load_user', $user->username)->to(LivewireUser::class);
     }
     public function updated($property)
     {
-        if(Auth::check())
-        {
-            session()->put('last-active-' . Auth::user()->username, now());
+        if (Auth::check()) {
+            session()->put('last-active-' . $this->user->username, now());
         }
     }
     #[On('save_profile_settings_modal_position')]
@@ -166,8 +168,8 @@ class ProfileSetting extends Component
             'top' => $data['top'],
             'bottom' => $data['bottom']
         ];
-        $preferences = session()->get('preference-' . Auth::user()->username);
-        session()->put('preference-' . Auth::user()->username, [
+        $preferences = session()->get('preference-' . $this->user->username);
+        session()->put('preference-' . $this->user->username, [
             'color_1' => $preferences['color_1'],
             'color_2' => $preferences['color_2'],
             'color_3' => $preferences['color_3'],
@@ -186,6 +188,7 @@ class ProfileSetting extends Component
             ],
             'preference_settings_modal_position' => $preferences['preference_settings_modal_position']
         ]);
-        $this->preferences = session()->get('preference-' . Auth::user()->username);
+        $this->preferences = session()->get('preference-' . $this->user->username);
+        $this->mount($this->user, $this->preferences);
     }
 }

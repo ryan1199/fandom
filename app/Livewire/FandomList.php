@@ -22,8 +22,7 @@ class FandomList extends Component
     public function mount()
     {
         $this->loadFandoms();
-        if(Auth::check())
-        {
+        if (Auth::check()) {
             $this->preferences = session()->get('preference-' . Auth::user()->username);
             $this->create_fandom_modal_position = $this->preferences['create_fandom_modal_position'];
         } else {
@@ -66,12 +65,11 @@ class FandomList extends Component
     #[On('load_fandoms')]
     public function loadFandoms()
     {
-        $this->fandoms = Fandom::with(['avatar.image','cover.image','members'])->get();
+        $this->fandoms = Fandom::with(['avatar.image', 'cover.image', 'members'])->get();
     }
     public function updated($property)
     {
-        if(Auth::check())
-        {
+        if (Auth::check()) {
             session()->put('last-active-' . Auth::user()->username, now());
         }
     }

@@ -56,5 +56,5 @@
             </div>
         </div>
     </div>
-    <x-nav/>
+    <x-nav :preferences="$preferences" />
 </div>

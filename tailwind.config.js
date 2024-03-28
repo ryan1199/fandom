@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'selector',
   content: [
     "./resources/**/*.blade.php",
     "./resources/**/*.js",
@@ -49,6 +50,7 @@ export default {
   },
   plugins: [
     require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
   ],
 }
 
