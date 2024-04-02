@@ -22,4 +22,8 @@ class Publish extends Model
     {
         return $this->hasOne(Post::class, 'publish_id', 'id');
     }
+    public function gallery(): HasOne
+    {
+        return $this->hasOne(Gallery::class, 'publish_id', 'id');
+    }
 }

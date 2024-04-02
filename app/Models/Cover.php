@@ -12,7 +12,7 @@ class Cover extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'coverable_id','coverable_type'
+        'coverable_id', 'coverable_type'
     ];
     public function coverable(): MorphTo
     {

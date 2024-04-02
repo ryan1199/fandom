@@ -76,4 +76,8 @@ class User extends Authenticatable
     {
         return $this->morphMany(Publish::class, 'publishable');
     }
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(Gallery::class);
+    }
 }

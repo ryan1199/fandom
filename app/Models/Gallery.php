@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
-class Avatar extends Model
+class Gallery extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'avatarable_id', 'avatarable_type'
+        'galleryable_id', 'galleryable_type', 'user_id', 'publish_id', 'tags', 'visible'
     ];
-    public function avatarable(): MorphTo
+    public function galleryable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -22,8 +22,12 @@ class Avatar extends Model
     {
         return $this->morphOne(Image::class, 'imageable');
     }
-    public function profile(): BelongsTo
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Profile::class);
+        return $this->belongsTo(User::class);
+    }
+    public function publish(): BelongsTo
+    {
+        return $this->belongsTo(Publish::class, 'publish_id', 'id');
     }
 }
