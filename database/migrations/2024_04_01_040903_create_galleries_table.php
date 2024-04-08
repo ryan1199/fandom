@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('galleries', function (Blueprint $table) {
             $table->id();
-            $table->morphs('galleryable');
             $table->foreignIdFor(User::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Publish::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('tags');
+            $table->bigInteger('view');
             $table->timestamps();
         });
     }

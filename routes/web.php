@@ -4,6 +4,7 @@ use App\Http\Controllers\LogoutController;
 use App\Livewire\FandomDetails;
 use App\Livewire\FandomList;
 use App\Livewire\ForgotPassword;
+use App\Livewire\Gallery;
 use App\Livewire\Home;
 use App\Livewire\Login;
 use App\Livewire\NewPassword;
@@ -36,6 +37,7 @@ Route::get('/user/{user}', User::class)->middleware('auth')->name('user');
 Route::get('/fandom-list', FandomList::class)->name('fandom-list');
 Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-details');
 Route::get('/post', Post::class)->middleware('auth')->name('post');
+Route::get('/gallery', Gallery::class)->middleware('auth')->name('gallery');
 Route::fallback(function () {
     return redirect()->route('home');
 });

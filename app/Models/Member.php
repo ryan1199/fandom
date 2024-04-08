@@ -11,7 +11,7 @@ class Member extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id','role_id','fandom_id'
+        'user_id', 'role_id', 'fandom_id'
     ];
 
     public function user(): BelongsTo

@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Models\Fandom;
+use App\Models\Gallery;
+use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -11,7 +13,8 @@ class FandomDetails extends Component
 {
     public $fandom;
     public $members;
-    public $publishes;
+    public $posts;
+    public $galleries;
     public $time;
     public $timeNow;
     public $timePast;
@@ -68,10 +71,17 @@ class FandomDetails extends Component
     #[On('load_fandom_details')]
     public function loadFandomDetails($name)
     {
-        $fandom = Fandom::with(['avatar.image', 'cover.image', 'members.user.profile', 'members.user.cover.image', 'members.user.avatar.image', 'members.role', 'publishes.post.user'])->where('name', $name)->first();
+        $fandom = Fandom::with(['avatar.image', 'cover.image', 'members.user.profile', 'members.user.cover.image', 'members.user.avatar.image', 'members.role', 'publishes'])->where('name', $name)->first();
         $this->fandom = $fandom;
-        $publishes = collect($fandom->publishes)->sortByDesc('created_at');
-        $this->publishes = $publishes->take(5);
+
+        $posts = Post::with(['user', 'publish'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get();
+        $posts = collect($posts)->sortByDesc('publish.created_at');
+        $this->posts = $posts->take(5);
+
+        $galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get();
+        $galleries = collect($galleries)->sortByDesc('created_at');
+        $this->galleries = $galleries->take(5);
+
         $members = collect($fandom->members)->pluck('user.id');
         $this->members = $members->toArray();
     }

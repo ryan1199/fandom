@@ -12,12 +12,8 @@ class Gallery extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'galleryable_id', 'galleryable_type', 'user_id', 'publish_id', 'tags', 'visible'
+        'user_id', 'publish_id', 'tags', 'view'
     ];
-    public function galleryable(): MorphTo
-    {
-        return $this->morphTo();
-    }
     public function image(): MorphOne
     {
         return $this->morphOne(Image::class, 'imageable');

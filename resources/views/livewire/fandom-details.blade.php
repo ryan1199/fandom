@@ -50,14 +50,15 @@
                                 <div>
                                     <div class="p-1">Recent Posts</div>
                                     <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
-                                        @foreach ($publishes as $publish)
+                                        @foreach ($posts as $post)
                                         <div
                                             class="w-full h-fit p-1 border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
-                                            <h1>{{ $publish->post->title }}</h1>
+                                            <h1>{{ $post->title }}</h1>
                                             <div class="flex flex-col">
-                                                <p>By {{ $publish->post->user->username }}</p>
+                                                <p>By {{ $post->user->username }}</p>
                                                 <p class="text-right">Published
-                                                    {{ $publish->created_at->diffForHumans(['options' => null]) }}</p>
+                                                    {{ $post->publish->created_at->diffForHumans(['options' => null]) }}
+                                                </p>
                                             </div>
                                         </div>
                                         @endforeach
@@ -66,11 +67,22 @@
                                 {{-- galery --}}
                                 <div>
                                     <div class="p-1">New In Galery</div>
-                                    <div class="border-x-0 border-y border-black">
-                                        <div class="w-1/5 h-fit m-1 aspect-square bg-black inline-block"></div>
-                                        <div class="w-1/5 h-fit m-1 aspect-square bg-black inline-block"></div>
-                                        <div class="w-1/5 h-fit m-1 aspect-square bg-black inline-block"></div>
-                                        <div class="w-1/5 h-fit m-1 aspect-square bg-black inline-block"></div>
+                                    <div class="w-full h-fit grid gap-2 grid-cols-3">
+                                        @foreach ($galleries as $gallery)
+                                        <div
+                                            class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
+                                            <div class="flex flex-col space-x-0 space-y-2">
+                                                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt=""
+                                                    class="w-full h-fit max-h-52 hover:max-h-full object-cover object-center rounded-lg">
+                                                <div class="flex flex-col">
+                                                    <p>By {{ $gallery->user->username }}</p>
+                                                    <p class="text-right">Uploaded
+                                                        {{ $gallery->publish->created_at->diffForHumans(['options' => null]) }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @endforeach
                                     </div>
                                 </div>
                                 {{-- votes --}}
@@ -143,7 +155,27 @@
                                 <livewire:post-search :preferences="$preferences" from="fandom" />
                                 <livewire:post-list :preferences="$preferences" from="fandom" id="{{ $fandom->id }}" />
                             </div>
-                            <div x-cloak x-show="tab == 'galery'" class="p-4">Galery</div>
+                            <div x-cloak x-show="tab == 'galery'"
+                                class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
+                                <div class="w-full h-fit flex flex-row justify-between items-center">
+                                    <div>Gallery</div>
+                                    @auth
+                                    @if (in_array(Auth::id(), $members))
+                                    <a wire:navigate.hover href="{{ route('gallery') }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                            class="w-6 h-6">
+                                            <path fill-rule="evenodd"
+                                                d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </a>
+                                    @endif
+                                    @endauth
+                                </div>
+                                <livewire:gallery-search :preferences="$preferences" from="fandom" />
+                                <livewire:gallery-list :preferences="$preferences" from="fandom"
+                                    id="{{ $fandom->id }}" />
+                            </div>
                         </div>
                     </div>
                 </div>

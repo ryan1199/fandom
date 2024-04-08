@@ -57,7 +57,21 @@
             class="form-input border {{ 'border-['.$preferences['color_secondary'].']' }} rounded-lg"
             placeholder="Post Tags"></textarea>
     </div>
-    {{-- galeries --}}
+    <div
+        class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 border {{ 'border-['.$preferences['color_secondary'].']' }} rounded-lg">
+        <div class="{{ 'text-[calc('.$preferences['font_size'] . 'px)]' }}">Galleries</div>
+        <div class="w-full h-fit grid gap-2 grid-cols-10">
+            @foreach ($galleries as $gallery)
+            <div
+                class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
+                <div class="flex flex-col space-x-0 space-y-2">
+                    <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt=""
+                        class="w-full h-fit max-h-52 hover:max-h-full object-cover object-center rounded-lg">
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
     <div
         class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 border {{ 'border-['.$preferences['color_secondary'].']' }} rounded-lg">
         <div>Content</div>

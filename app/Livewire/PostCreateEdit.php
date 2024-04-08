@@ -2,8 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Models\Gallery;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -23,6 +26,8 @@ class PostCreateEdit extends Component
     public $tags = '';
     public $raw_body = '# New Post';
     public $body = '';
+    #[Locked]
+    public $galleries;
     public function render()
     {
         return view('livewire.post-create-edit');
@@ -31,11 +36,19 @@ class PostCreateEdit extends Component
     {
         $this->toMarkdown();
         $this->cleanMarkdown();
+        $user = User::with('members.fandom.publishes.gallery')->find(Auth::id());
+        $fandoms = collect($user->members->pluck('fandom'));
+        $publishes = [];
+        foreach ($fandoms as $fandom) {
+            $publishes[] = $fandom->publishes->pluck('id');
+        }
+        $publishes = Arr::collapse($publishes);
+        $this->galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $publishes)->get();
     }
     #[On('create_post')]
     public function createPost()
     {
-        $this->resetExcept('preferences');
+        $this->resetExcept(['preferences', 'galleries']);
         $this->mode = 'create';
     }
     #[On('edit_post')]
@@ -110,7 +123,7 @@ class PostCreateEdit extends Component
             $post = Post::find($this->id);
             $this->dispatch('update_post', $post, $data);
         }
-        $this->resetExcept('preferences');
+        $this->resetExcept(['preferences', 'galleries']);
     }
     public function toMarkdown()
     {
