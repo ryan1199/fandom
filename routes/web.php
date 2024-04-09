@@ -9,6 +9,7 @@ use App\Livewire\Home;
 use App\Livewire\Login;
 use App\Livewire\NewPassword;
 use App\Livewire\Post;
+use App\Livewire\PostShow;
 use App\Livewire\Register;
 use App\Livewire\User;
 use App\Livewire\Verification;
@@ -37,6 +38,7 @@ Route::get('/user/{user}', User::class)->middleware('auth')->name('user');
 Route::get('/fandom-list', FandomList::class)->name('fandom-list');
 Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-details');
 Route::get('/post', Post::class)->middleware('auth')->name('post');
+Route::get('/post/{post}', PostShow::class)->name('post.show');
 Route::get('/gallery', Gallery::class)->middleware('auth')->name('gallery');
 Route::fallback(function () {
     return redirect()->route('home');

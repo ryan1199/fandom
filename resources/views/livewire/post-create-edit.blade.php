@@ -81,11 +81,11 @@
         <div class="w-full h-fit text-red-500 {{ 'text-[calc('.$preferences['font_size'] . 'px)]' }}">{{ $message }}
         </div>
         @enderror
-        <div class="w-full h-fit flex flex-row space-x-2 space-y-0">
-            <textarea wire:model.live="raw_body" id=""
-                class="w-full h-fit min-h-96 form-input border {{ 'border-['.$preferences['color_secondary'].']' }} rounded-lg"></textarea>
+        <div class="w-full h-fit grid grid-cols-2 gap-2">
+            <textarea wire:model.live="raw_body"
+                class="w-full h-full min-h-96 form-input border {{ 'border-['.$preferences['color_secondary'].']' }} rounded-lg"></textarea>
             <div
-                class="prose prose-blue w-full h-fit min-h-96 p-2 border {{ 'border-['.$preferences['color_secondary'].']' }} rounded-lg">
+                class="prose prose-base prose-img:mx-auto prose-img:max-w-sm w-full h-fit min-h-96 p-2 border {{ 'border-['.$preferences['color_secondary'].']' }} rounded-lg">
                 {!! $body !!}
             </div>
         </div>

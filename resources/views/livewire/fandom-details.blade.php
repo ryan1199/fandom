@@ -4,6 +4,7 @@
     <div class="container h-fit max-h-[calc(100%-48px)] overflow-clip">
         <div
             class="w-full h-fit grid grid-cols-12 grid-flow-row-dense auto-rows-max auto-cols-max gap-4 order-0 border-transparent rounded-lg">
+            {{-- chat --}}
             <div
                 class="w-full h-fit max-h-[calc(100%-48px)] col-span-3 bg-black border-0 border-transparent rounded-lg overflow-clip">
             </div>
@@ -57,8 +58,7 @@
                                             <div class="flex flex-col">
                                                 <p>By {{ $post->user->username }}</p>
                                                 <p class="text-right">Published
-                                                    {{ $post->publish->created_at->diffForHumans(['options' => null]) }}
-                                                </p>
+                                                    {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
                                             </div>
                                         </div>
                                         @endforeach
@@ -69,16 +69,12 @@
                                     <div class="p-1">New In Galery</div>
                                     <div class="w-full h-fit grid gap-2 grid-cols-3">
                                         @foreach ($galleries as $gallery)
-                                        <div
-                                            class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
+                                        <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
                                             <div class="flex flex-col space-x-0 space-y-2">
-                                                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt=""
-                                                    class="w-full h-fit max-h-52 hover:max-h-full object-cover object-center rounded-lg">
+                                                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="" class="w-full h-fit max-h-52 hover:max-h-full object-cover object-center rounded-lg">
                                                 <div class="flex flex-col">
                                                     <p>By {{ $gallery->user->username }}</p>
-                                                    <p class="text-right">Uploaded
-                                                        {{ $gallery->publish->created_at->diffForHumans(['options' => null]) }}
-                                                    </p>
+                                                    <p class="text-right">Uploaded {{ $gallery->publish->created_at->diffForHumans(['options' => null]) }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -155,8 +151,7 @@
                                 <livewire:post-search :preferences="$preferences" from="fandom" />
                                 <livewire:post-list :preferences="$preferences" from="fandom" id="{{ $fandom->id }}" />
                             </div>
-                            <div x-cloak x-show="tab == 'galery'"
-                                class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
+                            <div x-cloak x-show="tab == 'galery'" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
                                 <div class="w-full h-fit flex flex-row justify-between items-center">
                                     <div>Gallery</div>
                                     @auth
@@ -173,13 +168,13 @@
                                     @endauth
                                 </div>
                                 <livewire:gallery-search :preferences="$preferences" from="fandom" />
-                                <livewire:gallery-list :preferences="$preferences" from="fandom"
-                                    id="{{ $fandom->id }}" />
+                                <livewire:gallery-list :preferences="$preferences" from="fandom" id="{{ $fandom->id }}" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {{-- member --}}
             {{-- <div
                 class="w-full h-fit max-h-[calc(100%-48px)] col-span-3 bg-black border-0 border-transparent rounded-lg overflow-clip">
                 <p class="text-black">{{ $time->diffForHumans() }}</p>

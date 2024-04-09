@@ -102,7 +102,8 @@ class Post extends Component
             'view' => $post->view,
         ]);
         $this->dispatch('alert', 'success', 'Success, the selected post is updated')->to(Alert::class);
-        $this->dispatch('refresh_post_list', 'post')->to(PostList::class);
+        // $this->dispatch('refresh_post_list', 'post')->to(PostList::class);
+        $this->dispatch('search')->to(PostSearch::class);
     }
     public function deletePost(ModelsPost $post)
     {

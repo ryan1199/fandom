@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class PostSearch extends Component
@@ -27,7 +28,8 @@ class PostSearch extends Component
     {
         $this->from = $from;
     }
-    public function updated($property)
+    #[On('search')]
+    public function search()
     {
         if ($this->from == 'user') {
             $validated = Validator::make(
@@ -84,5 +86,9 @@ class PostSearch extends Component
             ];
         }
         $this->dispatch('search', $query)->to(PostList::class);
+    }
+    public function updated($property)
+    {
+        $this->search();
     }
 }

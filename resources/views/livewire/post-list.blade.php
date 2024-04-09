@@ -2,7 +2,7 @@
     @if ($from == 'post')
     @foreach ($posts as $post)
     <div class="w-full h-fit p-1 border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
-        <h1>{{ $post->title }}</h1>
+        <h1><a href="{{ route('post.show', $post) }}" class="cursor-pointer">{{ $post->title }}</a></h1>
         <div class="flex flex-col">
             <p>By {{ $post->user->username }}</p>
             <p class="text-right">Created {{ $post->created_at->diffForHumans(['options' => null]) }}</p>
@@ -71,7 +71,7 @@
     @if ($from == 'fandom')
     @foreach ($posts as $post)
     <div class="w-full h-fit p-1 border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
-        <h1>{{ $post->title }}</h1>
+        <h1><a href="{{ route('post.show', $post) }}" class="cursor-pointer">{{ $post->title }}</a></h1>
         <div class="flex flex-col">
             <p>By {{ $post->user->username }}</p>
             <p class="text-right">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
