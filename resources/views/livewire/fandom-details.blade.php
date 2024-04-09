@@ -54,7 +54,7 @@
                                         @foreach ($posts as $post)
                                         <div
                                             class="w-full h-fit p-1 border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
-                                            <h1>{{ $post->title }}</h1>
+                                            <h1><a href="{{ route('post.show', $post) }}" class="cursor-pointer">{{ $post->title }}</a></h1>
                                             <div class="flex flex-col">
                                                 <p>By {{ $post->user->username }}</p>
                                                 <p class="text-right">Published
@@ -71,7 +71,9 @@
                                         @foreach ($galleries as $gallery)
                                         <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
                                             <div class="flex flex-col space-x-0 space-y-2">
-                                                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="" class="w-full h-fit max-h-52 hover:max-h-full object-cover object-center rounded-lg">
+                                                <a href="{{ route('gallery.show', $gallery) }}">
+                                                    <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="" class="w-full h-40 object-cover rounded-lg">
+                                                </a>
                                                 <div class="flex flex-col">
                                                     <p>By {{ $gallery->user->username }}</p>
                                                     <p class="text-right">Uploaded {{ $gallery->publish->created_at->diffForHumans(['options' => null]) }}</p>

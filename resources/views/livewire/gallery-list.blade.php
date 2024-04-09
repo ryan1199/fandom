@@ -4,8 +4,10 @@
     <div
         class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
         <div class="flex flex-col space-x-0 space-y-2">
-            <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt=""
-                class="w-full h-fit max-h-52 hover:max-h-full object-cover object-center rounded-lg">
+            <a href="{{ route('gallery.show', $gallery) }}">
+                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt=""
+                    class="w-full h-fit max-h-52 hover:max-h-full object-cover object-center rounded-lg">
+            </a>
             <div class="flex flex-col">
                 <p>By {{ $gallery->user->username }}</p>
                 <p class="text-right">Uploaded {{ $gallery->created_at->diffForHumans(['options' => null]) }}</p>
@@ -40,8 +42,10 @@
     <div
         class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
         <div class="flex flex-col space-x-0 space-y-2">
-            <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt=""
-                class="w-full h-fit max-h-52 hover:max-h-full object-cover object-center rounded-lg">
+            <a href="{{ route('gallery.show', $gallery) }}">
+                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt=""
+                    class="w-full h-fit max-h-52 hover:max-h-full object-cover object-center rounded-lg">
+            </a>
             <div class="flex flex-col">
                 <p>By {{ $gallery->user->username }}</p>
                 <p class="text-right">Uploaded {{ $gallery->publish->created_at->diffForHumans(['options' => null]) }}
