@@ -2,7 +2,8 @@
     setting_modal: @entangle('setting_modal').live,
     profile_modal: @entangle('profile_modal').live,
     account_modal: @entangle('account_modal').live,
-    preference_modal: @entangle('preference_modal').live
+    preference_modal: @entangle('preference_modal').live,
+    tab: @entangle('tab').live
     }" @endif
     class="w-screen h-screen max-h-[100vh] mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center items-center
     relative z-0">
@@ -13,6 +14,7 @@
                 class="w-full h-fit max-h-[calc(100vh-96px)] grid grid-cols-3 grid-flow-row-dense auto-cols-max gap-4 overflow-clip">
                 <div wire:scroll
                     class="col-span-2 h-fit max-h-[calc(100vh-96px)] p-4 flex flex-col space-x-0 space-y-4 overflow-y-auto overflow-x-clip bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-lg">
+                    {{-- user information --}}
                     <div
                         class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-[{{ $preferences['color_secondary'] }}] border-0 border-transparent rounded-lg">
                         <div
@@ -90,17 +92,57 @@
                             </div>
                         </div>
                     </div>
+                    {{-- user images and posts --}}
                     <div
                         class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-[{{ $preferences['color_secondary'] }}] border-0 border-transparent rounded-lg">
-                        <div
+                        <div class="w-full h-fit grid grid-cols-2 gap-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 border-transparent rounded-lg">
+                            <div x-on:click="tab = 'image'" :class="tab == 'image' ? 'font-bold' : ''" class="w-full h-fit p-2 text-center {{ 'bg-[' . $preferences['color_primary'] . ']' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg hover:font-bold cursor-pointer">Gallery</div>
+                            <div x-on:click="tab = 'post'" :class="tab == 'post' ? 'font-bold' : ''" class="w-full h-fit p-2 text-center {{ 'bg-[' . $preferences['color_primary'] . ']' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg hover:font-bold cursor-pointer">Post</div>
+                        </div>
+                        <div x-cloak x-show="tab == 'image'"
                             class="w-full h-hit p-2 text-[{{ $preferences['color_text'] }}] text-center bg-[{{ $preferences['color_primary'] }}] border-0 border-transparent rounded-lg">
-                            <h1>User activity</h1>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa ipsam excepturi
-                                perferendis libero. Explicabo quaerat vel placeat quos neque vero voluptatem maxime
-                                illum rem necessitatibus reprehenderit, deserunt est voluptatum perspiciatis?</p>
+                            <div class="grid grid-cols-5 gap-2">
+                                @if (Auth::check() && Auth::id() == $user->id)
+                                <a href="{{ route('gallery') }}" class="w-full h-40 flex flex-row items-center justify-center border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
+                                    <div>
+                                        Add new image
+                                    </div>
+                                </a>
+                                @endif
+                                @foreach ($galleries as $gallery)
+                                <div class="flex flex-col space-x-0 space-y-2">
+                                    <a href="{{ route('gallery.show', $gallery) }}">
+                                        <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="" class="w-full h-40 object-cover rounded-lg">
+                                    </a>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div x-cloak x-show="tab == 'post'"
+                            class="w-full h-hit p-2 text-[{{ $preferences['color_text'] }}] text-center bg-[{{ $preferences['color_primary'] }}] border-0 border-transparent rounded-lg">
+                            <div class="flex flex-col space-x-0 space-y-2">
+                                @if (Auth::check() && Auth::id() == $user->id)
+                                <a href="{{ route('post') }}" class="w-full h-fit p-4 text-center border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
+                                    <div>
+                                        Create new post
+                                    </div>
+                                </a>
+                                @endif
+                                @foreach ($posts as $post)
+                                <div
+                                    class="w-full h-fit p-1 border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
+                                    <h1 class="text-left"><a href="{{ route('post.show', $post) }}" class="cursor-pointer">{{ $post->title }}</a></h1>
+                                    <div class="flex flex-col">
+                                        <p class="text-right">Published
+                                            {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
+                {{-- following and chat --}}
                 <div wire:scroll
                     class="h-fit max-h-[calc(100vh-96px)] p-4 overflow-y-auto overflow-x-clip bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-lg">
                     <div

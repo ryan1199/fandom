@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Gallery;
+use App\Models\Post;
 use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
@@ -15,6 +17,9 @@ class User extends Component
     public $preference_modal = false;
     public $user;
     public $state = false;
+    public $tab = 'image';
+    public $galleries;
+    public $posts;
     public $preferences = [];
     protected $listeners = ['refreshComponent' => '$refresh'];
 
@@ -69,11 +74,13 @@ class User extends Component
     public function loadUser($username)
     {
         $user = ModelsUser::with([
-            'profile', 'avatar.image', 'cover.image', 'members.fandom', 'members.role'
+            'profile', 'avatar.image', 'cover.image', 'members.fandom', 'members.role', 'publishes'
         ])->where('username', $username)->first();
 
         $this->user = $user;
         $this->state = true;
+        $this->galleries = collect(Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $user->publishes->pluck('id'))->get());
+        $this->posts = collect(Post::with(['user', 'publish'])->whereIn('publish_id', $user->publishes->pluck('id'))->get());
 
         $this->reset('state');
     }

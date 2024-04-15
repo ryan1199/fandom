@@ -36,12 +36,13 @@ class PostCreateEdit extends Component
     {
         $this->toMarkdown();
         $this->cleanMarkdown();
-        $user = User::with('members.fandom.publishes.gallery')->find(Auth::id());
+        $user = User::with(['members.fandom.publishes.gallery', 'publishes.gallery'])->find(Auth::id());
         $fandoms = collect($user->members->pluck('fandom'));
         $publishes = [];
         foreach ($fandoms as $fandom) {
             $publishes[] = $fandom->publishes->pluck('id');
         }
+        $publishes[] = $user->publishes->pluck('gallery.id');
         $publishes = Arr::collapse($publishes);
         $this->galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $publishes)->get();
     }

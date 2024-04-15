@@ -64,9 +64,11 @@ class GalleryShow extends Component
         if(class_basename($this->gallery->publish->publishable_type) === 'User') {
             $user = User::with(['publishes'])->find($this->gallery->user->id);
             $this->recommends = [
-                'user' => collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->whereIn('publish_id', $user->publishes->pluck('id'))->get())->take(10)
+                'user' => collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->whereIn('publish_id', $user->publishes->pluck('id'))->get())->take(10),
+                'fandom' => null
             ];
-        } else {
+        }
+        if(class_basename($this->gallery->publish->publishable_type) === 'Fandom') {
             $fandom = Fandom::with(['publishes'])->find($this->gallery->publish->publishable_id);
             $user = User::with(['publishes'])->find($this->gallery->user->id);
             $this->recommends = [
@@ -78,6 +80,5 @@ class GalleryShow extends Component
         Gallery::where('id', $this->gallery->id)->update([
             'view' => $this->gallery->view+1
         ]);
-        // dd($this->recommends);
     }
 }
