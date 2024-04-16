@@ -6,14 +6,41 @@
             class="w-full h-fit grid grid-cols-12 grid-flow-row-dense auto-rows-max auto-cols-max gap-4 order-0 border-transparent rounded-lg">
             {{-- chat --}}
             <div
-                class="w-full h-fit max-h-[calc(100%-48px)] col-span-3 bg-black border-0 border-transparent rounded-lg overflow-clip">
+                class="w-full h-fit max-h-[calc(100vh-96px)] col-span-3 p-4 bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-lg overflow-clip">
+                <div wire:scroll
+                    class="w-full h-fit max-h-[calc(100vh-128px)] border-0 border-transparent rounded-lg overflow-y-auto">
+                    <div
+                        class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-black border-0 border-transparent rounded-lg">
+                        <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 border-transparent rounded-lg">
+                            <h2 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{'text-[calc(2px+' . $preferences['font_size'] . 'px)]' }} font-medium">Chats</h2>
+                        </div>
+                        @if (in_array(Auth::id(), $members['manager']['id']))
+                        {{-- manager --}}
+                        <div class="text-white">
+                            manager
+                        </div>
+                        @endif
+                        @if (in_array(Auth::id(), $members['member']['id']) || in_array(Auth::id(), $members['manager']['id']))
+                        {{-- member --}}
+                        <div class="text-white">
+                            mamber
+                        </div>
+                        @endif
+                        {{-- public --}}
+                        <div>
+
+                        </div>
+                    </div>
+                </div>
             </div>
+            {{-- fandom details --}}
             <div
                 class="w-full h-fit max-h-[calc(100vh-96px)] col-span-6 p-4 bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-lg overflow-clip">
                 <div wire:scroll
                     class="w-full h-fit max-h-[calc(100vh-128px)] border-0 border-transparent rounded-lg overflow-y-auto">
                     <div x-data="{ tab: @entangle('tab').live }"
                         class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-black border-0 border-transparent rounded-lg">
+                        {{-- header --}}
                         <div class="w-full h-fit relative rounded-lg overflow-clip">
                             <img src="{{ asset('storage/covers/'.$fandom->cover->image->url) }}"
                                 alt="Cover image {{ $fandom->name }}" title="Cover image {{ $fandom->name }}"
@@ -24,17 +51,23 @@
                                     <img src="{{ asset('storage/avatars/'.$fandom->avatar->image->url) }}"
                                         alt="Avatar image {{ $fandom->name }}" title="Avatar image {{ $fandom->name }}"
                                         class="block w-auto h-full max-h-[70%] aspect-square object-cover border-0 border-transparent rounded-full">
-                                    <div class="w-full h-fit p-2 bg-white border-0 border-transparent rounded-lg">
+                                    <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-1 justify-center items-center bg-white/70 backdrop-blur-sm border-0 border-transparent rounded-lg">
                                         <h1
                                             class="w-full text-[{{ $preferences['color_text'] }}] text-center text-[calc({{'4px+' . $preferences['font_size'] . 'px' }})] font-semibold">
                                             {{ $fandom->name }}</h1>
                                         <p
                                             class="w-full text-[{{ $preferences['color_text'] }}] text-center text-[calc({{$preferences['font_size'] . 'px'}})]">
                                             {{ $fandom->description }}</p>
+                                        @if (Auth::check() && in_array(Auth::id(), $members['id']))
+                                        <div class="w-fit h-fit mx-auto px-2 py-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-full">Leave</div>
+                                        @else
+                                        <div class="w-fit h-fit mx-auto px-2 py-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-full">Join</div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        {{-- nav --}}
                         <div
                             class="w-full h-fit bg-[{{ $preferences['color_primary'] }}] border-0 border-transparent rounded-lg">
                             <div class="flex flex-row">
@@ -43,6 +76,7 @@
                                 <div x-on:click="tab = 'galery'" class="p-4">Galery</div>
                             </div>
                         </div>
+                        {{-- content --}}
                         <div
                             class="w-full h-fit bg-[{{ $preferences['color_primary'] }}] border-0 border-transparent rounded-lg">
                             <div x-cloak x-show="tab == 'home'"
@@ -54,11 +88,13 @@
                                         @foreach ($posts as $post)
                                         <div
                                             class="w-full h-fit p-1 border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
-                                            <h1><a href="{{ route('post.show', $post) }}" class="cursor-pointer">{{ $post->title }}</a></h1>
+                                            <h1><a href="{{ route('post.show', $post) }}"
+                                                    class="cursor-pointer">{{ $post->title }}</a></h1>
                                             <div class="flex flex-col">
                                                 <p>By {{ $post->user->username }}</p>
                                                 <p class="text-right">Published
-                                                    {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
+                                                    {{ $post->publish->created_at->diffForHumans(['options' => null]) }}
+                                                </p>
                                             </div>
                                         </div>
                                         @endforeach
@@ -69,14 +105,18 @@
                                     <div class="p-1">New In Galery</div>
                                     <div class="w-full h-fit grid gap-2 grid-cols-3">
                                         @foreach ($galleries as $gallery)
-                                        <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
+                                        <div
+                                            class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border border-[{{ $preferences['color_secondary'] }}] rounded-lg">
                                             <div class="flex flex-col space-x-0 space-y-2">
                                                 <a href="{{ route('gallery.show', $gallery) }}">
-                                                    <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="" class="w-full h-40 object-cover rounded-lg">
+                                                    <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}"
+                                                        alt="" class="w-full h-40 object-cover rounded-lg">
                                                 </a>
                                                 <div class="flex flex-col">
                                                     <p>By {{ $gallery->user->username }}</p>
-                                                    <p class="text-right">Uploaded {{ $gallery->publish->created_at->diffForHumans(['options' => null]) }}</p>
+                                                    <p class="text-right">Uploaded
+                                                        {{ $gallery->publish->created_at->diffForHumans(['options' => null]) }}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -138,7 +178,7 @@
                                 <div class="w-full h-fit flex flex-row justify-between items-center">
                                     <div>Post</div>
                                     @auth
-                                    @if (in_array(Auth::id(), $members))
+                                    @if (in_array(Auth::id(), $members['id']))
                                     <a wire:navigate.hover href="{{ route('post') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                             class="w-6 h-6">
@@ -153,11 +193,12 @@
                                 <livewire:post-search :preferences="$preferences" from="fandom" />
                                 <livewire:post-list :preferences="$preferences" from="fandom" id="{{ $fandom->id }}" />
                             </div>
-                            <div x-cloak x-show="tab == 'galery'" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
+                            <div x-cloak x-show="tab == 'galery'"
+                                class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
                                 <div class="w-full h-fit flex flex-row justify-between items-center">
                                     <div>Gallery</div>
                                     @auth
-                                    @if (in_array(Auth::id(), $members))
+                                    @if (in_array(Auth::id(), $members['id']))
                                     <a wire:navigate.hover href="{{ route('gallery') }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
                                             class="w-6 h-6">
@@ -170,18 +211,49 @@
                                     @endauth
                                 </div>
                                 <livewire:gallery-search :preferences="$preferences" from="fandom" />
-                                <livewire:gallery-list :preferences="$preferences" from="fandom" id="{{ $fandom->id }}" />
+                                <livewire:gallery-list :preferences="$preferences" from="fandom"
+                                    id="{{ $fandom->id }}" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             {{-- member --}}
+            <div
+                class="w-full h-fit max-h-[calc(100vh-96px)] col-span-3 p-4 bg-[{{ $preferences['color_primary'] }}]/10 backdrop-blur-sm border-0 border-transparent rounded-lg overflow-clip">
+                <div wire:scroll
+                    class="w-full h-fit max-h-[calc(100vh-128px)] border-0 border-transparent rounded-lg overflow-y-auto">
+                    <div
+                        class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-black border-0 border-transparent rounded-lg">
+                        <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 border-transparent rounded-lg">
+                            <h2 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{'text-[calc(2px+' . $preferences['font_size'] . 'px)]' }} font-medium">Users</h2>
+                        </div>
+                        <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 border-transparent rounded-lg">
+                            <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
+                                <h3 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{'text-[calc(0px+' . $preferences['font_size'] . 'px)]' }} font-normal">Managers</h3>
+                                @foreach ($members['manager']['list'] as $manager)
+                                    <hr>
+                                    <p class="{{ 'text-[' . $preferences['color_text'] . ']' }} {{'text-[calc(0px+' . $preferences['font_size'] . 'px)]' }}">{{ $manager->user->username }}</p>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 border-transparent rounded-lg">
+                            <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
+                                <h3 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{'text-[calc(0px+' . $preferences['font_size'] . 'px)]' }} font-normal">Members</h3>
+                                @foreach ($members['member']['list'] as $member)
+                                    <hr>
+                                    <p class="{{ 'text-[' . $preferences['color_text'] . ']' }} {{'text-[calc(0px+' . $preferences['font_size'] . 'px)]' }}">{{ $member->user->username }}</p>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             {{-- <div
                 class="w-full h-fit max-h-[calc(100%-48px)] col-span-3 bg-black border-0 border-transparent rounded-lg overflow-clip">
                 <p class="text-black">{{ $time->diffForHumans() }}</p>
-        </div> --}}
+            </div> --}}
+        </div>
     </div>
-</div>
-<x-nav :preferences="$preferences" />
+    <x-nav :preferences="$preferences" />
 </div>

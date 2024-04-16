@@ -82,8 +82,16 @@ class FandomDetails extends Component
         $galleries = collect($galleries)->sortByDesc('created_at');
         $this->galleries = $galleries->take(5);
 
-        $members = collect($fandom->members)->pluck('user.id');
-        $this->members = $members->toArray();
+        $users = collect($fandom->members);
+        $managers = $users->where('role.name', 'Manager');
+        $managers_id = $managers->pluck('user.id')->toArray();
+        $members = $users->where('role.name', 'Member');
+        $members_id = $members->pluck('user.id')->toArray();
+        $this->members['id'] = $users->pluck('user.id')->toArray();
+        $this->members['manager']['id'] = $managers_id;
+        $this->members['manager']['list'] = $managers;
+        $this->members['member']['id'] = $members_id;
+        $this->members['member']['list'] = $members;
     }
     // public function updated($property)
     // {
