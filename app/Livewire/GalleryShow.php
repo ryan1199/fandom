@@ -5,7 +5,9 @@ namespace App\Livewire;
 use App\Models\Fandom;
 use App\Models\Gallery;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
@@ -76,7 +78,12 @@ class GalleryShow extends Component
                 'fandom' => collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get())->take(10)
             ];
         }
-        $this->recommends['tags'] = collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->where('tags', 'like', '%'.$this->gallery->tags.'%')->get())->take(10);
+        $tags = Str::of($this->gallery->tags)->explode(',');
+        $this->recommends['tags'] = collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->where(function (Builder $query) use($tags) {
+            foreach($tags as $tag) {
+                $query->orWhere('tags', 'like', '%'.$tag.'%');
+            }
+        })->get())->take(10);
         Gallery::where('id', $this->gallery->id)->update([
             'view' => $this->gallery->view+1
         ]);

@@ -7,18 +7,21 @@
             preference_modal: @entangle('preference_modal').live,
             tab: @entangle('tab').live
         }" 
+    @else
+        x-data="{
+            tab: @entangle('tab').live
+        }" 
     @endif
-    class="w-screen h-screen p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-[' . $preferences['color_text'] . ']' }} relative z-0 overflow-x-clip overflow-y-auto">
-    <div class="sticky top-0 z-10 h-[10vh] select-none">
+    class="@if($user->id == Auth::id()) w-screen @else container mx-auto @endif h-screen p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-[' . $preferences['color_text'] . ']' }} relative z-0 overflow-x-clip overflow-y-auto">
+    <div class="sticky top-0 z-10 select-none">
         <x-nav :preferences="$preferences" />
     </div>
     <div class="fixed mx-auto inset-x-4 top-20 z-10 select-none">
         <livewire:alert :preferences="$preferences" />
     </div>
-    <div 
-        @if($user->id == Auth::id()) x-data="{ open: false, chat: true, following: false } @endif" 
+    <div @if($user->id == Auth::id()) x-data="{ open: false, chat: true, following: false } @endif" 
         class="w-full h-fit grid grid-cols-12 grid-flow-row-dense auto-rows-max auto-cols-max gap-2 order-0 rounded-lg relative">
-        <div class="col-span-12 lg:col-span-7 h-fit p-2 mb-10 lg:m-0 flex flex-col space-x-0 space-y-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg">
+        <div class="@if($user->id == Auth::id()) col-span-12 lg:col-span-7 @else col-span-12 lg:col-span-12 @endif h-fit p-2 mb-10 lg:m-0 flex flex-col space-x-0 space-y-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg">
             {{-- user information --}}
             <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
                 <div class="bg-gradient-to-tr {{ 'from-[' . $preferences['color_1'] . ']' }} {{ 'via-[' . $preferences['color_2'] . ']' }} {{ 'to-[' . $preferences['color_3'] . ']' }} relative rounded-lg select-none">
@@ -78,8 +81,8 @@
                     <div x-on:click="tab = 'post'" :class="tab == 'post' ? 'font-bold' : ''" class="w-full h-fit p-2 text-center {{ 'bg-[' . $preferences['color_primary'] . ']' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg hover:font-bold cursor-pointer">Post</div>
                 </div>
                 <div x-cloak x-show="tab == 'image'" class="w-full h-hit p-2 {{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
-                    <div class="grid grid-cols-5 gap-2">
-                        @if (Auth::check() && Auth::id() == $user->id)
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                        @if (Auth::id() == $user->id)
                             <a href="{{ route('gallery') }}" class="w-full h-40 flex flex-row items-center justify-center border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg" draggable="false"><div>Add new image</div></a>
                         @endif
                         @if (Auth::id() == $user->id)    
@@ -105,7 +108,7 @@
                 </div>
                 <div x-cloak x-show="tab == 'post'" class="w-full h-hit p-2 {{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
                     <div class="flex flex-col space-x-0 space-y-2">
-                        @if (Auth::check() && Auth::id() == $user->id)
+                        @if (Auth::id() == $user->id)
                             <a href="{{ route('post') }}" class="w-full h-fit p-4 text-center border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg select-none" draggable="false"><div>Create new post</div></a>
                         @endif
                         @if (Auth::id() == $user->id)
@@ -117,7 +120,7 @@
                                     </div>
                                 </div>
                             @endforeach
-                        {{-- @else
+                        @else
                             @if (in_array(Auth::id(), $friendlist_id))
                                 @foreach ($posts['friend'] as $post)
                                     <div class="w-full h-fit p-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
@@ -136,7 +139,7 @@
                                         </div>
                                     </div>
                                 @endforeach
-                            @endif --}}
+                            @endif
                         @endif
                     </div>
                 </div>

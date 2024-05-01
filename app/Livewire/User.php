@@ -20,6 +20,7 @@ class User extends Component
     public $tab = 'image';
     public $galleries;
     public $posts;
+    public $friendlist_id = [];
     public $preferences = [];
     protected $listeners = ['refreshComponent' => '$refresh'];
 

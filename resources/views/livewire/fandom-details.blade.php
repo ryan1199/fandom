@@ -30,9 +30,9 @@
                                             </svg>
                                             @auth
                                                 @if (in_array(Auth::id(), $members['id']))
-                                                    <div x-cloak x-show="open" class="absolute -top-1 -right-[72px] w-fit h-fit mx-auto px-2 py-1 bg-inherit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-full select-none">Leave</div>
+                                                    <div wire:click="leave" wire:confirm="Are you sure you want to leave this fandom?" x-cloak x-show="open" class="absolute -top-1 -right-[72px] w-fit h-fit mx-auto px-2 py-1 bg-inherit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-full select-none cursor-pointer">Leave</div>
                                                 @else
-                                                    <div x-cloak x-show="open" class="absolute top-0 right-0 w-fit h-fit mx-auto px-2 py-1 bg-inherit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-full select-none">Join</div>
+                                                    <div wire:click="join" wire:confirm="Are you sure you want to join this fandom?" x-cloak x-show="open" class="absolute -top-1 -right-[72px] w-fit h-fit mx-auto px-2 py-1 bg-inherit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-full select-none cursor-pointer">Join</div>
                                                 @endif
                                             @endauth
                                         </span>
@@ -46,11 +46,14 @@
                     </div>
                     {{-- nav --}}
                     <div class="w-full h-fit {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg select-none">
-                        <div class="flex flex-row">
+                        <div class="flex flex-row overflow-x-auto overflow-y-clip">
                             <div x-on:click="tab = 'home'" class="p-4 cursor-pointer">Home</div>
                             <div x-on:click="tab = 'post'" class="p-4 cursor-pointer">Post</div>
                             <div x-on:click="tab = 'galery'" class="p-4 cursor-pointer">Galery</div>
                             <div x-on:click="tab = 'user'" class="p-4 cursor-pointer">User</div>
+                            @if (in_array(Auth::id(), $members['manager']['id']))
+                                <div x-on:click="tab = 'setting'" class="p-4 cursor-pointer">Setting</div>
+                            @endif
                         </div>
                     </div>
                     {{-- content --}}

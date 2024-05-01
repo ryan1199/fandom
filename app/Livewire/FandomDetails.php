@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Fandom;
 use App\Models\Gallery;
 use App\Models\Post;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -92,6 +93,30 @@ class FandomDetails extends Component
         $this->members['manager']['list'] = $managers;
         $this->members['member']['id'] = $members_id;
         $this->members['member']['list'] = $members;
+    }
+    public function join()
+    {
+        if(in_array(Auth::id(), $this->members['id'])) {
+            $this->dispatch('alert', 'error', 'Failed, you are already joined in this fandom')->to(Alert::class);
+        } else {
+            $role = Role::where('name', 'Member')->first();
+            $this->fandom->members()->create([
+                'user_id' => Auth::id(),
+                'role_id' => $role->id
+            ]);
+            $this->loadFandomDetails($this->fandom->name);
+            $this->dispatch('alert', 'success', 'Done, now you are part of this fandom')->to(Alert::class);
+        }
+    }
+    public function leave()
+    {
+        if(in_array(Auth::id(), $this->members['id'])) {
+            $this->fandom->members()->where('user_id', Auth::id())->delete();
+            $this->loadFandomDetails($this->fandom->name);
+            $this->dispatch('alert', 'success', 'Done, now you are no longer part of this fandom, hope you find a new one');
+        } else {
+            $this->dispatch('alert', 'error', 'Failed, you are not part of this fandom');
+        }
     }
     // public function updated($property)
     // {
