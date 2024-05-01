@@ -19,7 +19,7 @@ class FandomDetails extends Component
     public $timeNow;
     public $timePast;
     public $preferences = [];
-    public $tab = 'post';
+    public $tab = 'home';
     public function mount(Fandom $fandom)
     {
         $this->loadFandomDetails($fandom->name);
@@ -75,12 +75,12 @@ class FandomDetails extends Component
         $this->fandom = $fandom;
 
         $posts = Post::with(['user', 'publish'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get();
-        $posts = collect($posts)->sortByDesc('publish.created_at');
-        $this->posts = $posts->take(5);
+        $this->posts['public'] = collect($posts)->where('publish.visible', 'public')->sortByDesc('publish.created_at')->take(5);
+        $this->posts['member'] = collect($posts)->sortByDesc('publish.created_at')->take(5);
 
         $galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get();
-        $galleries = collect($galleries)->sortByDesc('created_at');
-        $this->galleries = $galleries->take(5);
+        $this->galleries['public'] = collect($galleries)->where('publish.visible', 'public')->sortByDesc('created_at')->take(5);
+        $this->galleries['member'] = collect($galleries)->sortByDesc('created_at')->take(5);
 
         $users = collect($fandom->members);
         $managers = $users->where('role.name', 'Manager');

@@ -28,6 +28,8 @@ class PostCreateEdit extends Component
     public $body = '';
     #[Locked]
     public $galleries;
+    public $startPosition;
+    public $endPosition;
     public function render()
     {
         return view('livewire.post-create-edit');
@@ -45,12 +47,16 @@ class PostCreateEdit extends Component
         $publishes[] = $user->publishes->pluck('gallery.id');
         $publishes = Arr::collapse($publishes);
         $this->galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $publishes)->get();
+        $this->startPosition = Str::of($this->raw_body)->length();
+        $this->endPosition = $this->startPosition;
     }
     #[On('create_post')]
     public function createPost()
     {
         $this->resetExcept(['preferences', 'galleries']);
         $this->mode = 'create';
+        $this->startPosition = Str::of($this->raw_body)->length();
+        $this->endPosition = $this->startPosition;
     }
     #[On('edit_post')]
     public function editPost(Post $post)
@@ -136,6 +142,19 @@ class PostCreateEdit extends Component
     }
     public function updatedRawbody()
     {
-        $this->body = Str::of($this->raw_body)->markdown();
+        $this->toMarkdown();
+    }
+    public function addImage($url)
+    {
+        $image_url_list = collect($this->galleries)->pluck('image.url')->toArray();
+        if(in_array($url, $image_url_list))
+        {
+            $url = asset('storage/galleries/' . $url);
+            $image = '![' . $url . '](' . $url . ')';
+            $this->raw_body = Str::of($this->raw_body)->substrReplace("\n" . $image . "\n", $this->startPosition, $this->endPosition - $this->startPosition);
+            $this->toMarkdown();
+        } else {
+            $this->dispatch('alert', 'error', 'The selected image is unavailable')->to(Alert::class);
+        }
     }
 }

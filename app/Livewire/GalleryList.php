@@ -31,9 +31,16 @@ class GalleryList extends Component
         }
         if ($this->from == 'fandom') {
             $this->id = $id;
-            $publish_ids = Fandom::with(['publishes'])->where('id', $this->id)->first();
-            $publish_ids = Arr::pluck($publish_ids->publishes, 'id');
-            $this->galleries = Gallery::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->orderBy('created_at', 'asc')->get();
+            $fandom = Fandom::with(['publishes', 'members.user'])->where('id', $this->id)->first();
+            $users = collect($fandom->members);
+            $members['id'] = $users->pluck('user.id')->toArray();
+            $publish_ids = Arr::pluck($fandom->publishes, 'id');
+            $galleries = Gallery::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->orderBy('created_at', 'asc')->get();
+            if(in_array(Auth::id(), $members['id'])) {
+                $this->galleries = collect($galleries)->sortBy('created_at');
+            } else {
+                $this->galleries = collect($galleries)->where('publish.visible', 'public')->sortBy('created_at');
+            }
         }
     }
     #[On('search')]
@@ -52,14 +59,20 @@ class GalleryList extends Component
         $sort = ($sort == 'ASC') ? 'ASC' : 'DESC';
 
         if ($this->from == 'gallery') {
-            $this->galleries = Post::with(['user', 'publish.publishable'])->where('user_id', Auth::id())->where('tags', 'like', $search)->orderBy($sort_by, $sort)->get();
+            $this->galleries = Gallery::with(['user', 'publish.publishable'])->where('user_id', Auth::id())->where('tags', 'like', $search)->orderBy($sort_by, $sort)->get();
         }
         if ($this->from == 'fandom') {
-            $publish_ids = Fandom::with(['publishes'])->where('id', $this->id)->first();
-            $publish_ids = Arr::pluck($publish_ids->publishes, 'id');
+            $fandom = Fandom::with(['publishes', 'members.user'])->where('id', $this->id)->first();
+            $users = collect($fandom->members);
+            $members['id'] = $users->pluck('user.id')->toArray();
+            $publish_ids = Arr::pluck($fandom->publishes, 'id');
             $galleries = Gallery::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->where('tags', 'like', $search)->get();
+            if(in_array(Auth::id(), $members['id'])) {
+                $galleries = collect($galleries)->sortBy('created_at');
+            } else {
+                $galleries = collect($galleries)->where('publish.visible', 'public')->sortBy('created_at');
+            }
             if ($sort_by == 'view') {
-                $galleries = collect($galleries);
                 if ($sort == 'ASC') {
                     $this->galleries = $galleries->sortBy('view');
                 }
@@ -68,7 +81,6 @@ class GalleryList extends Component
                 }
             }
             if ($sort_by == 'created_at') {
-                $galleries = collect($galleries);
                 if ($sort == 'ASC') {
                     $this->galleries = $galleries->sortBy('publish.created_at');
                 }

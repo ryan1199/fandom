@@ -79,8 +79,13 @@ class User extends Component
 
         $this->user = $user;
         $this->state = true;
-        $this->galleries = collect(Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $user->publishes->pluck('id'))->get());
-        $this->posts = collect(Post::with(['user', 'publish'])->whereIn('publish_id', $user->publishes->pluck('id'))->get());
+        $galleries = collect(Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $user->publishes->pluck('id'))->get());
+        $posts = collect(Post::with(['user', 'publish'])->whereIn('publish_id', $user->publishes->pluck('id'))->get());
+        $this->galleries['self'] = $galleries;
+        $this->galleries['public'] = collect($galleries)->where('publish.visible', 'public');
+        $this->posts['self'] = $posts;
+        $this->posts['friend'] = collect($posts)->whereIn('publish.visible', ['friend', 'public']);
+        $this->posts['public'] = collect($posts)->where('publish.visible', 'public');
 
         $this->reset('state');
     }

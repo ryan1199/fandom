@@ -10,19 +10,14 @@
         <title>{{ $title ?? 'Page Title' }} | {{ config('app.name') }}</title>
     </head>
 
-    <body @if (Auth::check() && session()->has('preference-' . Auth::user()->username))
-        class="antialiased bg-gradient-to-tr
-        from-[{{ session()->get('preference-' . Auth::user()->username)['color_1'] }}]
-        via-[{{ session()->get('preference-' . Auth::user()->username)['color_2'] }}]
-        to-[{{ session()->get('preference-' . Auth::user()->username)['color_3'] }}]
-        font-[{{ session()->get('preference-' . Auth::user()->username)['selected_font_family'] }}] overflow-clip"
+    <body 
+        @if (Auth::check() && session()->has('preference-' . Auth::user()->username))
+            class="antialiased bg-gradient-to-tr {{ 'from-[' . session()->get('preference-' . Auth::user()->username)['color_1'] . ']' }} {{ 'via-[' . session()->get('preference-' . Auth::user()->username)['color_2'] . ']' }} {{ 'to-[' . session()->get('preference-' . Auth::user()->username)['color_3'] . ']' }} {{ 'font-[' . session()->get('preference-' . Auth::user()->username)['selected_font_family'] . ']' }} overflow-clip"
         @else
-        class="antialiased bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 select-none font-mono
-        overflow-clip"
+            class="antialiased bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 select-none font-mono overflow-clip"
         @endif>
-        <div style="background-image: url('{{ asset('bg-black.svg') }}')"
-            class="w-full h-full bg-repeat bg-auto bg-center">
-            <div class="bg-white/0 backdrop-blur-0">
+        <div style="background-image: url('{{ asset('bg-black.svg') }}')" class="w-full h-full bg-repeat bg-auto bg-center">
+            <div class="bg-white/0 backdrop-blur-3xl">
                 {{ $slot }}
             </div>
         </div>

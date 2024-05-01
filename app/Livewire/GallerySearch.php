@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class GallerySearch extends Component
@@ -21,10 +22,8 @@ class GallerySearch extends Component
     {
         return view('livewire.gallery-search');
     }
-    public function mount()
-    {
-    }
-    public function updated($property)
+    #[On('search')]
+    public function search()
     {
         $validated = Validator::make(
             [
@@ -49,5 +48,9 @@ class GallerySearch extends Component
             'sort' => $this->sort
         ];
         $this->dispatch('search', $query)->to(GalleryList::class);
+    }
+    public function updated($property)
+    {
+        $this->search();
     }
 }

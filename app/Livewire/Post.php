@@ -85,7 +85,7 @@ class Post extends Component
             'view' => 0,
         ]);
         $this->dispatch('alert', 'success', 'Success, the new post is stored')->to(Alert::class);
-        $this->dispatch('refresh_post_list', 'post')->to(PostList::class);
+        $this->dispatch('search')->to(PostSearch::class);
     }
     #[On('update_post')]
     public function updatePost(ModelsPost $post, array $data)
@@ -102,7 +102,6 @@ class Post extends Component
             'view' => $post->view,
         ]);
         $this->dispatch('alert', 'success', 'Success, the selected post is updated')->to(Alert::class);
-        // $this->dispatch('refresh_post_list', 'post')->to(PostList::class);
         $this->dispatch('search')->to(PostSearch::class);
     }
     public function deletePost(ModelsPost $post)
@@ -117,7 +116,7 @@ class Post extends Component
             ModelsPost::where('id', $post->id)->delete();
         }
         $this->dispatch('alert', 'success', 'Success, the selected post is deleted')->to(Alert::class);
-        $this->dispatch('refresh_post_list', 'post')->to(PostList::class);
+        $this->dispatch('search')->to(PostSearch::class);
     }
     public function publishPost(ModelsPost $post, $from, $id, $visible)
     {
@@ -153,7 +152,7 @@ class Post extends Component
                 $this->dispatch('alert', 'success', 'Success, the selected post is published on fandom ' . $fandom->name)->to(Alert::class);
             }
         }
-        $this->dispatch('refresh_post_list', 'post')->to(PostList::class);
+        $this->dispatch('search')->to(PostSearch::class);
     }
     public function unpublishPost(ModelsPost $post)
     {
@@ -168,8 +167,8 @@ class Post extends Component
             });
             $this->dispatch('alert', 'success', 'Success, the selected post is unpublished')->to(Alert::class);
         } else {
-            $this->dispatch('alert', 'error', 'Fail, the selected post is not published')->to(Alert::class);
+            $this->dispatch('alert', 'error', 'Failed, the selected post is not published')->to(Alert::class);
         }
-        $this->dispatch('refresh_post_list', 'post')->to(PostList::class);
+        $this->dispatch('search')->to(PostSearch::class);
     }
 }

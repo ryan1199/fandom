@@ -56,7 +56,8 @@ class GalleryCreateEdit extends Component
     #[On('create_gallery')]
     public function createGallery()
     {
-        $this->resetExcept(['preferences', 'available_publish_on', 'available_visible', 'publish_on', 'visible']);
+        $this->resetExcept(['preferences']);
+        $this->mount();
         $this->mode = 'create';
     }
     #[On('edit_gallery')]
@@ -66,6 +67,15 @@ class GalleryCreateEdit extends Component
         $this->mode = 'edit';
         $this->id = $gallery->id;
         $this->tags = $gallery->tags;
+        $gallery = Gallery::with(['publish.publishable'])->find($gallery->id);
+        if(class_basename($gallery->publish->publishable_type) === 'User')
+        {   
+            $this->setUploadLocation('User', $gallery->publish->publishable->id, $gallery->publish->publishable->username, $gallery->publish->visible);
+        }
+        if(class_basename($gallery->publish->publishable_type) === 'Fandom')
+        {   
+            $this->setUploadLocation('Fandom', $gallery->publish->publishable->id, $gallery->publish->publishable->name, $gallery->publish->visible);
+        }
     }
     public function saveGallery()
     {

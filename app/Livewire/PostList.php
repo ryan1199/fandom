@@ -48,9 +48,16 @@ class PostList extends Component
         }
         if ($this->from == 'fandom') {
             $this->id = $id;
-            $publish_ids = Fandom::with(['publishes'])->where('id', $this->id)->first();
-            $publish_ids = Arr::pluck($publish_ids->publishes, 'id');
-            $this->posts = Post::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->orderBy('created_at', 'asc')->get();
+            $fandom = Fandom::with(['publishes', 'members.user'])->where('id', $this->id)->first();
+            $users = collect($fandom->members);
+            $members['id'] = $users->pluck('user.id')->toArray();
+            $publish_ids = Arr::pluck($fandom->publishes, 'id');
+            $posts = Post::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->orderBy('created_at', 'asc')->get();
+            if(in_array(Auth::id(), $members['id'])) {
+                $this->posts = collect($posts)->sortBy('created_at');
+            } else {
+                $this->posts = collect($posts)->where('publish.visible', 'public')->sortBy('created_at');
+            }
         }
     }
     #[On('search')]
@@ -77,11 +84,17 @@ class PostList extends Component
             }
         }
         if ($this->from == 'fandom') {
-            $publish_ids = Fandom::with(['publishes'])->where('id', $this->id)->first();
-            $publish_ids = Arr::pluck($publish_ids->publishes, 'id');
+            $fandom = Fandom::with(['publishes', 'members.user'])->where('id', $this->id)->first();
+            $users = collect($fandom->members);
+            $members['id'] = $users->pluck('user.id')->toArray();
+            $publish_ids = Arr::pluck($fandom->publishes, 'id');
             $posts = Post::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->where('title', 'like', $search)->get();
-            if ($sort_by == 'title') {
+            if(in_array(Auth::id(), $members['id'])) {
                 $posts = collect($posts);
+            } else {
+                $posts = collect($posts)->where('publish.visible', 'public');
+            }
+            if ($sort_by == 'title') {
                 if ($sort == 'ASC') {
                     $this->posts = $posts->sortBy('title');
                 }
@@ -90,7 +103,6 @@ class PostList extends Component
                 }
             }
             if ($sort_by == 'created_at') {
-                $posts = collect($posts);
                 if ($sort == 'ASC') {
                     $this->posts = $posts->sortBy('publish.created_at');
                 }
