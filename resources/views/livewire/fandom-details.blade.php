@@ -14,12 +14,12 @@
                     <div class="w-full h-[30vh] relative rounded-lg">
                         <img src="{{ asset('storage/covers/' . $fandom->cover->image->url) }}"
                             alt="Cover image {{ $fandom->name }}" title="Cover image {{ $fandom->name }}"
-                            class="w-full h-[30vh] object-cover block rounded-lg" draggable="false">
+                            class="w-full h-[30vh] object-cover block rounded-lg select-none" draggable="false">
                         <div class="absolute left-0 top-0 w-full h-[30vh]">
                             <div class="w-full h-[30vh] p-4 flex flex-col justify-center items-center space-x-0 space-y-4">
                                 <img src="{{ asset('storage/avatars/' . $fandom->avatar->image->url) }}"
                                     alt="Avatar image {{ $fandom->name }}" title="Avatar image {{ $fandom->name }}"
-                                    class="block w-auto h-[50%] aspect-square object-cover border-0 rounded-full"
+                                    class="block w-auto h-[50%] aspect-square object-cover border-0 rounded-full select-none"
                                     draggable="false">
                                 <div class="w-full h-fit max-h-[15vh] p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/70' }} backdrop-blur-sm border-0 rounded-lg overflow-clip">
                                     <div x-data="{ open: false }" class="flex flex-row space-x-1 space-y-0 justify-center items-center">
@@ -37,8 +37,8 @@
                                             @endauth
                                         </span>
                                     </div>
-                                    <div class="w-full h-fit max-h-[10vh] mt-1 text-left overflow-clip overflow-y-auto">
-                                        <p class="w-full {{ 'text-[' . $preferences['color_text'] . ']' }} {{ 'text-[calc(' . $preferences['font_size'] . 'px)]'}}">{{ $fandom->description }}</p>
+                                    <div class="w-fit max-w-full h-fit max-h-[10vh] mx-auto mt-1 text-left overflow-clip overflow-y-auto">
+                                        <p class="{{ 'text-[' . $preferences['color_text'] . ']' }} {{ 'text-[calc(' . $preferences['font_size'] . 'px)]'}}">{{ $fandom->description }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -186,9 +186,7 @@
                             <livewire:gallery-list :preferences="$preferences" from="fandom" id="{{ $fandom->id }}" />
                         </div>
                         <div x-cloak x-show="tab == 'user'" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
-                            <div class="w-full h-fit flex flex-row justify-between items-center">
-                                <div class="font-semibold">User</div>
-                            </div>
+                            <div class="font-semibold">User</div>
                             {{-- manager --}}
                             <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
                                 <h3 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{ 'text-[' . $preferences['font_size'] . 'px]' }} font-normal">Managers</h3>
@@ -220,6 +218,11 @@
                                 </div>
                             </div>
                         </div>
+                        @if (in_array(Auth::id(), $members['manager']['id']))
+                            <div x-cloak x-show="tab == 'setting'">
+                                <livewire:fandom-setting :fandom="$fandom" :preferences="$preferences" :managers="$members['manager']['id']" />
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

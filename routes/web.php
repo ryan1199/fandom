@@ -45,4 +45,3 @@ Route::get('/gallery/{gallery}', GalleryShow::class)->name('gallery.show');
 Route::fallback(function () {
     return redirect()->route('home');
 });
-// gallery and post visible
