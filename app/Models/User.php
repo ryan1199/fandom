@@ -80,4 +80,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Gallery::class);
     }
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

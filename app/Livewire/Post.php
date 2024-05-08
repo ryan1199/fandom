@@ -108,7 +108,7 @@ class Post extends Component
     {
         $this->authorize('delete', $post);
         if ($post->publish_id != null) {
-            DB::transaction(function ($post) {
+            DB::transaction(function () use ($post) {
                 Publish::where('id', $post->publish_id)->delete();
                 ModelsPost::where('id', $post->id)->delete();
             });

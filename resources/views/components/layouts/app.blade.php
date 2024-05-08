@@ -18,7 +18,9 @@
         @endif>
         <div style="background-image: url('{{ asset('bg-black.svg') }}')" class="w-full h-full bg-repeat bg-auto bg-center">
             <div class="bg-white/0 backdrop-blur-3xl">
-                {{ $slot }}
+                <div class="w-screen h-screen overflow-x-clip overflow-y-auto">
+                    {{ $slot }}
+                </div>
             </div>
         </div>
     </body>
