@@ -14,7 +14,9 @@ use Livewire\Component;
 class Comment extends Component
 {
     public $comments;
+    #[Locked]
     public $from;
+    #[Locked]
     public $id;
     public $preferences = [];
     public function render()

@@ -5,7 +5,7 @@
     <div class="fixed mx-auto inset-x-4 top-20 z-10 select-none">
         <livewire:alert :preferences="$preferences" />
     </div>
-    <div class="w-full h-fit relative">
+    <div class="w-full h-fit mx-auto">
         <div class="w-full h-fit col-span-6 p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg">
             <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
                 <div class="w-full p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">

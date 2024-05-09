@@ -1,7 +1,7 @@
-<div class="w-screen h-screen max-w-lg mx-auto {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-[' . $preferences['color_text'] . ']' }} relative z-0 overflow-clip">
+<div class="w-screen h-screen max-w-lg mx-auto {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-[' . $preferences['color_text'] . ']' }} relative z-0">
     <div class="w-full h-fit absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
         <div class="max-h-screen p-2 overflow-x-clip overflow-y-auto flex flex-col space-x-0 space-y-2 relative">
-            <div class="sticky top-0 z-10 select-none">
+            <div class="select-none">
                 <x-nav :preferences="$preferences" />
             </div>
             <div class="fixed mx-auto inset-x-4 top-20 z-10 select-none">

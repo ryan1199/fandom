@@ -1,5 +1,5 @@
-<div @auth x-data="{ create_fandom_modal: @entangle('create_fandom_modal').live }" @endauth class="w-screen h-screen mx-auto p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-[' . $preferences['color_text'] . ']' }} relative z-0 overflow-x-clip overflow-y-auto">
-    <div class="sticky top-0 z-10">
+<div @auth x-data="{ create_fandom_modal: @entangle('create_fandom_modal').live }" @endauth class="container h-full mx-auto p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-[' . $preferences['color_text'] . ']' }} relative z-0">
+    <div class="select-none">
         <x-nav :preferences="$preferences" />
     </div>
     <div class="fixed mx-auto inset-x-4 top-20 z-10">
