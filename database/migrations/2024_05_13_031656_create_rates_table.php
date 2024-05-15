@@ -12,12 +12,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('comments', function (Blueprint $table) {
+        Schema::create('rates', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->morphs('commentable');
-            $table->bigInteger('reply_to')->nullable();
-            $table->bigInteger('replied')->default(0);
+            $table->morphs('rateable');
+            $table->boolean('like')->nullable()->default(null);
+            $table->boolean('dislike')->nullable()->default(null);
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('comments');
+        Schema::dropIfExists('rates');
     }
 };

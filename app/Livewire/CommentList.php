@@ -3,35 +3,24 @@
 namespace App\Livewire;
 
 use App\Models\Comment;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class CommentList extends Component
 {
     public $comments;
+    #[Locked]
     public $from;
+    #[Locked]
     public $id;
     public $reply = null;
     public $preferences = [];
     public function render()
     {
-        return view('livewire.comment-list');
-    }
-    public function mount($preferences, $from, $id, $reply)
-    {
-        $this->preferences = $preferences;
-        $this->from = $from;
-        $this->id = $id;
-        $this->reply = $reply;
-        $this->loadComment();
-    }
-    #[On('load_comment')]
-    public function loadComment()
-    {
-        if($this->reply == null) {
-            $this->comments = Comment::with(['user.cover.image', 'user.avatar.image', 'message'])->where('commentable_id', $this->id)->where('reply_to', null)->get();
-        } else {
-            $this->comments = Comment::with(['user.cover.image', 'user.avatar.image', 'message'])->where('commentable_id', $this->id)->where('reply_to', $this->reply)->get();
-        }
+        $child_comments = collect($this->comments)->where('reply_to', $this->reply);
+        $comments = $this->comments;
+        return view('livewire.comment-list', compact('child_comments', 'comments'));
     }
 }

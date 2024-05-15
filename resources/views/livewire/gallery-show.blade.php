@@ -104,7 +104,7 @@
                     @endif
                 @endif
                 {{-- comment --}}
-                <livewire:comment :preferences="$preferences" from="gallery" :id="$gallery->id"/>
+                <livewire:comment :preferences="$preferences" from="App\Models\Gallery" :id="$gallery->id"/>
             </div>
         </div>
     </div>
