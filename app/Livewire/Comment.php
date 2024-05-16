@@ -93,4 +93,15 @@ class Comment extends Component
         }
         $this->loadComments();
     }
+    #[On('delete_comment')]
+    public function deleteComment($id)
+    {
+        $comment = ModelsComment::find($id);
+        $this->authorize('delete', $comment);
+        Message::where('messageable_type', "App\Models\Comment")->where('messageable_id', $id)->update([
+            'text' => "<p><em>deleted comment</em></p>"
+        ]);
+        $this->dispatch('alert','success', 'Done, you delete the comment');
+        $this->loadComments();
+    }
 }

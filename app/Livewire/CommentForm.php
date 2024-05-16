@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class CommentForm extends Component
 {
@@ -42,8 +43,10 @@ class CommentForm extends Component
                 'reply_to' => $validated['reply'],
                 'user_id' => Auth::id()
             ]);
+            $content = Str::of($validated['content'])->markdown();
+            $content = clean($content);
             $message = new Message([
-                'text' => $validated['content'],
+                'text' => $content,
                 'user_id' => Auth::id()
             ]);
             if($from == 'App\Models\Gallery') {

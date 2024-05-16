@@ -16,7 +16,7 @@
                     </div>
                 </div>
                 {{-- comment --}}
-                <livewire:comment :preferences="$preferences" from="post" :id="$post->id"/>
+                <livewire:comment :preferences="$preferences" from="App\Models\Post" :id="$post->id"/>
             </div>
         </div>
     </div>

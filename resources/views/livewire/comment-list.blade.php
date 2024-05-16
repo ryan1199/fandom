@@ -5,11 +5,13 @@
                 <img src="{{ asset('storage/avatars/'.$child_comment->user->avatar->image->url) }}" alt="{{ $child_comment->user->username }}" title="{{ $child_comment->user->username }}" class="aspect-square w-auto h-[7vh] bg-black border-0 rounded-full object-cover" draggable="false">
                 <div x-data="{ {{ 'open_comment_' . $child_comment->id }}: false }" class="w-full flex flex-col space-x-0 space-y-2">
                     <p class="font-bold">{{ $child_comment->user->username }}</p>
-                    <p x-on:click="{{ 'open_comment_' . $child_comment->id . ' = ! ' . 'open_comment_' . $child_comment->id }}" :class="{{ 'open_comment_' . $child_comment->id }} ? 'line-clamp-none' : 'line-clamp-2'" class="font-thin text-gray-600">
-                        {{ $child_comment->message->text }}
-                    </p>
-                    <div class="flex flex-col sm:flex-row space-x-0 space-y-2 sm:space-x-2 sm:space-y-0">
-                        <div class="flex flex-row space-x-2 space-y-0 items-stretch">
+                    <div class="prose">
+                        <p x-on:click="{{ 'open_comment_' . $child_comment->id . ' = ! ' . 'open_comment_' . $child_comment->id }}" :class="{{ 'open_comment_' . $child_comment->id }} ? 'line-clamp-none' : 'line-clamp-2'" class="font-thin text-gray-600">
+                            {!! $child_comment->message->text !!}
+                        </p>
+                    </div>
+                    <div class="flex flex-row flex-wrap">
+                        <div class="mr-2 flex flex-row space-x-2 space-y-0 items-stretch">
                             <div class="flex flex-col space-x-0 space-y-1 items-center justify-center">
                                 @if (in_array(Auth::id(), collect($child_comment->rates)->where('like', true)->pluck('user_id')->toArray()))
                                     <div class="p-2 border-2 {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg select-none cursor-pointer">
@@ -43,14 +45,18 @@
                                 <div>{{ collect($child_comment->rates)->where('dislike', true)->count() }}</div>
                             </div>
                         </div>
-                        <div class="flex flex-row space-x-2 space-y-0 items-stretch">
+                        <div class="mr-2 flex flex-row space-x-2 space-y-0 items-stretch">
                             <div class="flex flex-col space-x-0 space-y-1 items-center justify-center">
                                 <div x-on:click="{{ 'open_' . $child_comment->id . ' = ! ' . 'open_' . $child_comment->id }}" class="p-2 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg select-none cursor-pointer">Replies</div>
                                 <div>{{ $child_comment->replied }}</div>
                             </div>
                             <a wire:click="$dispatch('reply_comment', { id: {{ $child_comment->id }} })" href="#commentForm" class="w-fit h-fit p-2 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg select-none cursor-pointer" draggable="false">Reply</a>
-                            {{-- <div wire:click="$dispatch('reply_comment', { id: {{ $child_comment->id }} })" class="w-fit h-fit p-2 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg select-none cursor-pointer">Reply</div> --}}
                         </div>
+                        @auth
+                            @if (Auth::id() == $child_comment->user_id)
+                                <div wire:click="$dispatch('delete_comment', { id: {{ $child_comment->id }} })" class="w-fit h-fit p-2 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg select-none cursor-pointer">Delete</div>
+                            @endif
+                        @endauth
                     </div>
                 </div>
             </div>
