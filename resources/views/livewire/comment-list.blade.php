@@ -2,9 +2,11 @@
     @foreach ($child_comments as $child_comment)
         <div wire:key="{{ rand() }}" x-data="{ {{ 'open_' . $child_comment->id }} : false }" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 items-start border-l-2 {{ 'border-[' . $preferences['color_secondary'] . ']' }}">
             <div class="w-full h-fit p-2 flex flex-row space-x-4 space-y-0 items-start">
-                <img src="{{ asset('storage/avatars/'.$child_comment->user->avatar->image->url) }}" alt="{{ $child_comment->user->username }}" title="{{ $child_comment->user->username }}" class="aspect-square w-auto h-[7vh] bg-black border-0 rounded-full object-cover" draggable="false">
+                <a href="{{ route('user', $child_comment->user) }}" class="aspect-square w-[7vh] h-[7vh] block object-cover" draggable="false">
+                    <img src="{{ asset('storage/avatars/'.$child_comment->user->avatar->image->url) }}" alt="{{ $child_comment->user->username }}" title="{{ $child_comment->user->username }}" class="aspect-square w-full h-full bg-black border-0 rounded-full object-cover block" draggable="false">
+                </a>
                 <div x-data="{ {{ 'open_comment_' . $child_comment->id }}: false }" class="w-full flex flex-col space-x-0 space-y-2">
-                    <p class="font-bold">{{ $child_comment->user->username }}</p>
+                    <a href="{{ route('user', $child_comment->user) }}" class="font-bold" draggable="false">{{ $child_comment->user->username }}</a>
                     <div class="prose">
                         <p x-on:click="{{ 'open_comment_' . $child_comment->id . ' = ! ' . 'open_comment_' . $child_comment->id }}" :class="{{ 'open_comment_' . $child_comment->id }} ? 'line-clamp-none' : 'line-clamp-2'" class="font-thin text-gray-600">
                             {!! $child_comment->message->text !!}

@@ -27,4 +27,8 @@ class Post extends Model
     {
         return $this->morphMany(Comment::class, 'commentable');
     }
+    public function rates(): MorphMany
+    {
+        return $this->morphMany(Rate::class, 'rateable');
+    }
 }

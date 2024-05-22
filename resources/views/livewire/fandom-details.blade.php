@@ -24,18 +24,18 @@
                                 <div class="w-full h-fit max-h-[15vh] p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/70' }} backdrop-blur-sm border-0 rounded-lg overflow-clip">
                                     <div x-data="{ open: false }" class="flex flex-row space-x-1 space-y-0 justify-center items-center">
                                         <h1 class="w-fit {{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{ 'text-[calc(4px+' . $preferences['font_size'] . 'px)]' }} font-semibold">{{ $fandom->name }}</h1>
-                                        <span class="relative">
-                                            <svg x-on:click="open = ! open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 bg-inherit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-full">
-                                                <path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd" />
-                                            </svg>
-                                            @auth
+                                        @auth
+                                            <span class="relative">
+                                                <svg x-on:click="open = ! open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 bg-inherit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-full">
+                                                    <path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd" />
+                                                </svg>
                                                 @if (in_array(Auth::id(), $members['id']))
                                                     <div wire:click="leave" wire:confirm="Are you sure you want to leave this fandom?" x-cloak x-show="open" class="absolute -top-1 -right-[72px] w-fit h-fit mx-auto px-2 py-1 bg-inherit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-full select-none cursor-pointer">Leave</div>
                                                 @else
                                                     <div wire:click="join" wire:confirm="Are you sure you want to join this fandom?" x-cloak x-show="open" class="absolute -top-1 -right-[72px] w-fit h-fit mx-auto px-2 py-1 bg-inherit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-full select-none cursor-pointer">Join</div>
                                                 @endif
-                                            @endauth
-                                        </span>
+                                            </span>
+                                        @endauth
                                     </div>
                                     <div class="w-fit max-w-full h-fit max-h-[10vh] mx-auto mt-1 text-left overflow-clip overflow-y-auto">
                                         <p class="{{ 'text-[' . $preferences['color_text'] . ']' }} {{ 'text-[calc(' . $preferences['font_size'] . 'px)]'}}">{{ $fandom->description }}</p>

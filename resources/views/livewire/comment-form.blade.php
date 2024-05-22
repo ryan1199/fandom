@@ -19,7 +19,7 @@
                 </div>
             </div>
         @endif
-        <textarea id="commentForm" wire:model="content" class="w-full h-fit form-textarea {{ 'bg-[' . $preferences['color_primary'] . ']' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg" rows="5" cols="100" autofocus></textarea>
+        <textarea id="commentForm" wire:model="content" class="w-full h-fit form-textarea {{ 'bg-[' . $preferences['color_primary'] . ']' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg" rows="5" cols="100"></textarea>
         @error('content')
             <div class="w-full h-fit text-red-500">{{ $message }}</div>
         @enderror

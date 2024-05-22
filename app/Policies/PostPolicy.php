@@ -21,7 +21,35 @@ class PostPolicy
      */
     public function view(User $user, Post $post): bool
     {
-        //
+        $post = Post::with(['user','publish.publishable'])->find($post->id);
+        if(class_basename($post->publish->publishable_type) === 'User') {
+            if($post->publish->publishable_id == $user->id) {
+                return true;
+            } else {
+                switch($post->publish->visible) {
+                    case 'public':
+                        return true;
+                        break;
+                    case 'self':
+                        return false;
+                        break;
+                }
+            }
+        }
+        if(class_basename($post->publish->publishable_type) === 'Fandom') {
+            if(in_array($user->id, $post->publish->publishable->members->pluck('user.id')->toArray())) {
+                return true;
+            } else {
+                switch($post->publish->visible) {
+                    case 'public':
+                        return true;
+                        break;
+                    case 'member':
+                        return false;
+                        break;
+                }
+            }
+        }
     }
 
     /**

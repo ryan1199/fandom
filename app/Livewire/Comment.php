@@ -20,6 +20,9 @@ class Comment extends Component
     public $from;
     #[Locked]
     public $id;
+    #[Locked]
+    public $available_sorting = ['Latest', 'Old', 'Like', 'Dislike'];
+    public $sorting = 'Latest';
     public $preferences = [];
     public function render()
     {
@@ -36,6 +39,7 @@ class Comment extends Component
     public function loadComments()
     {
         $this->comments = ModelsComment::with(['user.cover.image', 'user.avatar.image', 'message', 'rates.user'])->where('commentable_id', $this->id)->where('commentable_type', $this->from)->get();
+        $this->sortComments();
     }
     #[On('like_comment')]
     public function likeComment($id)
@@ -103,5 +107,35 @@ class Comment extends Component
         ]);
         $this->dispatch('alert','success', 'Done, you delete the comment');
         $this->loadComments();
+    }
+    public function updatedSorting()
+    {
+        if(in_array($this->sorting, $this->available_sorting)) {
+            $this->sortComments();
+        } else {
+            $this->dispatch('alert','error', 'Error, invalid sorting');
+        }
+    }
+    public function sortComments()
+    {
+        switch($this->sorting) {
+            case 'Latest':
+                $sorted_comments = collect($this->comments)->sortByDesc('created_at');
+                break;
+            case 'Old':
+                $sorted_comments = collect($this->comments)->sortBy('created_at');
+                break;
+            case 'Like':
+                $sorted_comments = collect($this->comments)->sortByDesc(function (ModelsComment $comment) {
+                    return $comment->rates->sum('like');
+                });
+                break;
+            case 'Dislike':
+                $sorted_comments = collect($this->comments)->sortByDesc(function (ModelsComment $comment) {
+                    return $comment->rates->sum('dislike');
+                });
+                break;
+        }
+        $this->comments = $sorted_comments->values()->all();
     }
 }

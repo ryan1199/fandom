@@ -26,22 +26,8 @@ class GalleryList extends Component
     public function mount($from, $id = null)
     {
         $this->from = $from;
-        if ($this->from == 'gallery') {
-            $this->galleries = Gallery::with(['user', 'publish.publishable', 'image'])->where('user_id', Auth::id())->orderBy('created_at', 'asc')->get();
-        }
-        if ($this->from == 'fandom') {
-            $this->id = $id;
-            $fandom = Fandom::with(['publishes', 'members.user'])->where('id', $this->id)->first();
-            $users = collect($fandom->members);
-            $members['id'] = $users->pluck('user.id')->toArray();
-            $publish_ids = Arr::pluck($fandom->publishes, 'id');
-            $galleries = Gallery::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->orderBy('created_at', 'asc')->get();
-            if(in_array(Auth::id(), $members['id'])) {
-                $this->galleries = collect($galleries)->sortBy('created_at');
-            } else {
-                $this->galleries = collect($galleries)->where('publish.visible', 'public')->sortBy('created_at');
-            }
-        }
+        $this->id = $id;
+        $this->dispatch('search')->to(GallerySearch::class);
     }
     #[On('search')]
     public function search($query)
@@ -59,35 +45,36 @@ class GalleryList extends Component
         $sort = ($sort == 'ASC') ? 'ASC' : 'DESC';
 
         if ($this->from == 'gallery') {
-            $this->galleries = Gallery::with(['user', 'publish.publishable'])->where('user_id', Auth::id())->where('tags', 'like', $search)->orderBy($sort_by, $sort)->get();
+            $galleries = Gallery::with(['user', 'publish.publishable', 'image'])->where('user_id', Auth::id())->where('tags', 'like', $search)->get();
         }
         if ($this->from == 'fandom') {
             $fandom = Fandom::with(['publishes', 'members.user'])->where('id', $this->id)->first();
             $users = collect($fandom->members);
             $members['id'] = $users->pluck('user.id')->toArray();
             $publish_ids = Arr::pluck($fandom->publishes, 'id');
-            $galleries = Gallery::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->where('tags', 'like', $search)->get();
+            $galleries = Gallery::with(['user', 'publish.publishable', 'image'])->whereIn('publish_id', $publish_ids)->where('tags', 'like', $search)->get();
             if(in_array(Auth::id(), $members['id'])) {
-                $galleries = collect($galleries)->sortBy('created_at');
+                $galleries = collect($galleries);
             } else {
-                $galleries = collect($galleries)->where('publish.visible', 'public')->sortBy('created_at');
-            }
-            if ($sort_by == 'view') {
-                if ($sort == 'ASC') {
-                    $this->galleries = $galleries->sortBy('view');
-                }
-                if ($sort == 'DESC') {
-                    $this->galleries = $galleries->sortByDesc('view');
-                }
-            }
-            if ($sort_by == 'created_at') {
-                if ($sort == 'ASC') {
-                    $this->galleries = $galleries->sortBy('publish.created_at');
-                }
-                if ($sort == 'DESC') {
-                    $this->galleries = $galleries->sortByDesc('publish.created_at');
-                }
+                $galleries = collect($galleries)->where('publish.visible', 'public');
             }
         }
+        if ($sort_by == 'view') {
+            if ($sort == 'ASC') {
+                $galleries = $galleries->sortBy('view');
+            }
+            if ($sort == 'DESC') {
+                $galleries = $galleries->sortByDesc('view');
+            }
+        }
+        if ($sort_by == 'created_at') {
+            if ($sort == 'ASC') {
+                $galleries = $galleries->sortBy('publish.created_at');
+            }
+            if ($sort == 'DESC') {
+                $galleries = $galleries->sortByDesc('publish.created_at');
+            }
+        }
+        $this->galleries = $galleries->values()->all();
     }
 }
