@@ -38,10 +38,10 @@ Route::post('/logout', [LogoutController::class, 'process'])->middleware(['throt
 Route::get('/user/{user}', User::class)->middleware('auth')->name('user');
 Route::get('/fandom-list', FandomList::class)->name('fandom-list');
 Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-details');
-Route::get('/post', Post::class)->middleware('auth')->name('post');
-Route::get('/post/{post}', PostShow::class)->name('post.show');
-Route::get('/gallery', Gallery::class)->middleware('auth')->name('gallery');
-Route::get('/gallery/{gallery}', GalleryShow::class)->name('gallery.show');
+Route::get('/post-manager', Post::class)->middleware('auth')->name('post');
+Route::get('/post-show/{post}', PostShow::class)->name('post.show');
+Route::get('/gallery-manager', Gallery::class)->middleware('auth')->name('gallery');
+Route::get('/gallery-show/{gallery}', GalleryShow::class)->name('gallery.show');
 Route::fallback(function () {
     return redirect()->route('home');
 });

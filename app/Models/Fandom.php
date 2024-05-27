@@ -35,4 +35,8 @@ class Fandom extends Model
     {
         return $this->morphMany(Publish::class, 'publishable');
     }
+    public function discusses(): HasMany
+    {
+        return $this->hasMany(Discuss::class);
+    }
 }

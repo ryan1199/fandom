@@ -72,7 +72,7 @@ class FandomDetails extends Component
     #[On('load_fandom_details')]
     public function loadFandomDetails($name)
     {
-        $fandom = Fandom::with(['avatar.image', 'cover.image', 'members.user.profile', 'members.user.cover.image', 'members.user.avatar.image', 'members.role', 'publishes'])->where('name', $name)->first();
+        $fandom = Fandom::with(['avatar.image', 'cover.image', 'members.user.profile', 'members.user.cover.image', 'members.user.avatar.image', 'members.role', 'publishes', 'discusses'])->where('name', $name)->first();
         $this->fandom = $fandom;
 
         $posts = Post::with(['user', 'publish'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get();
