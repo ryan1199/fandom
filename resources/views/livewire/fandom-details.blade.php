@@ -255,101 +255,16 @@
                             @switch($discuss->visible)
                                 @case('manager')
                                     @if (in_array(Auth::id(), $members['manager']['id']))
-                                        <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
-                                            <div x-data="{ open: true }" class="w-full h-fit p-1 flex flex-col space-x-0 space-y-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
-                                                <h3 x-on:click="open = ! open" class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{ 'text-[' . $preferences['font_size'] . 'px]' }} font-normal select-none">{{ $discuss->name }}</h3>
-                                                <div x-cloak x-show="open" class="w-full h-fit max-h-[calc(100vh)] flex flex-col space-x-0 space-y-1 overflow-x-clip overflow-y-auto relative">
-                                                    <div class="grid grid-cols-3 gap-1">
-                                                        @for ($i = 0; $i < 3; $i++) 
-                                                            <div class="p-1 col-span-2 border rounded-lg">
-                                                                <p>User1</p>
-                                                                <hr class="{{ 'border-[' . $preferences['color_secondary'] . ']' }}">
-                                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                                                            </div>
-                                                            <div class="p-1 col-span-2 col-start-2 border rounded-lg">
-                                                                <p class="text-right">User2</p>
-                                                                <hr class="{{ 'border-[' . $preferences['color_secondary'] . ']' }}">
-                                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                                                            </div>
-                                                        @endfor
-                                                    </div>
-                                                    <form class="w-full h-fit flex flex-row space-x-1 space-y-0 items-center sticky bottom-0 {{ 'bg-[' . $preferences['color_primary'] . ']' }}">
-                                                        <input type="text" placeholder="Your message" title="Your message" class="form-input w-full h-fit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
-                                                        <button type="submit" title="Send your message"
-                                                            class="w-fit h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                                                <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
-                                                            </svg>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
                                     @endif
                                     @break
                                 @case('member')
                                     @if (in_array(Auth::id(), $members['member']['id']) || in_array(Auth::id(), $members['manager']['id']))
-                                        <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
-                                            <div x-data="{ open: true }" class="w-full h-fit p-1 flex flex-col space-x-0 space-y-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
-                                                <h3 x-on:click="open = ! open" class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{ 'text-[' . $preferences['font_size'] . 'px]' }} font-normal">{{ $discuss->name }}</h3>
-                                                <div x-cloak x-show="open" class="w-full h-fit max-h-[calc(100vh)] flex flex-col space-x-0 space-y-1 overflow-x-clip overflow-y-auto relative">
-                                                    <div class="grid grid-cols-3 gap-1">
-                                                        @for ($i = 0; $i < 3; $i++) 
-                                                            <div class="p-1 col-span-2 border rounded-lg">
-                                                                <p>User1</p>
-                                                                <hr class="{{ 'border-[' . $preferences['color_secondary'] . ']' }}">
-                                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                                                            </div>
-                                                            <div class="p-1 col-span-2 col-start-2 border rounded-lg">
-                                                                <p class="text-right">User2</p>
-                                                                <hr class="{{ 'border-[' . $preferences['color_secondary'] . ']' }}">
-                                                                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                                                            </div>
-                                                        @endfor
-                                                    </div>
-                                                    <form class="w-full h-fit flex flex-row space-x-1 space-y-0 items-center sticky bottom-0 {{ 'bg-[' . $preferences['color_primary'] . ']' }}">
-                                                        <input type="text" placeholder="Your message" title="Your message" class="form-input w-full h-fit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
-                                                        <button type="submit" title="Send your message" class="w-fit h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                                                <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
-                                                            </svg>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
                                     @endif
                                     @break
                                 @default
-                                    <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
-                                        <div x-data="{ open: true }" class="w-full h-fit p-1 flex flex-col space-x-0 space-y-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
-                                            <h3 x-on:click="open = ! open" class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{ 'text-[' . $preferences['font_size'] . 'px]' }} font-normal">{{ $discuss->name }}</h3>
-                                            <div x-cloak x-show="open" class="w-full h-fit max-h-[calc(100vh)] flex flex-col space-x-0 space-y-1 overflow-x-clip overflow-y-auto relative">
-                                                <div class="grid grid-cols-3 gap-1">
-                                                    @for ($i = 0; $i < 3; $i++) 
-                                                        <div class="p-1 col-span-2 border rounded-lg">
-                                                            <p>User1</p>
-                                                            <hr class="{{ 'border-[' . $preferences['color_secondary'] . ']' }}">
-                                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                                                        </div>
-                                                        <div class="p-1 col-span-2 col-start-2 border rounded-lg">
-                                                            <p class="text-right">User2</p>
-                                                            <hr class="{{ 'border-[' . $preferences['color_secondary'] . ']' }}">
-                                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-                                                        </div>
-                                                    @endfor
-                                                </div>
-                                                <form class="w-full h-fit flex flex-row space-x-1 space-y-0 items-center sticky bottom-0 {{ 'bg-[' . $preferences['color_primary'] . ']' }}">
-                                                    <input type="text" placeholder="Your message" title="Your message" class="form-input w-full h-fit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
-                                                    <button type="submit" title="Send your message" class="w-fit h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                                            <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
-                                                        </svg>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
                             @endswitch
                         @endforeach
                     </div>

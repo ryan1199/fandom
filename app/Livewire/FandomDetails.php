@@ -95,6 +95,7 @@ class FandomDetails extends Component
         $this->members['member']['list'] = $members;
         $this->dispatch('search')->to(GallerySearch::class);
         $this->dispatch('search')->to(PostSearch::class);
+        $this->dispatch('load_latest_messages')->to(Discuss::class);
     }
     public function join()
     {

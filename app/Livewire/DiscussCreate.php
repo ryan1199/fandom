@@ -13,7 +13,7 @@ class DiscussCreate extends Component
     #[Locked]
     public $fandom;
     public $name = '';
-    public $visible = '';
+    public $visible = 'public';
     public $available_visible = ['public', 'member', 'manager'];
     public $managers = [];
     public $preferences = [];
@@ -30,7 +30,7 @@ class DiscussCreate extends Component
                 'visible' => $this->visible
             ], [
                 'name' => 'required|max:50',
-                'visible' => Rule::in($this->available_visible)
+                'visible' => ['required', Rule::in($this->available_visible)]
             ], [
                 'required' => 'Please provide a :attribute',
                 'max' => 'Maximum length of the provided :attribute is :max characters',
@@ -45,7 +45,7 @@ class DiscussCreate extends Component
             'visible' => $validated['visible'],
             'fandom_id' => $this->fandom->id
         ]);
-        $this->reset('name', 'visible');
+        $this->reset('name');
         $this->resetValidation();
         $this->dispatch('alert', 'success', 'Done, new discussion has been created');
         $this->dispatch('load_fandom_details', $this->fandom->name);
