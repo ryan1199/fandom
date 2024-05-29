@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\NewDiscussionMessage;
 use App\Models\Discuss as ModelsDiscuss;
 use App\Models\Fandom;
 use App\Models\Message;
@@ -71,6 +72,7 @@ class Discuss extends Component
             $this->resetValidation();
             $this->dispatch('alert', 'success', 'Done, your message has been sent');
             $this->loadLatestMessages();
+            NewDiscussionMessage::dispatch($this->discuss);
         } else {
             $this->dispatch('alert', 'error', 'Error, you can not send this message');
         }
@@ -116,5 +118,11 @@ class Discuss extends Component
         } else {
             $this->dispatch('alert','error', 'Error, the discuss has not been reseted');
         }
+    }
+    public function getListeners()
+    {
+        return [
+            "echo-private:discussion.{$this->discuss->id},NewDiscussionMessage" => 'loadLatestMessages',
+        ];
     }
 }

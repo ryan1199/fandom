@@ -54,4 +54,5 @@ class DiscussCreate extends Component
     {
         $this->resetValidation();
     }
+    // pake broadcasting untuk memberitahukan pengunjung fandom bahwa diskusi baru telah dibuat
 }
