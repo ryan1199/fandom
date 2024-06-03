@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Livewire\Discuss as LivewireDiscuss;
+use App\Models\Discuss;
 use App\Models\Fandom;
 use App\Models\Gallery;
 use App\Models\Post;
@@ -16,6 +18,7 @@ class FandomDetails extends Component
     public $members;
     public $posts;
     public $galleries;
+    public $discusses;
     public $time;
     public $timeNow;
     public $timePast;
@@ -83,6 +86,8 @@ class FandomDetails extends Component
         $this->galleries['public'] = collect($galleries)->where('publish.visible', 'public')->sortByDesc('created_at')->take(5);
         $this->galleries['member'] = collect($galleries)->sortByDesc('created_at')->take(5);
 
+        $this->discusses = $fandom->discusses;
+
         $users = collect($fandom->members);
         $managers = $users->where('role.name', 'Manager');
         $managers_id = $managers->pluck('user.id')->toArray();
@@ -95,7 +100,7 @@ class FandomDetails extends Component
         $this->members['member']['list'] = $members;
         $this->dispatch('search')->to(GallerySearch::class);
         $this->dispatch('search')->to(PostSearch::class);
-        $this->dispatch('load_latest_messages')->to(Discuss::class);
+        $this->dispatch('load_latest_messages')->to(LivewireDiscuss::class);
     }
     public function join()
     {
@@ -120,6 +125,19 @@ class FandomDetails extends Component
         } else {
             $this->dispatch('alert', 'error', 'Failed, you are not part of this fandom');
         }
+    }
+    public function getListeners()
+    {
+        return [
+            "echo-private:DeleteDiscussion.{$this->fandom->id},DeleteDiscussion" => 'loadFandomDetailsAfterDeleteDiscussion',
+            "echo-private:CreateDiscussion.{$this->fandom->id},CreateDiscussion" => 'loadFandomDetailsAfterDeleteDiscussion',
+        ];
+    }
+    public function loadFandomDetailsAfterDeleteDiscussion($event)
+    {
+        $name = $event['fandom']['name'];
+        $fandom = Fandom::where('name', $name)->first();
+        $this->discusses = Discuss::where('fandom_id', $fandom->id)->get();
     }
     // public function updated($property)
     // {

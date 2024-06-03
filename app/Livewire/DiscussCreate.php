@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\CreateDiscussion;
 use App\Models\Discuss;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
@@ -48,11 +49,11 @@ class DiscussCreate extends Component
         $this->reset('name');
         $this->resetValidation();
         $this->dispatch('alert', 'success', 'Done, new discussion has been created');
+        CreateDiscussion::dispatch($this->fandom);
         $this->dispatch('load_fandom_details', $this->fandom->name);
     }
     public function updated()
     {
         $this->resetValidation();
     }
-    // pake broadcasting untuk memberitahukan pengunjung fandom bahwa diskusi baru telah dibuat
 }

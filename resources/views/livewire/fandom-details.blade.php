@@ -227,49 +227,51 @@
                 </div>
             </div>
         </div>
-        {{-- discusses --}}
-        <div class="sticky top-0 w-full h-[100vh] col-span-12 lg:col-span-6 flex flex-col space-x-0 space-y-2">
-            <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg">
-                <div class="w-full h-fit border-0 rounded-lg">
-                    <div
-                    @if (in_array(Auth::id(), $members['manager']['id']))
-                        x-data="{ openDiscussCreateComponent: false }"
-                    @endif
-                     class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
-                        <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg relative">
-                            <h2 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{ 'text-[calc(2px+' . $preferences['font_size'] . 'px)]' }} font-medium">Discusses</h2>
+        @if ($discusses->isNotEmpty())
+            {{-- discusses --}}
+            <div class="sticky top-0 w-full h-[100vh] col-span-12 lg:col-span-6 flex flex-col space-x-0 space-y-2">
+                <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg">
+                    <div class="w-full h-fit border-0 rounded-lg">
+                        <div
+                        @if (in_array(Auth::id(), $members['manager']['id']))
+                            x-data="{ openDiscussCreateComponent: false }"
+                        @endif
+                        class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
+                            <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg relative">
+                                <h2 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{ 'text-[calc(2px+' . $preferences['font_size'] . 'px)]' }} font-medium">Discusses</h2>
+                                @if (in_array(Auth::id(), $members['manager']['id']))
+                                    <div x-on:click="openDiscussCreateComponent = ! openDiscussCreateComponent" class="size-8 p-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg absolute right-1.5 inset-y-1.5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                                        </svg>
+                                    </div>
+                                @endif
+                            </div>
                             @if (in_array(Auth::id(), $members['manager']['id']))
-                                <div x-on:click="openDiscussCreateComponent = ! openDiscussCreateComponent" class="size-8 p-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg absolute right-1.5 inset-y-1.5">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                                        <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                                    </svg>
+                                <div x-cloak x-show="openDiscussCreateComponent">
+                                    <livewire:discuss-create :fandom="$fandom" :preferences="$preferences" :managers="$members['manager']['id']" />
                                 </div>
                             @endif
+                            @foreach ($discusses as $discuss)
+                                @switch($discuss->visible)
+                                    @case('manager')
+                                        @if (in_array(Auth::id(), $members['manager']['id']))
+                                            <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
+                                        @endif
+                                        @break
+                                    @case('member')
+                                        @if (in_array(Auth::id(), $members['member']['id']) || in_array(Auth::id(), $members['manager']['id']))
+                                            <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
+                                        @endif
+                                        @break
+                                    @default
+                                        <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
+                                @endswitch
+                            @endforeach
                         </div>
-                        @if (in_array(Auth::id(), $members['manager']['id']))
-                            <div x-cloak x-show="openDiscussCreateComponent">
-                                <livewire:discuss-create :fandom="$fandom" :preferences="$preferences" :managers="$members['manager']['id']" />
-                            </div>
-                        @endif
-                        @foreach ($fandom->discusses as $discuss)
-                            @switch($discuss->visible)
-                                @case('manager')
-                                    @if (in_array(Auth::id(), $members['manager']['id']))
-                                        <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
-                                    @endif
-                                    @break
-                                @case('member')
-                                    @if (in_array(Auth::id(), $members['member']['id']) || in_array(Auth::id(), $members['manager']['id']))
-                                        <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
-                                    @endif
-                                    @break
-                                @default
-                                    <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
-                            @endswitch
-                        @endforeach
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 </div>

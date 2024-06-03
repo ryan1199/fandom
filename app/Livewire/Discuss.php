@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Events\DeleteDiscussion;
 use App\Events\NewDiscussionMessage;
+use App\Events\ResetDiscussion;
 use App\Models\Discuss as ModelsDiscuss;
 use App\Models\Fandom;
 use App\Models\Message;
@@ -18,7 +20,7 @@ class Discuss extends Component
 {
     public ModelsDiscuss $discuss;
     #[Locked]
-    public $messages = [];
+    public $messages;
     public $content;
     public $raw_content;
     #[Locked]
@@ -29,10 +31,7 @@ class Discuss extends Component
     public function render()
     {
         $this->messages = $this->discuss->messages()->with(['user.cover.image', 'user.avatar.image'])->orderByDesc('created_at')->get();
-        // dd($this->messages);
-        // $messages = collect($this->messages)->reverse()->values()->all();
         $messages = collect($this->messages);
-        // $this->messages = collect($this->messages)->reverse()->values()->all();
         return view('livewire.discuss', [
             'messages' => $messages
         ]);
@@ -64,7 +63,7 @@ class Discuss extends Component
             )->validate();
             $message = Str::of($validated['content'])->markdown();
             $message = clean($message);
-            $this->discuss->messages()->create([
+            $message = $this->discuss->messages()->create([
                 'text' => $message,
                 'user_id' => Auth::id()
             ]);
@@ -72,7 +71,7 @@ class Discuss extends Component
             $this->resetValidation();
             $this->dispatch('alert', 'success', 'Done, your message has been sent');
             $this->loadLatestMessages();
-            NewDiscussionMessage::dispatch($this->discuss);
+            NewDiscussionMessage::dispatch($this->discuss, $message);
         } else {
             $this->dispatch('alert', 'error', 'Error, you can not send this message');
         }
@@ -88,10 +87,11 @@ class Discuss extends Component
     public function loadLatestMessages()
     {
         $this->messages = $this->discuss->messages()->with(['user.cover.image', 'user.avatar.image'])->get();
-        $this->messages = collect($this->messages)->reverse();;
+        $this->messages = collect($this->messages)->reverse();
     }
     public function deleteDiscuss()
     {
+        $fandom = Fandom::find($this->discuss->fandom_id);
         $status = false;
         DB::transaction(function () use (&$status) {
             $this->discuss->messages()->delete();
@@ -99,8 +99,8 @@ class Discuss extends Component
             $status = true;
         });
         if($status) {
-            $fandom = Fandom::find($this->discuss->fandom_id);
             $this->dispatch('alert','success', 'Done, the discuss has been deleted');
+            DeleteDiscussion::dispatch($fandom);
             $this->dispatch('load_fandom_details', $fandom->name);
         } else {
             $this->dispatch('alert','error', 'Error, the discuss has not been deleted');
@@ -115,6 +115,7 @@ class Discuss extends Component
         });
         if($status) {
             $this->dispatch('alert','success', 'Done, the discuss has been reset');
+            ResetDiscussion::dispatch($this->discuss);
         } else {
             $this->dispatch('alert','error', 'Error, the discuss has not been reseted');
         }
@@ -122,7 +123,12 @@ class Discuss extends Component
     public function getListeners()
     {
         return [
-            "echo-private:discussion.{$this->discuss->id},NewDiscussionMessage" => 'loadLatestMessages',
+            "echo-private:NewDiscussionMessage.{$this->discuss->id},NewDiscussionMessage" => 'newMessage',
+            "echo-private:ResetDiscussion.{$this->discuss->id},ResetDiscussion" => 'loadLatestMessages',
         ];
+    }
+    public function newMessage($event)
+    {
+        $this->messages->push($event['message']);
     }
 }

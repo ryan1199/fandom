@@ -3,7 +3,6 @@
 namespace App\Events;
 
 use App\Models\Discuss;
-use App\Models\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -12,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewDiscussionMessage implements ShouldBroadcast
+class ResetDiscussion implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -21,7 +20,6 @@ class NewDiscussionMessage implements ShouldBroadcast
      */
     public function __construct(
         public Discuss $discuss,
-        public Message $message
     ){}
 
     /**
@@ -32,7 +30,7 @@ class NewDiscussionMessage implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('NewDiscussionMessage.' . $this->discuss->id),
+            new PrivateChannel('ResetDiscussion.' . $this->discuss->id),
         ];
     }
 }
