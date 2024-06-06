@@ -61,6 +61,7 @@
                             </div>
                         @endif
                     </div>
+                    <hr>
                     <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                         {{-- list of badges or something --}}
                         <h2>Badges</h2>
@@ -72,6 +73,18 @@
                             @endforeach
                         </div>
                     </div>
+                    @if ($user->id != Auth::id())
+                        <hr>
+                        <div x-data="{ open_chat: false }" class="w-full h-fit flex flex-col space-x-0 space-y-2">
+                            <div class="w-fit h-fit mx-auto flex flex-row space-x-2 space-y-0 select-none">
+                                <div class="w-fit h-full p-2 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">Follow</div>
+                                <div x-on:click="open_chat = ! open_chat" class="w-fit h-full p-2 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">Chat</div>
+                            </div>
+                            <div x-cloak x-show="open_chat">
+                                <livewire:chat-form :user1="Auth::user()" :user2="$user" :$preferences />
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
             {{-- user images and posts --}}
@@ -147,9 +160,10 @@
         </div>
         @if ($user->id == Auth::id())
             {{-- following and chat --}}
-            <div class=" col-span-12 lg:col-span-5 w-full h-full p-2 lg:p-0 relative">
+            <div class=" col-span-12 lg:col-span-5 w-full h-full p-2 mb-9 lg:p-0 relative">
                 <div class="hidden lg:block lg:sticky lg:top-0 w-full h-[90vh] lg:h-[100vh]">
                     <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg">
+                        {{-- friends --}}
                         <div class="mb-2 p-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
                             <div class="p-2 grid grid-cols-1 gap-1 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
                                 <h1 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{'text-[calc(4px+' . $preferences['font_size'] . 'px)]' }} font-semibold select-none">Following</h1>
@@ -170,80 +184,50 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="p-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
-                            <div class="p-2 grid grid-cols-1 gap-1 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
-                                <h1 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{'text-[calc(4px+' . $preferences['font_size'] . 'px)]' }} font-semibold select-none">Chat</h1>
-                                <div class="h-[40vh] grid grid-cols-1 gap-1 overflow-x-clip overflow-y-auto">
+                        {{-- chats --}}
+                        <livewire:chat :$chats :$preferences />
+                    </div>
+                </div>
+                <div x-cloak x-show="open" class="lg:hidden fixed inset-x-0 bottom-0 w-full h-fit p-0 bg-gradient-to-tr {{ 'from-[' . $preferences['color_1'] .']/90' }} {{ 'via-[' . $preferences['color_2'] . ']/90' }} {{ 'to-[' . $preferences['color_3'] . ']/90' }} lg:bg-none backdrop-blur-sm lg:backdrop-blur-0 border-0 rounded-lg">
+                    <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-[' . $preferences['color_secondary'] . ']/70' }} border-0 rounded-lg">
+                        <div class="grid grid-cols-2 gap-2 h-fit">
+                            <div x-on:click="following = ! following, chat = ! following" class="w-full h-fit p-2 text-center {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">Following</div>
+                            <div x-on:click="chat = ! chat, following = ! chat" class="w-full h-fit p-2 text-center {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">Chat</div>
+                        </div>
+                        <div class="w-full h-[80vh] {{ 'bg-[' . $preferences['color_primary'] . ']' }} overflow-x-clip overflow-y-auto border-0 rounded-lg">
+                            <div class="mb-16">
+                                <div x-cloak x-show="following" class="grid grid-cols-1 gap-1 p-2">
+                                    <h1>Following</h1>
                                     @for ($i = 0; $i < 100; $i++)
                                         <hr>
                                         <div class="w-full h-fit flex flex-row space-x-2 space-y-0 items-center">
-                                            <div class="aspect-square w-auto h-[7vh] bg-black border-0 rounded-full select-none"></div>
+                                            <div class="aspect-square w-auto h-[7vh] bg-black border-0 rounded-full"></div>
                                             <div>
                                                 <p class="font-bold">User{{ $i }}</p>
-                                                <p class="font-thin line-clamp-2">Lorem ipsum, dolor sit amet
-                                                    consectetur
-                                                    adipisicing elit. Maxime, optio. Suscipit repellendus asperiores ipsam
-                                                    ducimus odio iure porro exercitationem ex, facere voluptatem beatae
-                                                    numquam
-                                                    obcaecati, architecto praesentium mollitia nam inventore?</p>
+                                                <div>
+                                                    <span>Chat</span>
+                                                    <span>Unfollow</span>
+                                                </div>
                                             </div>
                                         </div>
                                     @endfor
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div x-cloak x-show="open" class="block lg:hidden fixed inset-x-0 bottom-0 w-full h-fit p-2 bg-gradient-to-tr {{ 'from-[' . $preferences['color_1'] .']/90' }} {{ 'via-[' . $preferences['color_2'] . ']/90' }} {{ 'to-[' . $preferences['color_3'] . ']/90' }} lg:bg-none backdrop-blur-sm lg:backdrop-blur-0">
-                    <div class="grid grid-cols-2 gap-2 h-[6vh]">
-                        <div x-on:click="following = ! following, chat = ! following" class="w-full h-fit p-2 text-center {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">Following</div>
-                        <div x-on:click="chat = ! chat, following = ! chat" class="w-full h-fit p-2 text-center {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">Chat</div>
-                    </div>
-                    <div class="w-full h-[80vh] {{ 'bg-[' . $preferences['color_primary'] . ']' }} overflow-x-clip overflow-y-auto border-0 rounded-lg">
-                        <div class="mb-16">
-                            <div x-cloak x-show="following" class="grid grid-cols-1 gap-1 p-2">
-                                <h1>Following</h1>
-                                @for ($i = 0; $i < 100; $i++)
-                                    <hr>
-                                    <div class="w-full h-fit flex flex-row space-x-2 space-y-0 items-center">
-                                        <div class="aspect-square w-auto h-[7vh] bg-black border-0 rounded-full"></div>
-                                        <div>
-                                            <p class="font-bold">User{{ $i }}</p>
-                                            <div>
-                                                <span>Chat</span>
-                                                <span>Unfollow</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endfor
-                            </div>
-                            <div x-cloak x-show="chat" class="grid grid-cols-1 gap-1 p-2">
-                                <h1>Chats</h1>
-                                @for ($i = 0; $i < 100; $i++)
-                                    <hr>
-                                    <div class="w-full h-fit flex flex-row space-x-2 space-y-0 items-center">
-                                        <div class="aspect-square w-auto h-[7vh] bg-black border-0 rounded-full"></div>
-                                        <div>
-                                            <p class="font-bold">User{{ $i }}</p>
-                                            <p class="font-thin text-gray-600 line-clamp-2">Lorem ipsum, dolor sit amet
-                                                consectetur
-                                                adipisicing elit. Maxime, optio. Suscipit repellendus asperiores ipsam
-                                                ducimus odio iure porro exercitationem ex, facere voluptatem beatae numquam
-                                                obcaecati, architecto praesentium mollitia nam inventore?</p>
-                                        </div>
-                                    </div>
-                                @endfor
+                                <div x-cloak x-show="chat" class="grid grid-cols-1 gap-1 p-2">
+                                    <livewire:chat :$chats :$preferences />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="fixed lg:hidden bottom-2">
-                <div x-on:click="open = ! open" class="w-fit h-fit p-1 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg select-none hover:cursor-pointer">
-                    <div class="w-fit h-fit p-1 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
-                        <div class="w-fit h-fit p-1 bg-gradient-to-tr {{ 'from-[' . $preferences['color_1'] .']' }} {{ 'via-[' . $preferences['color_2'] . ']' }} {{ 'to-[' . $preferences['color_3'] . ']' }} border-0 rounded-lg">
-                            <div class="w-fit h-fit px-1 py-0 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
-                                <div class="w-fit h-fit px-2 py-1 bg-clip-text text-xl text-transparent font-black bg-gradient-to-tr {{ 'from-[' . $preferences['color_1'] .']' }} {{ 'via-[' . $preferences['color_2'] . ']' }} {{ 'to-[' . $preferences['color_3'] . ']' }} border-0 rounded-lg select-none">Chat & Following</div>
+                <div x-on:click="open = ! open" class="w-fit h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg select-none hover:cursor-pointer">
+                    <div class="w-fit h-fit p-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
+                        <div class="w-fit h-fit p-1 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
+                            <div class="w-fit h-fit p-1 bg-gradient-to-tr {{ 'from-[' . $preferences['color_1'] .']' }} {{ 'via-[' . $preferences['color_2'] . ']' }} {{ 'to-[' . $preferences['color_3'] . ']' }} border-0 rounded-lg">
+                                <div class="w-fit h-fit px-1 py-0 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
+                                    <div class="w-fit h-fit px-2 py-1 bg-clip-text text-xl text-transparent font-black bg-gradient-to-tr {{ 'from-[' . $preferences['color_1'] .']' }} {{ 'via-[' . $preferences['color_2'] . ']' }} {{ 'to-[' . $preferences['color_3'] . ']' }} border-0 rounded-lg select-none">Chat & Following</div>
+                                </div>
                             </div>
                         </div>
                     </div>

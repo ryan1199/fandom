@@ -51,7 +51,6 @@
                     </div>
                 @endif
                 <div class="flex flex-row space-x-1 space-y-0 items-center">
-                    {{-- <input wire:model.live="content" type="text" placeholder="Your message" title="Your message" class="form-input w-full h-fit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg"> --}}
                     <textarea wire:model.live="content" placeholder="Your message" title="Your message" cols="30" rows="1" class="form-input w-full h-fit border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg"></textarea>
                     <button type="submit" title="Send your message"
                         class="w-fit h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">

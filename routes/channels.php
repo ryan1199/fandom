@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Chat;
 use App\Models\Discuss;
 use App\Models\Fandom;
 use Illuminate\Support\Facades\Broadcast;
@@ -29,4 +30,7 @@ Broadcast::channel('DeleteDiscussion.{id}', function ($id) {
 });
 Broadcast::channel('CreateDiscussion.{id}', function ($id) {
     return Fandom::find($id) != null;
+});
+Broadcast::channel('NewChatMessage.{id}', function ($id) {
+    return Chat::find($id) != null;
 });

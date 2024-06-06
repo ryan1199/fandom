@@ -21,6 +21,7 @@ class User extends Component
     public $galleries;
     public $posts;
     public $friendlist_id = [];
+    public $chats;
     public $preferences = [];
     protected $listeners = ['refreshComponent' => '$refresh'];
 
@@ -75,7 +76,7 @@ class User extends Component
     public function loadUser($username)
     {
         $user = ModelsUser::with([
-            'profile', 'avatar.image', 'cover.image', 'members.fandom', 'members.role', 'publishes'
+            'profile', 'avatar.image', 'cover.image', 'members.fandom', 'members.role', 'publishes', 'chats.messages.user', 'chats.users'
         ])->where('username', $username)->first();
 
         $this->user = $user;
@@ -87,6 +88,7 @@ class User extends Component
         $this->posts['self'] = $posts;
         $this->posts['friend'] = collect($posts)->whereIn('publish.visible', ['friend', 'public']);
         $this->posts['public'] = collect($posts)->where('publish.visible', 'public');
+        $this->chats = $this->user->chats;
 
         $this->reset('state');
     }

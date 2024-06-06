@@ -30,11 +30,15 @@ class Discuss extends Component
     public $preferences = [];
     public function render()
     {
-        $this->messages = $this->discuss->messages()->with(['user.cover.image', 'user.avatar.image'])->orderByDesc('created_at')->get();
-        $messages = collect($this->messages);
-        return view('livewire.discuss', [
-            'messages' => $messages
-        ]);
+        return view('livewire.discuss');
+    }
+    public function mount(ModelsDiscuss $discuss, $preferences, $managers, $members)
+    {
+        $this->discuss = $discuss;
+        $this->preferences = $preferences;
+        $this->managers = $managers;
+        $this->members = $members;
+        $this->loadLatestMessages();
     }
     public function submitMessage()
     {
@@ -70,7 +74,6 @@ class Discuss extends Component
             $this->reset('content', 'raw_content');
             $this->resetValidation();
             $this->dispatch('alert', 'success', 'Done, your message has been sent');
-            $this->loadLatestMessages();
             NewDiscussionMessage::dispatch($this->discuss, $message);
         } else {
             $this->dispatch('alert', 'error', 'Error, you can not send this message');
@@ -129,6 +132,7 @@ class Discuss extends Component
     }
     public function newMessage($event)
     {
-        $this->messages->push($event['message']);
+        $message = Message::with(['user'])->find($event['message']['id']);
+        $this->messages->prepend($message);
     }
 }
