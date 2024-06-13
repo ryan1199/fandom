@@ -97,4 +97,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Chat::class)->using(ChatUser::class);
     }
+    public function follows(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'follow', 'self_user_id', 'other_user_id')->using(Follow::class)->withTimestamps();
+    }
+    public function blocks(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'block', 'self_user_id', 'other_user_id')->using(Block::class)->withTimestamps();
+    }
 }

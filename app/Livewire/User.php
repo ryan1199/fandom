@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Follow;
 use App\Models\Gallery;
 use App\Models\Post;
 use App\Models\User as ModelsUser;
@@ -22,6 +23,10 @@ class User extends Component
     public $posts;
     public $friendlist_id = [];
     public $chats;
+    public $followed_users;
+    public $blocked_users;
+    public $followers;
+    public $following;
     public $preferences = [];
     protected $listeners = ['refreshComponent' => '$refresh'];
 
@@ -76,7 +81,7 @@ class User extends Component
     public function loadUser($username)
     {
         $user = ModelsUser::with([
-            'profile', 'avatar.image', 'cover.image', 'members.fandom', 'members.role', 'publishes', 'chats.messages.user', 'chats.users'
+            'profile', 'avatar.image', 'cover.image', 'members.fandom', 'members.role', 'publishes', 'chats.messages.user', 'chats.users', 'follows'
         ])->where('username', $username)->first();
 
         $this->user = $user;
@@ -89,8 +94,24 @@ class User extends Component
         $this->posts['friend'] = collect($posts)->whereIn('publish.visible', ['friend', 'public']);
         $this->posts['public'] = collect($posts)->where('publish.visible', 'public');
         $this->chats = $this->user->chats;
+        $this->followed_users = $this->user->follows;
+        $this->blocked_users = $this->user->blocks;
+        $this->loadFollowersAndFollowing();
 
         $this->reset('state');
+    }
+    public function loadFollowersAndFollowing()
+    {
+        $this->followers = Follow::where('other_user_id', $this->user->id)->get()->count();
+        $this->following = Follow::where('self_user_id', $this->user->id)->get()->count();
+    }
+    public function getListeners()
+    {
+        return [
+            "echo-private:User.{$this->user->id},UserFollowed" => 'loadFollowersAndFollowing',
+            "echo-private:User.{$this->user->id},UserUnfollowed" => 'loadFollowersAndFollowing',
+            "echo-private:User.{$this->user->id},UserBlocked" => 'loadFollowersAndFollowing',
+        ];
     }
     public function updatedState($value)
     {

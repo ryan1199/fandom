@@ -1,5 +1,5 @@
 <div x-data="{ open: @entangle('open').live }" x-cloak x-show="open" x-transition class="w-fit h-fit p-0 mx-auto border-0 rounded-lg z-10">
-    <div class="w-fit h-fit p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 rounded-lg">
+    <div class="w-fit h-fit p-1 bg-gradient-to-tr {{ 'from-[' . $preferences['color_1'] . ']' }} {{ 'via-[' . $preferences['color_2'] . ']' }} {{ 'to-[' . $preferences['color_3'] . ']' }} border-0 rounded-lg">
         <div class="w-fit h-fit p-4 flex flex-row space-x-4 space-y-0 justify-start items-center bg-white backdrop-blur-sm border-0 rounded-lg">
             <p class="@if($type == 'success') text-green-500 @elseif($type == 'error') text-red-500 @else text-black @endif font-semibold">{{ $message }}</p>
             <button class="w-fit h-full" @click="open = !open">
