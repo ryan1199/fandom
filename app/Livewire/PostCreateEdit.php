@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\Fandom;
 use App\Models\Gallery;
 use App\Models\Post;
 use App\Models\User;
@@ -36,17 +37,30 @@ class PostCreateEdit extends Component
     }
     public function mount()
     {
+        if(session()->has('temporary-post-' . Auth::user()->username)) {
+            $post = session()->get('temporary-post-'. Auth::user()->username);
+            $this->id = $post['id'];
+            $this->title = $post['title'];
+            $this->description = $post['description'];
+            $this->tags = $post['tags'];
+            $this->raw_body = $post['raw_body'];
+            $this->mode = $post['mode'];
+        }
         $this->toMarkdown();
         $this->cleanMarkdown();
         $user = User::with(['members.fandom.publishes.gallery', 'publishes.gallery'])->find(Auth::id());
         $fandoms = collect($user->members->pluck('fandom'));
-        $publishes = [];
-        foreach ($fandoms as $fandom) {
-            $publishes[] = $fandom->publishes->pluck('id');
+        $fandoms = Fandom::with('publishes.gallery')->whereIn('id', $fandoms->pluck('id'))->get();
+        $fandom_publish_ids = collect();
+        $user_publish_ids = collect();
+        foreach($fandoms as $fandom) {
+            $fandom_publish_ids->push($fandom->publishes->pluck('id'));
         }
-        $publishes[] = $user->publishes->pluck('gallery.id');
-        $publishes = Arr::collapse($publishes);
-        $this->galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $publishes)->get();
+        $user_publish_ids->push($user->publishes->pluck('id'));
+        $publish_ids = $fandom_publish_ids->concat($user_publish_ids);
+        $publish_ids = $publish_ids->flatten();
+        $publish_ids = $publish_ids->unique();
+        $this->galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $publish_ids)->get();
         $this->startPosition = Str::of($this->raw_body)->length();
         $this->endPosition = $this->startPosition;
     }
@@ -108,7 +122,7 @@ class PostCreateEdit extends Component
         $this->toMarkdown();
         $this->cleanMarkdown();
         $title = $this->title;
-        $slug = Str::slug($title);
+        $slug = Str::slug($title . '-post-by-' . Auth::user()->username);
         $description = $this->description;
         $body = $this->body;
         $raw_body = $this->raw_body;
@@ -125,12 +139,13 @@ class PostCreateEdit extends Component
             'tags' => $tags
         ];
         if ($this->mode == 'create') {
-            $this->dispatch('store_post', $data);
+            $this->storePost($data);
         } elseif ($this->mode == 'edit') {
             $post = Post::find($this->id);
-            $this->dispatch('update_post', $post, $data);
+            $this->updatePost($post, $data);
         }
         $this->resetExcept(['preferences', 'galleries']);
+        session()->forget('temporary-post-' . Auth::user()->username);
     }
     public function toMarkdown()
     {
@@ -156,5 +171,61 @@ class PostCreateEdit extends Component
         } else {
             $this->dispatch('alert', 'error', 'The selected image is unavailable')->to(Alert::class);
         }
+    }
+    public function savePostTemporary()
+    {
+        if($this->mode == 'create') {
+            $temporary_post = [
+                'id' => null,
+                'title' => $this->title,
+                'description' => $this->description,
+                'raw_body' => $this->raw_body,
+                'tags' => $this->tags,
+                'mode' => $this->mode,
+            ];
+        } else {
+            $temporary_post = [
+                'id' => $this->id,
+                'title' => $this->title,
+                'description' => $this->description,
+                'raw_body' => $this->raw_body,
+                'tags' => $this->tags,
+                'mode' => $this->mode,
+            ];
+        }
+        session()->put('temporary-post-' . Auth::user()->username, $temporary_post);
+        $this->dispatch('alert', 'success', 'Saved as temporary post');
+    }
+    protected function storePost(array $data)
+    {
+        $user = User::find(Auth::id());
+        $user->posts()->create([
+            'publish_id' => null,
+            'title' => $data['title'],
+            'slug' => $data['slug'],
+            'description' => $data['description'],
+            'body' => $data['body'],
+            'raw_body' => $data['raw_body'],
+            'tags' => $data['tags'],
+            'view' => 0,
+        ]);
+        $this->dispatch('alert', 'success', 'Success, the new post is stored')->to(Alert::class);
+        $this->dispatch('search')->to(PostSearch::class);
+    }
+    protected function updatePost(Post $post, array $data)
+    {
+        $this->authorize('update', $post);
+        $post->update([
+            'publish_id' => $post->publish_id,
+            'title' => $data['title'],
+            'slug' => $data['slug'],
+            'description' => $data['description'],
+            'body' => $data['body'],
+            'raw_body' => $data['raw_body'],
+            'tags' => $data['tags'],
+            'view' => $post->view,
+        ]);
+        $this->dispatch('alert', 'success', 'Success, the selected post is updated')->to(Alert::class);
+        $this->dispatch('search')->to(PostSearch::class);
     }
 }

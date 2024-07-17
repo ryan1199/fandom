@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Models\Chat;
 use App\Models\Follow;
 use App\Models\Gallery;
 use App\Models\Post;
 use App\Models\User as ModelsUser;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -81,7 +83,7 @@ class User extends Component
     public function loadUser($username)
     {
         $user = ModelsUser::with([
-            'profile', 'avatar.image', 'cover.image', 'members.fandom', 'members.role', 'publishes', 'chats.messages.user', 'chats.users', 'follows'
+            'profile', 'avatar.image', 'cover.image', 'members.fandom', 'members.role', 'publishes', 'chats.messages.user', 'chats.users', 'follows', 'blocks'
         ])->where('username', $username)->first();
 
         $this->user = $user;
@@ -104,6 +106,21 @@ class User extends Component
     {
         $this->followers = Follow::where('other_user_id', $this->user->id)->get()->count();
         $this->following = Follow::where('self_user_id', $this->user->id)->get()->count();
+    }
+    public function chatTo()
+    {
+        $chat = Chat::query()->whereHas('users',function (Builder $query) {
+            $query->whereIn('user_id', [$this->user->id, Auth::id()]);
+        })->first();
+        if($chat == null)
+        {
+            $chat = new Chat();
+            $chat->save();
+            $chat->users()->attach([$this->user->id, Auth::id()]);
+        }
+        $this->dispatch('refresh')->to(RightSideNavigationBar::class);
+        $this->dispatch('open')->to(RightSideNavigationBar::class);
+        $this->dispatch('openChat', $chat->id)->to(RightSideNavigationBar::class);
     }
     public function getListeners()
     {

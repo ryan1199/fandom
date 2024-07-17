@@ -5,12 +5,14 @@ namespace App\Livewire;
 use App\Events\NewChatMessage;
 use App\Models\Chat;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Reactive;
 
 class ChatForm extends Component
 {
@@ -18,14 +20,24 @@ class ChatForm extends Component
     public $user1;
     #[Locked]
     public $user2;
+    #[Reactive]
+    public $user_ids = [];
     public $content = '';
     public $preferences = [];
     public function render()
     {
         return view('livewire.chat-form');
     }
+    public function mount(User $user1, User $user2, $user_ids, $preferences)
+    {
+        $this->user1 = $user1;
+        $this->user2 = $user2;
+        $this->user_ids = $user_ids;
+        $this->preferences = $preferences;
+    }
     public function submitChat()
     {
+        $this->authorize('submit', [Chat::class, $this->user_ids]);
         $validated = Validator::make(
             [
                 'content' => $this->content
@@ -59,12 +71,13 @@ class ChatForm extends Component
             ]);
             $result = true;
         });
-        $this->reset('content');
         if ($result) {
             NewChatMessage::dispatch($chat, $message);
             $this->dispatch('alert','success', 'Done, your message has been sent');
         } else {
             $this->dispatch('alert', 'error', 'Error, your message not sent');
         }
+        $this->reset('content');
+        $this->resetValidation();
     }
 }

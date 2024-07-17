@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -114,12 +115,12 @@ class ProfileSetting extends Component
         $validated = Validator::make(data: [
             'status' => $this->status
         ], rules: [
-            'status' => 'required|max:50'
+            'status' => 'required|max:100'
         ])->validate();
         
         $user = User::where('id', $this->user->id)->first();
         Profile::where('user_id', $user->id)->update([
-            'status' => $validated['status'],
+            'status' => clean(Str::of($validated['status'])->markdown()),
         ]);
 
         $this->reset(['status']);
@@ -133,12 +134,12 @@ class ProfileSetting extends Component
         $validated = Validator::make(data: [
             'description' => $this->description
         ], rules: [
-            'description' => 'required|max:100'
+            'description' => 'required|max:500'
         ])->validate();
         
         $user = User::where('id', $this->user->id)->first();
         Profile::where('user_id', $user->id)->update([
-            'description' => $validated['description'],
+            'description' => clean(Str::of($validated['description'])->markdown()),
         ]);
 
         $this->reset(['description']);

@@ -16,7 +16,6 @@ class DiscussCreate extends Component
     public $name = '';
     public $visible = 'public';
     public $available_visible = ['public', 'member', 'manager'];
-    public $managers = [];
     public $preferences = [];
     public function render()
     {
@@ -24,7 +23,7 @@ class DiscussCreate extends Component
     }
     public function createDiscussion()
     {
-        $this->authorize('create', [Discuss::class, $this->managers]);
+        $this->authorize('create', [Discuss::class, $this->fandom]);
         $validated = Validator::make(
             [
                 'name' => $this->name,
@@ -50,7 +49,6 @@ class DiscussCreate extends Component
         $this->resetValidation();
         $this->dispatch('alert', 'success', 'Done, new discussion has been created');
         CreateDiscussion::dispatch($this->fandom);
-        $this->dispatch('load_fandom_details', $this->fandom->name);
     }
     public function updated()
     {

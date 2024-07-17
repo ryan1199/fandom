@@ -1,31 +1,21 @@
-<div class="container h-full mx-auto p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-[' . $preferences['color_text'] . ']' }} relative z-0">
-    <div class="select-none">
-        <x-nav :preferences="$preferences" />
-    </div>
-    <div class="fixed mx-auto inset-x-4 top-20 z-10 select-none">
-        <livewire:alert :preferences="$preferences" />
-    </div>
-    <div class="w-full h-fit flex flex-col lg:flex-row space-x-0 space-y-2 lg:space-x-2 lg:space-y-0 relative">
-        <div class="sticky top-0 w-full h-fit lg:max-w-screen-sm p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg">
-            <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg overflow-clip">
-                <div class="w-full h-hit p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['color_text'] . ']' }} text-left {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
-                    <div class="w-full h-fit flex flex-row justify-between items-center">
-                        <div class="font-semibold">Post List</div>
-                        <svg wire:click="createPost" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                        </svg>
+<div class="w-full h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} text-zinc-500 bg-zinc-100 select-none overflow-clip">
+    <div class="w-full h-fit flex flex-col lg:flex-row space-x-0 space-y-2 lg:space-x-0 lg:space-y-0">
+        <div class="w-full lg:max-w-screen-sm h-fit max-h-[25vh] lg:max-h-[100vh] p-2 pb-0 lg:pb-2 pr-2 lg:pr-1 overflow-y-auto">
+            <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 text-left bg-zinc-50 border border-zinc-200 rounded-lg">
+                <div class="w-full h-fit flex flex-row justify-between items-center">
+                    <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-[' . $preferences['color_1'] . ']' }} {{ 'via-[' . $preferences['color_2'] . ']' }} {{ 'to-[' . $preferences['color_3'] . ']' }}">
+                          Post List
+                        </span>
                     </div>
-                    <livewire:post-search :preferences="$preferences" from="user" />
-                    <div class="max-h-[25vh] lg:max-h-full overflow-y-auto">
-                        <livewire:post-list :preferences="$preferences" from="post" />
-                    </div>
+                    <svg wire:click="createPost" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 {{ 'hover:text-[' . $preferences['color_2'] . ']' }} cursor-pointer animation-button">
+                        <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                    </svg>
                 </div>
+                @livewire(PostSearch::class, ['preferences' => $preferences, 'from' => 'user'])
+                @livewire(PostList::class, ['preferences' => $preferences, 'from' => 'post'])
             </div>
         </div>
-        <div class="sticky top-0 w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg">
-            <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
-                <livewire:post-create-edit :preferences="$preferences" />
-            </div>
-        </div>
+        @livewire(PostCreateEdit::class, ['preferences' => $preferences])
     </div>
 </div>

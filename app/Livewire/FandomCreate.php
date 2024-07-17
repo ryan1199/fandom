@@ -11,7 +11,9 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Str;
+use Livewire\Attributes\Title;
 
+#[Title('Fandom Create')]
 class FandomCreate extends Component
 {
     use WithFileUploads;

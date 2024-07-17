@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LogoutController;
+use App\Livewire\FandomCreate;
 use App\Livewire\FandomDetails;
 use App\Livewire\FandomList;
 use App\Livewire\ForgotPassword;
@@ -34,14 +35,23 @@ Route::get('/forgot-password', ForgotPassword::class)->middleware(['throttle:for
 Route::get('/new-password/{ticket}', NewPassword::class)->middleware(['throttle:new-password', 'no_auth', 'valid_ticket'])->name('new-password');
 Route::get('/verification', Verification::class)->middleware(['throttle:verification', 'no_auth'])->name('verification.send');
 Route::get('/verification/{ticket}', Verification::class)->middleware(['throttle:verification', 'no_auth', 'valid_ticket'])->name('verification.verify');
-Route::post('/logout', [LogoutController::class, 'process'])->middleware(['throttle:logout', 'auth'])->name('logout');
+Route::post('/logout', LogoutController::class)->middleware(['throttle:logout', 'auth'])->name('logout');
 Route::get('/user/{user}', User::class)->middleware('auth')->name('user');
 Route::get('/fandom-list', FandomList::class)->name('fandom-list');
+Route::get('/fandom-create', FandomCreate::class)->name('fandom-create');
 Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-details');
-Route::get('/post-manager', Post::class)->middleware('auth')->name('post');
+Route::get('/post-management', Post::class)->middleware('auth')->name('post');
 Route::get('/post-show/{post}', PostShow::class)->name('post.show');
-Route::get('/gallery-manager', Gallery::class)->middleware('auth')->name('gallery');
+Route::get('/gallery-management', Gallery::class)->middleware('auth')->name('gallery');
 Route::get('/gallery-show/{gallery}', GalleryShow::class)->name('gallery.show');
 Route::fallback(function () {
     return redirect()->route('home');
 });
+// jangan ngoper model bindng untuk crud ke komponen lain karena tidak aman (not done yet)
+// load discusses into the right side navigation bar
+// benerin semua wire:key
+// baru delete discuss
+// broadcast ke navigasi (done)
+// fandom setting on left side navigation bar
+// model binding
+// create fandom pindah ke navigasi saja

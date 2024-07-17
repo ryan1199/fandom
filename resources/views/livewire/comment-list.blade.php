@@ -1,6 +1,6 @@
 <div class="w-full h-fit flex flex-col space-x-0 space-y-4">
     @foreach ($child_comments as $child_comment)
-        <div wire:key="{{ rand() }}" x-data="{ {{ 'open_' . $child_comment->id }} : false }" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 items-start border-l-2 {{ 'border-[' . $preferences['color_secondary'] . ']' }}">
+        <div wire:key="{{ rand() }}" x-data="{ {{ 'open_' . $child_comment->id }}: false }" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 items-start border-l-2 {{ 'border-[' . $preferences['color_secondary'] . ']' }}">
             <div class="w-full h-fit p-2 flex flex-row space-x-4 space-y-0 items-start">
                 <a href="{{ route('user', $child_comment->user) }}" class="aspect-square w-[7vh] h-[7vh] block object-cover" draggable="false">
                     <img src="{{ asset('storage/avatars/'.$child_comment->user->avatar->image->url) }}" alt="{{ $child_comment->user->username }}" title="{{ $child_comment->user->username }}" class="aspect-square w-full h-full bg-black border-0 rounded-full object-cover block" draggable="false">

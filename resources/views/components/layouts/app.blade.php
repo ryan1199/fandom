@@ -16,10 +16,15 @@
         @else
             class="antialiased bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 select-none font-mono overflow-clip"
         @endif>
-        <div style="background-image: url('{{ asset('bg-black.svg') }}')" class="w-full h-full bg-repeat bg-auto bg-center">
-            <div class="bg-white/0 backdrop-blur-3xl">
-                <div class="w-screen h-screen overflow-x-clip overflow-y-auto">
-                    {{ $slot }}
+        <div style="background-image: url('{{ asset('bg-white.svg') }}')" class="w-full h-full bg-repeat bg-auto bg-center">
+            <div class="bg-zinc-100/10 backdrop-blur-3xl">
+                <div class="w-screen h-screen flex flex-row overflow-clip relative">
+                    @livewire(LeftSideNavigationBar::class)
+                    @livewire(Alert::class)
+                    <div class="w-full h-screen">
+                        {{ $slot }}
+                    </div>
+                    @livewire(RightSideNavigationBar::class)
                 </div>
             </div>
         </div>

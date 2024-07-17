@@ -19,6 +19,7 @@ class FandomDetails extends Component
     public $posts;
     public $galleries;
     public $discusses;
+    public $openDiscusses = [];
     public $time;
     public $timeNow;
     public $timePast;
@@ -75,7 +76,9 @@ class FandomDetails extends Component
     #[On('load_fandom_details')]
     public function loadFandomDetails($name)
     {
-        $fandom = Fandom::with(['avatar.image', 'cover.image', 'members.user.profile', 'members.user.cover.image', 'members.user.avatar.image', 'members.role', 'publishes', 'discusses'])->where('name', $name)->first();
+        $fandom = Fandom::with(['avatar.image', 'cover.image', 'members.user.profile', 'members.user.cover.image', 'members.user.avatar.image', 'members.role', 'publishes', 'discusses' => function($query) {
+            $query->where('visible', '=', 'public');
+        }])->where('name', $name)->first();
         $this->fandom = $fandom;
 
         $posts = Post::with(['user', 'publish'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get();
@@ -87,6 +90,11 @@ class FandomDetails extends Component
         $this->galleries['member'] = collect($galleries)->sortByDesc('created_at')->take(5);
 
         $this->discusses = $fandom->discusses;
+        $discuss_ids = collect();
+        foreach($this->discusses as $discuss) {
+            $discuss_ids->push($discuss->id);
+        }
+        $this->openDiscusses = array_fill_keys($discuss_ids->toArray(), false);
 
         $users = collect($fandom->members);
         $managers = $users->where('role.name', 'Manager');
@@ -129,15 +137,17 @@ class FandomDetails extends Component
     public function getListeners()
     {
         return [
-            "echo-private:DeleteDiscussion.{$this->fandom->id},DeleteDiscussion" => 'loadFandomDetailsAfterDeleteDiscussion',
-            "echo-private:CreateDiscussion.{$this->fandom->id},CreateDiscussion" => 'loadFandomDetailsAfterDeleteDiscussion',
+            "echo-private:DeleteDiscussion.{$this->fandom->id},DeleteDiscussion" => 'loadDiscussion',
+            "echo-private:CreateDiscussion.{$this->fandom->id},CreateDiscussion" => 'loadDiscussion',
         ];
     }
-    public function loadFandomDetailsAfterDeleteDiscussion($event)
+    public function loadDiscussion($event)
     {
         $name = $event['fandom']['name'];
-        $fandom = Fandom::where('name', $name)->first();
-        $this->discusses = Discuss::where('fandom_id', $fandom->id)->get();
+        $fandom = Fandom::with(['discusses' => function($query) {
+            $query->where('visible', '=', 'public');
+        }])->where('name', $name)->first();
+        $this->discusses = $fandom->discusses;
     }
     // public function updated($property)
     // {

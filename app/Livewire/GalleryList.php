@@ -4,8 +4,12 @@ namespace App\Livewire;
 
 use App\Models\Fandom;
 use App\Models\Gallery;
+use App\Models\Image;
+use App\Models\Publish;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -22,7 +26,6 @@ class GalleryList extends Component
     {
         return view('livewire.gallery-list');
     }
-    #[On('refresh_gallery_list')]
     public function mount($from, $id = null)
     {
         $this->from = $from;
@@ -76,5 +79,33 @@ class GalleryList extends Component
             }
         }
         $this->galleries = $galleries->values()->all();
+    }
+    public function editGallery(Gallery $gallery)
+    {
+        $this->authorize('update', $gallery);
+        $this->dispatch('edit_gallery', $gallery)->to(GalleryCreateEdit::class);
+    }
+    public function deleteGallery(Gallery $gallery) {
+        $this->authorize('delete', $gallery);
+        $id = $gallery->id;
+        $image = $gallery->image;
+        $result = false;
+        DB::transaction(function () use ($gallery, $image, &$result) {
+            Publish::where('id', $gallery->publish_id)->delete();
+            Gallery::where('id', $gallery->id)->delete();
+            Image::where('id', $image->id)->delete();
+            $result = true;
+        });
+        if($result) {
+            Storage::delete('galleries/' . $image->url);
+            $i = 0;
+            foreach($this->galleries as $gallery) {
+                if($gallery->id == $id) {
+                    Arr::forget($this->galleries, $i);
+                }
+                $i++;
+            }
+            $this->dispatch('alert', 'success', 'Success, the selected image is deleted')->to(Alert::class);
+        }
     }
 }

@@ -1,11 +1,5 @@
-<div class="container h-full mx-auto p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-[' . $preferences['color_text'] . ']' }} relative z-0">
-    <div class="select-none">
-        <x-nav :preferences="$preferences" />
-    </div>
-    <div class="fixed mx-auto inset-x-4 top-20 z-10">
-        <livewire:alert :preferences="$preferences" />
-    </div>
-    <div class="w-full h-fit grid grid-cols-12 grid-flow-row-dense auto-rows-max auto-cols-max gap-2 border-0 rounded-lg relative">
+<div class="w-full h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} text-zinc-500 overflow-clip">
+    <div class="w-full h-screen max-h-[100vh] p-2 grid grid-cols-12 grid-flow-row-dense auto-rows-max auto-cols-max gap-2 bg-zinc-100 relative overflow-y-auto">
         {{-- fandom details --}}
         <div class="w-full h-fit col-span-12 lg:col-span-6 p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg">
             <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
@@ -65,7 +59,7 @@
                                 <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                                     @if (in_array(Auth::id(), $members['id']))
                                         @foreach ($posts['member'] as $post)
-                                            <div class="w-full h-fit p-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
+                                            <div wire:key="post-member-{{ $loop->index }}" class="w-full h-fit p-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
                                                 <h1><a href="{{ route('post.show', $post) }}" class="cursor-pointer" draggable="false">{{ $post->title }}</a></h1>
                                                 <div class="flex flex-col">
                                                     <p>By {{ $post->user->username }}</p>
@@ -75,7 +69,7 @@
                                         @endforeach
                                     @else
                                         @foreach ($posts['public'] as $post)
-                                            <div class="w-full h-fit p-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
+                                            <div wire:key="post-public-{{ $loop->index }}" class="w-full h-fit p-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
                                                 <h1><a href="{{ route('post.show', $post) }}" class="cursor-pointer" draggable="false">{{ $post->title }}</a></h1>
                                                 <div class="flex flex-col">
                                                     <p>By {{ $post->user->username }}</p>
@@ -92,7 +86,7 @@
                                 <div class="w-full h-fit grid gap-2 grid-cols-3">
                                     @if (in_array(Auth::id(), $members['id']))
                                         @foreach ($galleries['member'] as $gallery)
-                                            <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
+                                            <div wire:key="gallery-member-{{ $loop->index }}" class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
                                                 <div class="flex flex-col space-x-0 space-y-2">
                                                     <a href="{{ route('gallery.show', $gallery) }}" draggable="false">
                                                         <img src="{{ asset('storage/galleries/' . $gallery->image->url) }}"
@@ -108,7 +102,7 @@
                                         @endforeach
                                     @else
                                         @foreach ($galleries['public'] as $gallery)
-                                            <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
+                                            <div wire:key="gallery-public-{{ $loop->index }}" class="w-full h-fit p-1 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg">
                                                 <div class="flex flex-col space-x-0 space-y-2">
                                                     <a href="{{ route('gallery.show', $gallery) }}" draggable="false">
                                                         <img src="{{ asset('storage/galleries/' . $gallery->image->url) }}"
@@ -193,7 +187,7 @@
                                 <hr class="{{ 'border-[' . $preferences['color_secondary'] . ']' }}">
                                 <div class="flex flex-row flex-wrap">
                                     @foreach ($members['manager']['list'] as $manager)
-                                        <div class="w-fit m-1">
+                                        <div wire:key="user-manager-{{ $loop->index }}" class="w-fit m-1">
                                             <a href="{{ route('user', $manager->user) }}" class="p-2 flex flex-row space-x-2 space-y-0 justify-start items-center {{ 'text-[' . $preferences['color_text'] . ']' }} {{ 'text-[' . $preferences['font_size'] . 'px]' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg" draggable="false">
                                                 <img src="{{ asset('storage/avatars/' . $manager->user->avatar->image->url) }}" alt="{{ $manager->user->username }}" class="w-10 h-10 object-cover object-center rounded-full" draggable="false">
                                                 <p>{{ $manager->user->username }}</p>
@@ -208,7 +202,7 @@
                                 <hr class="{{ 'border-[' . $preferences['color_secondary'] . ']' }}">
                                 <div class="flex flex-row flex-wrap">
                                     @foreach ($members['member']['list'] as $member)
-                                        <div class="w-fit m-1">
+                                        <div wire:key="user-member-{{ $loop->index }}" class="w-fit m-1">
                                             <a href="{{ route('user', $member->user) }}" class="p-2 flex flex-row space-x-2 space-y-0 justify-start items-center {{ 'text-[' . $preferences['color_text'] . ']' }} {{ 'text-[' . $preferences['font_size'] . 'px]' }} border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg" draggable="false">
                                                 <img src="{{ asset('storage/avatars/' . $member->user->avatar->image->url) }}" alt="{{ $member->user->username }}" class="w-10 h-10 object-cover object-center rounded-full" draggable="false">
                                                 <p>{{ $member->user->username }}</p>
@@ -220,58 +214,37 @@
                         </div>
                         @if (in_array(Auth::id(), $members['manager']['id']))
                             <div x-cloak x-show="tab == 'setting'">
-                                <livewire:fandom-setting :fandom="$fandom" :preferences="$preferences" :managers="$members['manager']['id']" />
+                                <livewire:fandom-setting :fandom="$fandom->slug" :preferences="$preferences" />
                             </div>
                         @endif
                     </div>
                 </div>
             </div>
         </div>
-        @if ($discusses->isNotEmpty())
-            {{-- discusses --}}
-            <div class="sticky top-0 w-full h-[100vh] col-span-12 lg:col-span-6 flex flex-col space-x-0 space-y-2">
-                <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']/10' }} backdrop-blur-sm border-0 rounded-lg">
-                    <div class="w-full h-fit border-0 rounded-lg">
-                        <div
-                        @if (in_array(Auth::id(), $members['manager']['id']))
-                            x-data="{ openDiscussCreateComponent: false }"
-                        @endif
-                        class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
-                            <div class="w-full h-fit p-2 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg relative">
-                                <h2 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{ 'text-[calc(2px+' . $preferences['font_size'] . 'px)]' }} font-medium">Discusses</h2>
-                                @if (in_array(Auth::id(), $members['manager']['id']))
-                                    <div x-on:click="openDiscussCreateComponent = ! openDiscussCreateComponent" class="size-8 p-1 border {{ 'border-[' . $preferences['color_secondary'] . ']' }} rounded-lg absolute right-1.5 inset-y-1.5">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                @endif
-                            </div>
-                            @if (in_array(Auth::id(), $members['manager']['id']))
-                                <div x-cloak x-show="openDiscussCreateComponent">
-                                    <livewire:discuss-create :fandom="$fandom" :preferences="$preferences" :managers="$members['manager']['id']" />
-                                </div>
-                            @endif
-                            @foreach ($discusses as $discuss)
-                                @switch($discuss->visible)
-                                    @case('manager')
-                                        @if (in_array(Auth::id(), $members['manager']['id']))
-                                            <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
-                                        @endif
-                                        @break
-                                    @case('member')
-                                        @if (in_array(Auth::id(), $members['member']['id']) || in_array(Auth::id(), $members['manager']['id']))
-                                            <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
-                                        @endif
-                                        @break
-                                    @default
-                                        <livewire:discuss :$discuss :$preferences :managers="$members['manager']['id']" :members="$members['member']['id']" :key="rand()" />
-                                @endswitch
-                            @endforeach
-                        </div>
+        {{-- discusses --}}
+        <div class="sticky top-0 w-full h-fit col-span-12 lg:col-span-6 flex flex-col space-x-0 space-y-2">
+            <div @if (in_array(Auth::id(), $members['manager']['id'])) x-data="{ openDiscussCreateComponent: false }" @endif class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-zinc-50 border border-zinc-200 rounded-lg">
+                <div class="w-full h-fit flex flex-row justify-between items-center select-none">
+                    <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-[' . $preferences['color_1'] . ']' }} {{ 'via-[' . $preferences['color_2'] . ']' }} {{ 'to-[' . $preferences['color_3'] . ']' }}">
+                            Discusses
+                        </span>
                     </div>
+                    @if (in_array(Auth::id(), $members['manager']['id']))
+                        <svg x-on:click="openDiscussCreateComponent = ! openDiscussCreateComponent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 {{ 'hover:text-[' . $preferences['color_2'] . ']' }} cursor-pointer animation-button">
+                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                        </svg>
+                    @endif
                 </div>
+                @if (in_array(Auth::id(), $members['manager']['id']))
+                    <div x-cloak x-show="openDiscussCreateComponent">
+                        @livewire(DiscussCreate::class, ['fandom' => $fandom, 'preferences' => $preferences])
+                    </div>
+                @endif
+                @if ($discusses->isNotEmpty())
+                    @livewire(Discuss::class, ['discuss_ids' => $discusses->pluck('id'), 'preferences' => $preferences, 'from' => 'fandom-discuss-' . $fandom->id], key("fandom-discuss"))
+                @endif
             </div>
-        @endif
+        </div>
     </div>
 </div>

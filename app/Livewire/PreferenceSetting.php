@@ -41,7 +41,7 @@ class PreferenceSetting extends Component
             'color_primary' => ['required', 'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
             'color_secondary' => ['required', 'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
             'color_text' => ['required', 'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
-            'font_size' => ['required', 'numeric', 'min:12', 'max:128'],
+            'font_size' => ['required', 'numeric', 'min:11', 'max:127'],
             'selected_font_family' => ['required', Rule::in($this->available_font_families)]
         ];
     }

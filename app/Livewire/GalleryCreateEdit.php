@@ -2,10 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Models\Fandom;
 use App\Models\Gallery;
+use App\Models\Image;
+use App\Models\Publish;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
@@ -37,21 +41,41 @@ class GalleryCreateEdit extends Component
     public function mount()
     {
         $users_fandom = User::with(['members.fandom'])->where('id', Auth::id())->first();
-        foreach ($users_fandom->members as $member) {
-            $this->available_publish_on[] = [
-                'from' => 'fandom',
-                'id' => $member->fandom->id,
-                'name' => $member->fandom->name
-            ];
-        }
+        $fandom_ids = $users_fandom->members->pluck('fandom.id');
+        $fandoms = Fandom::with([
+            'cover' => [
+                'image'
+            ],
+            'avatar' => [
+                'image'
+            ],
+        ])->whereIn('id', $fandom_ids)->get();
+        $user = User::with([
+            'profile',
+            'cover' => [
+                'image'
+            ],
+            'avatar' => [
+                'image'
+            ],
+        ])->find(Auth::id());
         $this->available_publish_on[] = [
             'from' => 'user',
-            'id' => Auth::id(),
-            'name' => Auth::user()->username
+            'data' => $user
         ];
-        $this->available_visible = ['self', 'member', 'public'];
-        $this->publish_on = $this->available_publish_on[0];
-        $this->visible = $this->available_visible[2];
+        foreach ($fandoms as $fandom) {
+            $this->available_publish_on[] = [
+                'from' => 'fandom',
+                'data' => $fandom
+            ];
+        }
+        $this->available_visible = ['self', 'friend', 'member', 'public'];
+        $this->publish_on = [
+            'from' => $this->available_publish_on[0]['from'],
+            'id' => $this->available_publish_on[0]['data']->id,
+            'name' => $this->available_publish_on[0]['data']->username
+        ];
+        $this->visible = $this->available_visible[3];
     }
     #[On('create_gallery')]
     public function createGallery()
@@ -70,11 +94,14 @@ class GalleryCreateEdit extends Component
         $gallery = Gallery::with(['publish.publishable'])->find($gallery->id);
         if(class_basename($gallery->publish->publishable_type) === 'User')
         {   
-            $this->setUploadLocation('User', $gallery->publish->publishable->id, $gallery->publish->publishable->username, $gallery->publish->visible);
+            // dd($this->publish_on);
+            // dd('User', $gallery->publish->publishable->id, $gallery->publish->publishable->username, $gallery->publish->visible);
+            $this->setUploadLocation('user', $gallery->publish->publishable->id, $gallery->publish->publishable->username, $gallery->publish->visible);
+            // dd($this->publish_on);
         }
         if(class_basename($gallery->publish->publishable_type) === 'Fandom')
         {   
-            $this->setUploadLocation('Fandom', $gallery->publish->publishable->id, $gallery->publish->publishable->name, $gallery->publish->visible);
+            $this->setUploadLocation('fandom', $gallery->publish->publishable->id, $gallery->publish->publishable->name, $gallery->publish->visible);
         }
     }
     public function saveGallery()
@@ -120,7 +147,7 @@ class GalleryCreateEdit extends Component
                 'image_name' => $image_name,
                 'tags' => $tags
             ];
-            $this->dispatch('store_gallery', $data);
+            $this->storeGallery($data);
         }
         if ($this->mode == 'edit') {
             if ($this->id != null) {
@@ -159,9 +186,102 @@ class GalleryCreateEdit extends Component
                 'visible' => $this->visible,
                 'tags' => $tags
             ];
-            $this->dispatch('update_gallery', $gallery, $data);
+            $this->updateGallery($gallery, $data);
         }
         $this->resetExcept(['preferences', 'available_publish_on', 'available_visible', 'publish_on', 'visible']);
+    }
+    protected function storeGallery(array $data)
+    {
+        $fandoms_id = [];
+        $user = User::find(Auth::id());
+        $users_fandom = User::with(['members.fandom'])->where('id', Auth::id())->first();
+        $available_visible = ['self', 'friend', 'member', 'public'];
+        $visible = $data['visible'];
+        foreach ($users_fandom->members as $member) {
+            $fandoms_id[] = $member->fandom->id;
+        }
+        if (!in_array($data['visible'], $available_visible, true)) {
+            $visible = 'public';
+        }
+        if ($data['publish_on']['from'] == 'user') {
+            if ($user->id == $data['publish_on']['id']) {
+                DB::transaction(function () use ($visible, $user, $data) {
+                    $publish = new Publish(['visible' => $visible]);
+                    $publish = $user->publishes()->save($publish);
+                    $gallery = $user->galleries()->create([
+                        'tags' => $data['tags'],
+                        'view' => 0,
+                        'publish_id' => $publish->id
+                    ]);
+                    $image = new Image(['url' => $data['image_name']]);
+                    $gallery->image()->save($image);
+                });
+            }
+        }
+        if ($data['publish_on']['from'] == 'fandom') {
+            if (in_array($data['publish_on']['id'], $fandoms_id, true)) {
+                $fandom = Fandom::find($data['publish_on']['id']);
+                DB::transaction(function () use ($visible, $user, $fandom, $data) {
+                    $publish = new Publish(['visible' => $visible]);
+                    $publish = $fandom->publishes()->save($publish);
+                    $gallery = $user->galleries()->create([
+                        'tags' => $data['tags'],
+                        'view' => 0,
+                        'publish_id' => $publish->id
+                    ]);
+                    $image = new Image(['url' => $data['image_name']]);
+                    $gallery->image()->save($image);
+                });
+            }
+        }
+        $this->dispatch('alert', 'success', 'Success, the new image is stored')->to(Alert::class);
+        $this->dispatch('search')->to(GallerySearch::class);
+    }
+    protected function updateGallery(Gallery $gallery, array $data)
+    {
+        $this->authorize('update', $gallery);
+        $fandoms_id = [];
+        $user = User::find(Auth::id());
+        $users_fandom = User::with(['members.fandom'])->where('id', Auth::id())->first();
+        $available_visible = ['self', 'friend', 'member', 'public'];
+        $visible = $data['visible'];
+        foreach ($users_fandom->members as $member) {
+            $fandoms_id[] = $member->fandom->id;
+        }
+        if (!in_array($data['visible'], $available_visible, true)) {
+            $visible = 'public';
+        }
+        if ($data['publish_on']['from'] == 'user') {
+            if ($user->id == $data['publish_on']['id']) {
+                DB::transaction(function () use ($visible, $user, $data, $gallery) {
+                    $publish_id = $gallery->publish_id;
+                    $publish = new Publish(['visible' => $visible]);
+                    $publish = $user->publishes()->save($publish);
+                    Gallery::where('id', $gallery->id)->update([
+                        'tags' => $data['tags'],
+                        'publish_id' => $publish->id
+                    ]);
+                    Publish::where('id', $publish_id)->delete();
+                });
+            }
+        }
+        if ($data['publish_on']['from'] == 'fandom') {
+            if (in_array($data['publish_on']['id'], $fandoms_id, true)) {
+                $fandom = Fandom::find($data['publish_on']['id']);
+                DB::transaction(function () use ($visible, $fandom, $data, $gallery) {
+                    $publish_id = $gallery->publish_id;
+                    $publish = new Publish(['visible' => $visible]);
+                    $publish = $fandom->publishes()->save($publish);
+                    Gallery::where('id', $gallery->id)->update([
+                        'tags' => $data['tags'],
+                        'publish_id' => $publish->id
+                    ]);
+                    Publish::where('id', $publish_id)->delete();
+                });
+            }
+        }
+        $this->dispatch('alert', 'success', 'Success, the selected image is updated')->to(Alert::class);
+        $this->dispatch('search')->to(GallerySearch::class);
     }
     public function setUploadLocation($from, $id, $name, $visible)
     {
@@ -171,5 +291,9 @@ class GalleryCreateEdit extends Component
             'name' => $name
         ];
         $this->visible = $visible;
+    }
+    public function updatedImage()
+    {
+        $this->resetValidation('image');
     }
 }

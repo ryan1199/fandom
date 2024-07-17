@@ -6,6 +6,7 @@ use App\Models\Fandom;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\WithFileUploads;
@@ -13,8 +14,8 @@ use Livewire\WithFileUploads;
 class FandomSetting extends Component
 {
     use WithFileUploads;
+    #[Locked]
     public $fandom;
-    public $manager;
     public $cover;
     public $avatar;
     #[Validate('required|max:100')]
@@ -24,50 +25,10 @@ class FandomSetting extends Component
     {
         return view('livewire.fandom-setting');
     }
-    public function mount(Fandom $fandom, $preferences, $managers)
+    public function mount(Fandom $fandom, $preferences)
     {
         $this->fandom = $fandom;
         $this->preferences = $preferences;
-        $this->manager = $managers;
-        if(Auth::check())
-        {
-            $this->preferences = session()->get('preference-' . Auth::user()->username);
-        } else {
-            $this->preferences = [
-                'color_1' => '#f97316',
-                'color_2' => '#ec4899',
-                'color_3' => '#6366f1',
-                'color_primary' => '#ffffff',
-                'color_secondary' => '#000000',
-                'color_text' => '#000000',
-                'font_size' => 16,
-                'selected_font_family' => 'mono',
-                'create_fandom_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ],
-                'account_settings_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ],
-                'profile_settings_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ],
-                'preference_settings_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ]
-            ];
-        }
     }
     public function updatedCover($value)
     {

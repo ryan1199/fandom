@@ -40,8 +40,9 @@ class AccountSetting extends Component
     public function updateAccount()
     {
         $this->authorize('update', $this->user);
-
+        
         $validated = $this->validate();
+        dd('yes');
 
         User::where('id', $this->user->id)->update([
             'password' => Hash::make($validated['password'])

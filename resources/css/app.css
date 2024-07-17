@@ -8,6 +8,9 @@ body {
 [x-cloak] {
     display: none !important;
 }
+input, select, textarea {
+    @apply !border hover:!border active:!border focus:!border checked:!border !ring-0 hover:!ring-0 active:!ring-0 focus:!ring-0 checked:!ring-0 !ring-offset-0 hover:!ring-offset-0 active:!ring-offset-0 focus:!ring-offset-0 checked:!ring-offset-0 !outline-none hover:!outline-none active:!outline-none focus:!outline-none checked:!outline-none;
+}
 ::-webkit-scrollbar-track {
     @apply w-1 h-1 rounded-full;
 }
@@ -25,6 +28,21 @@ body {
 }
 ::-webkit-scrollbar-corner {
     @apply w-1 h-1 rounded-full;
+}
+.animation {
+    @apply transition-all duration-200;
+}
+.animation-button {
+    @apply transition-all duration-100 hover:scale-110 active:duration-75 active:scale-[.90];
+}
+.animation-button-group {
+    @apply transition-all duration-100 group-hover:scale-110 group-active:duration-75 group-active:scale-[.90];
+}
+.animation-button-file {
+    @apply file:transition-all file:duration-100 file:hover:scale-110 file:active:duration-75 file:active:scale-[.90];
+}
+.animation-button-file-group {
+    @apply file:transition-all file:duration-100 file:group-hover:scale-110 file:group-active:duration-75 file:group-active:scale-[.90];
 }
 .nav-icons {
     @apply block aspect-square w-fit h-fit p-1 bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 border-0 border-transparent rounded-full;

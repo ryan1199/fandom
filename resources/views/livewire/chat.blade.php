@@ -1,10 +1,7 @@
-<div class="p-2 {{ 'bg-[' . $preferences['color_secondary'] . ']' }} border-0 rounded-lg">
-    <div class="p-2 grid grid-cols-1 gap-1 {{ 'bg-[' . $preferences['color_primary'] . ']' }} border-0 rounded-lg">
-        <h1 class="{{ 'text-[' . $preferences['color_text'] . ']' }} text-center {{'text-[calc(4px+' . $preferences['font_size'] . 'px)]' }} font-semibold select-none">Chat</h1>
-        <div class="h-fit grid grid-cols-1 gap-1">
-            @foreach ($chats as $chat)
-                <livewire:chat-details :$chat :$preferences :key="rand()"/>
-            @endforeach
-        </div>
-    </div>
+<div class="h-fit grid grid-cols-1 gap-1 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} text-zinc-500">
+    @forelse ($chats as $chat)
+        @livewire(ChatDetails::class, ['chat' => $chat->id, 'preferences' => $preferences], key('chat' . $chat->id))
+    @empty
+        <p>No chats</p>
+    @endforelse
 </div>

@@ -9,14 +9,21 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\Locked;
+use Livewire\Attributes\On;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
 class ChatDetails extends Component
 {
+    #[Locked]
     public $chat;
     public $messages;
-    public $open_chat = false;
+    public $openChat = false;
+    #[Locked]
     public $user;
+    #[Locked]
+    public $user_ids = [];
     public $preferences = [];
     public function render()
     {
@@ -28,6 +35,7 @@ class ChatDetails extends Component
         $this->messages = collect($this->chat->messages)->reverse();
         $this->user = $this->chat->users->where('id', '!=', Auth::id())->first();
         $this->preferences = $preferences;
+        $this->user_ids = $this->chat->users->pluck('id')->toArray();
     }
     public function getListeners()
     {
@@ -39,5 +47,11 @@ class ChatDetails extends Component
     {
         $message = Message::with(['user'])->find($event['message']['id']);
         $this->messages->prepend($message);
+    }
+    #[On('openChat')]
+    public function openChat($chat_id) {
+        if($chat_id == $this->chat->id) {
+            $this->openChat = ! $this->openChat;
+        }
     }
 }

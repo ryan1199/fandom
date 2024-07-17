@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class LogoutController extends Controller
 {
-    public function process(Request $request)
+    public function __invoke(Request $request)
     {
         if(Auth::check())
         {
