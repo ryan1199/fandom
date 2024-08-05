@@ -20,37 +20,35 @@ class FollowUnfollowButton extends Component
     {
         return view('livewire.follow-unfollow-button');
     }
-    public function mount($user1, $user2, $preferences)
+    public function mount(User $user1, User $user2, $preferences)
     {
-        $this->user1 = User::find($user1->id);
-        $this->user2 = User::find($user2->id);
+        $this->user1 = $user1;
+        $this->user2 = $user2;
         $this->checkFollowing();
         $this->preferences = $preferences;
     }
     public function follow()
     {
-        $this->checkFollowing();
         if($this->followed) {
             $this->unfollow();
         } else {
             $this->user1->follows()->attach($this->user2->id);
             $this->user1->blocks()->detach($this->user2->id);
-            $this->mount($this->user1, $this->user2, $this->preferences);
             UserFollowed::dispatch($this->user1, $this->user2);
             $this->dispatch('alert', 'success', 'Successfully follow ' . $this->user2->username);
         }
+        $this->checkFollowing();
     }
     public function unfollow()
     {
-        $this->checkFollowing();
         if(! $this->followed) {
             $this->follow();
         } else {
             $this->user1->follows()->detach($this->user2->id);
-            $this->mount($this->user1, $this->user2, $this->preferences);
             UserUnfollowed::dispatch($this->user1, $this->user2);
             $this->dispatch('alert', 'success', 'Successfully unfollow ' . $this->user2->username);
         }
+        $this->checkFollowing();
     }
     public function checkFollowing()
     {

@@ -18,37 +18,35 @@ class BlockUnblockButton extends Component
     {
         return view('livewire.block-unblock-button');
     }
-    public function mount($user1, $user2, $preferences)
+    public function mount(User $user1, User $user2, $preferences)
     {
-        $this->user1 = User::find($user1->id);
-        $this->user2 = User::find($user2->id);
+        $this->user1 = $user1;
+        $this->user2 = $user2;
         $this->checkBlocking();
         $this->preferences = $preferences;
     }
     public function block()
     {
-        $this->checkBlocking();
         if($this->blocked) {
             $this->unblock();
         } else {
             $this->user1->blocks()->attach($this->user2->id);
             $this->user1->follows()->detach($this->user2->id);
-            $this->loadBlocking();
             UserBlocked::dispatch($this->user1, $this->user2);
             $this->dispatch('alert', 'success', 'Successfully block ' . $this->user2->username);
         }
+        $this->checkBlocking();
     }
     public function unblock()
     {
-        $this->checkBlocking();
         if(! $this->blocked) {
             $this->block();
         } else {
             $this->user1->blocks()->detach($this->user2->id);
-            $this->loadBlocking();
             UserUnblocked::dispatch($this->user1, $this->user2);
             $this->dispatch('alert', 'success', 'Successfully unblock ' . $this->user2->username);
         }
+        $this->checkBlocking();
     }
     public function checkBlocking()
     {
@@ -57,10 +55,6 @@ class BlockUnblockButton extends Component
     public function loadBlocking()
     {
         $this->mount($this->user1, $this->user2, $this->preferences);
-    }
-    public function testLoadBlocking()
-    {
-        dd('yes');
     }
     public function getListeners()
     {

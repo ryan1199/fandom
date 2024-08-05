@@ -6,6 +6,7 @@ use App\Models\Chat as ModelsChat;
 use App\Models\ChatUser;
 use App\Models\Message;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Locked;
@@ -28,8 +29,18 @@ class Chat extends Component
         $this->preferences = $preferences;
         $this->loadChats();
     }
+    public function getListeners()
+    {
+        return [
+            "echo-private:Chat.{$this->user->id},NewChatMessage" => 'loadChats',
+            "echo-private:Chat.{$this->user->id},NewChat" => 'loadChats',
+        ];
+    }
     public function loadChats()
     {
-        $this->chats = $this->user->chats;
+        $user = User::with(['chats' => function ($query) {
+            $query->orderByDesc('updated_at');
+        }])->find($this->user->id);
+        $this->chats = $user->chats;
     }
 }

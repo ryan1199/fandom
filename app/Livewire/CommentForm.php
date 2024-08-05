@@ -17,9 +17,9 @@ use Illuminate\Support\Str;
 class CommentForm extends Component
 {
     #[Locked]
-    public $from;
+    public $post;
     #[Locked]
-    public $id;
+    public $gallery;
     public $content = "";
     public $reply;
     public $comment = null;
@@ -28,6 +28,13 @@ class CommentForm extends Component
     {
         return view('livewire.comment-form');
     }
+    public function mount($preferences, $post = null, $gallery = null, $reply = null)
+    {
+        $this->preferences = $preferences;
+        $this->post = $post;
+        $this->gallery = $gallery;
+        $this->reply = $reply;
+    }
     public function submitComment()
     {
         $rules = [
@@ -35,10 +42,8 @@ class CommentForm extends Component
             'reply' => 'nullable|exists:comments,id'
         ];
         $validated = $this->validate(rules: $rules);
-        $from = $this->from;
-        $id = $this->id;
         $result = false;
-        DB::transaction(function () use ($validated, $from, $id, &$result) {
+        DB::transaction(function () use ($validated, &$result) {
             $comment = new Comment([
                 'reply_to' => $validated['reply'],
                 'user_id' => Auth::id()
@@ -49,14 +54,12 @@ class CommentForm extends Component
                 'text' => $content,
                 'user_id' => Auth::id()
             ]);
-            if($from == 'App\Models\Gallery') {
-                $gallery = Gallery::find($id);
-                $comment = $gallery->comments()->save($comment);
+            if($this->post != null) {
+                $comment = $this->post->comments()->save($comment);
                 $message = $comment->message()->save($message);
-            } 
-            if($from == 'App\Models\Post') {
-                $post = Post::find($id);
-                $comment = $post->comments()->save($comment);
+            }
+            if($this->gallery != null) {
+                $comment = $this->gallery->comments()->save($comment);
                 $message = $comment->message()->save($message);
             }
             if($validated['reply'] != null) {

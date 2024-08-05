@@ -30,7 +30,7 @@ class CreateDiscussion implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('CreateDiscussion.' . $this->fandom->id),
+            new PrivateChannel('FandomListLeftSideNavigationBar.' . $this->fandom->id),
         ];
     }
 }

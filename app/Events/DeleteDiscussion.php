@@ -30,7 +30,7 @@ class DeleteDiscussion implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('DeleteDiscussion.' . $this->fandom->id),
+            new PrivateChannel('FandomListLeftSideNavigationBar.' . $this->fandom->id),
         ];
     }
 }

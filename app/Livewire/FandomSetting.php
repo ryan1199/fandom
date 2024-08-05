@@ -18,7 +18,7 @@ class FandomSetting extends Component
     public $fandom;
     public $cover;
     public $avatar;
-    #[Validate('required|max:100')]
+    #[Validate('required|max:500')]
     public $description = '';
     public $preferences = [];
     public function render()

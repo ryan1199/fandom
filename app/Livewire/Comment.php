@@ -17,9 +17,9 @@ class Comment extends Component
 {
     public $comments;
     #[Locked]
-    public $from;
+    public $post;
     #[Locked]
-    public $id;
+    public $gallery;
     #[Locked]
     public $available_sorting = ['Latest', 'Old', 'Like', 'Dislike'];
     public $sorting = 'Latest';
@@ -28,17 +28,25 @@ class Comment extends Component
     {
         return view('livewire.comment');
     }
-    public function mount($preferences, $from, $id)
+    public function mount($preferences, $post = null, $gallery = null)
     {
         $this->preferences = $preferences;
-        $this->from = $from;
-        $this->id = $id;
+        $this->post = $post;
+        $this->gallery = $gallery;
         $this->loadComments();
     }
     #[On('load_comments')]
     public function loadComments()
     {
-        $this->comments = ModelsComment::with(['user.cover.image', 'user.avatar.image', 'message', 'rates.user'])->where('commentable_id', $this->id)->where('commentable_type', $this->from)->get();
+        if ($this->post != null) {
+            $this->post->load(['comments']);
+            $this->comments = $this->post->comments->load(['user.cover.image', 'user.avatar.image', 'message', 'rates.user']);
+        }
+        if ($this->gallery != null) {
+            $this->gallery->load(['comments']);
+            $this->comments = $this->gallery->comments->load(['user.cover.image', 'user.avatar.image', 'message', 'rates.user']);
+        }
+        // $this->comments = ModelsComment::with(['user.cover.image', 'user.avatar.image', 'message', 'rates.user'])->where('commentable_id', $this->id)->where('commentable_type', $this->from)->get();
         $this->sortComments();
     }
     #[On('like_comment')]

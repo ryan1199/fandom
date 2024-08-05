@@ -40,16 +40,16 @@ class FandomListLeftSideNavigationBar extends Component
     public function getListeners()
     {
         return [
-            "echo-private:DeleteDiscussion.{$this->fandom->id},DeleteDiscussion" => 'loadDiscusses',
-            "echo-private:CreateDiscussion.{$this->fandom->id},CreateDiscussion" => 'loadDiscusses',
+            "echo-private:FandomListLeftSideNavigationBar.{$this->fandom->id},DeleteDiscussion" => 'loadDiscusses',
+            "echo-private:FandomListLeftSideNavigationBar.{$this->fandom->id},CreateDiscussion" => 'loadDiscusses',
         ];
     }
     public function loadDiscusses()
     {
         if($this->member->role->name == "Manager") {
-            $this->discusses = Discuss::where('fandom_id', $this->fandom->id)->get();
+            $this->discusses = Discuss::where('fandom_id', $this->fandom->id)->orderBy('name')->get();
         } elseif($this->member->role->name == "Member") {
-            $this->discusses = Discuss::where('fandom_id', $this->fandom->id)->whereIn('visible', ['member', 'public'])->get();
+            $this->discusses = Discuss::where('fandom_id', $this->fandom->id)->whereIn('visible', ['member', 'public'])->orderBy('name')->get();
         }
     }
 }

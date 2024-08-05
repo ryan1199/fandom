@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\Discuss;
+use App\Models\Fandom;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ResetDiscussion implements ShouldBroadcast
+class FandomCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,7 +19,7 @@ class ResetDiscussion implements ShouldBroadcast
      * Create a new event instance.
      */
     public function __construct(
-        public Discuss $discuss,
+        public Fandom $fandom,
     ){}
 
     /**
@@ -30,7 +30,7 @@ class ResetDiscussion implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('DiscussDetails.' . $this->discuss->id),
+            new Channel('FandomList', $this->fandom->id),
         ];
     }
 }

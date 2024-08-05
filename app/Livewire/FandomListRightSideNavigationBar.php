@@ -36,14 +36,15 @@ class FandomListRightSideNavigationBar extends Component
         return [
             "echo-private:DeleteDiscussion.{$this->fandom->id},DeleteDiscussion" => 'loadDiscusses',
             "echo-private:CreateDiscussion.{$this->fandom->id},CreateDiscussion" => 'loadDiscusses',
+            "echo-private:FandomListRightSideNavigationBar.{$this->fandom->id},NewDiscussionMessage" => 'loadDiscusses',
         ];
     }
     public function loadDiscusses()
     {
         if($this->member->role->name == "Manager") {
-            $this->discusses = Discuss::where('fandom_id', $this->fandom->id)->get();
+            $this->discusses = Discuss::where('fandom_id', $this->fandom->id)->orderByDesc('updated_at')->get();
         } elseif($this->member->role->name == "Member") {
-            $this->discusses = Discuss::where('fandom_id', $this->fandom->id)->whereIn('visible', ['member', 'public'])->get();
+            $this->discusses = Discuss::where('fandom_id', $this->fandom->id)->whereIn('visible', ['member', 'public'])->orderByDesc('updated_at')->get();
         }
     }
 }

@@ -32,7 +32,8 @@ class NewDiscussionMessage implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('NewDiscussionMessage.' . $this->discuss->id),
+            new PrivateChannel('DiscussDetails.' . $this->discuss->id),
+            new PrivateChannel('FandomListRightSideNavigationBar.' . $this->discuss->fandom_id),
         ];
     }
 }

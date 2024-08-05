@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Events\CreateDiscussion;
 use App\Models\Discuss;
+use App\Models\Fandom;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Locked;
@@ -15,11 +16,17 @@ class DiscussCreate extends Component
     public $fandom;
     public $name = '';
     public $visible = 'public';
+    #[Locked]
     public $available_visible = ['public', 'member', 'manager'];
     public $preferences = [];
     public function render()
     {
         return view('livewire.discuss-create');
+    }
+    public function mount(Fandom $fandom, $preferences)
+    {
+        $this->fandom = $fandom;
+        $this->preferences = $preferences;
     }
     public function createDiscussion()
     {

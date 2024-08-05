@@ -150,7 +150,9 @@
                     @endif
                 @endif
                 @auth
-                    <livewire:comment :preferences="$preferences" from="App\Models\Gallery" :id="$gallery->id"/>
+                    <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto">
+                        @livewire(Comment::class, ['preferences' => $preferences, 'post' => null, 'gallery' => $gallery])
+                    </div>
                 @endauth
             </div>
         </div>

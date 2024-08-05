@@ -40,7 +40,7 @@ class ChatDetails extends Component
     public function getListeners()
     {
         return [
-            "echo-private:NewChatMessage.{$this->chat->id},NewChatMessage" => 'newMessage',
+            "echo-private:ChatDetails.{$this->chat->id},NewChatMessage" => 'newMessage',
         ];
     }
     public function newMessage($event)

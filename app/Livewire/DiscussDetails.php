@@ -75,8 +75,8 @@ class DiscussDetails extends Component
     public function getListeners()
     {
         return [
-            "echo-private:NewDiscussionMessage.{$this->discuss->id},NewDiscussionMessage" => 'newMessage',
-            "echo-private:ResetDiscussion.{$this->discuss->id},ResetDiscussion" => 'loadLatestMessages',
+            "echo-private:DiscussDetails.{$this->discuss->id},NewDiscussionMessage" => 'newMessage',
+            "echo-private:DiscussDetails.{$this->discuss->id},ResetDiscussion" => 'loadLatestMessages',
         ];
     }
     public function newMessage($event)

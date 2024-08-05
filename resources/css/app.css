@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-    @apply bg-repeat bg-contain bg-center bg-blue-300;
+    @apply bg-repeat bg-contain bg-center;
 }
 [x-cloak] {
     display: none !important;
@@ -11,7 +11,7 @@ body {
 input, select, textarea {
     @apply !border hover:!border active:!border focus:!border checked:!border !ring-0 hover:!ring-0 active:!ring-0 focus:!ring-0 checked:!ring-0 !ring-offset-0 hover:!ring-offset-0 active:!ring-offset-0 focus:!ring-offset-0 checked:!ring-offset-0 !outline-none hover:!outline-none active:!outline-none focus:!outline-none checked:!outline-none;
 }
-::-webkit-scrollbar-track {
+/* ::-webkit-scrollbar-track {
     @apply w-1 h-1 rounded-full;
 }
 ::-webkit-scrollbar-track-piece {
@@ -28,7 +28,7 @@ input, select, textarea {
 }
 ::-webkit-scrollbar-corner {
     @apply w-1 h-1 rounded-full;
-}
+} */
 .animation {
     @apply transition-all duration-200;
 }

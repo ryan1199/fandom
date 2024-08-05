@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\FandomCreated;
 use App\Models\Fandom;
 use App\Models\Image;
 use App\Models\Role;
@@ -23,60 +24,23 @@ class FandomCreate extends Component
     public $avatar;
     #[Validate('required|unique:fandoms,name|max:50')]
     public $name = '';
-    #[Validate('required|max:100')]
+    #[Validate('required|max:500')]
     public $description = '';
     public $preferences = [];
     public function render()
     {
         return view('livewire.fandom-create');
     }
-    public function mount()
+    public function mount($preferences)
     {
-        if(Auth::check())
-        {
-            $this->preferences = session()->get('preference-' . Auth::user()->username);
-        } else {
-            $this->preferences = [
-                'color_1' => '#f97316',
-                'color_2' => '#ec4899',
-                'color_3' => '#6366f1',
-                'color_primary' => '#ffffff',
-                'color_secondary' => '#000000',
-                'color_text' => '#000000',
-                'font_size' => 16,
-                'selected_font_family' => 'mono',
-                'create_fandom_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ],
-                'account_settings_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ],
-                'profile_settings_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ],
-                'preference_settings_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ]
-            ];
-        }
+        $this->preferences = $preferences;
     }
     public function createFandom()
     {
         $this->validate();
-
-        DB::transaction(function() {
+        $fandom = '';
+        $result = false;
+        DB::transaction(function() use (&$fandom, &$result) {
             $slug = Str::slug($this->name, '-');
             $fandom = Fandom::create([
                 'name' => $this->name,
@@ -88,21 +52,24 @@ class FandomCreate extends Component
                 'user_id' => Auth::id(),
                 'role_id' => $role->id
             ]);
-    
             $cover_name = 'fandom/' . $slug . "/cover-" . $slug . "." . $this->cover->extension();
             $this->cover->storeAs('covers', $cover_name, 'public');
             $avatar_name = 'fandom/' . $slug . "/avatar-" . $slug . "." . $this->avatar->extension();
             $this->avatar->storeAs('avatars', $avatar_name, 'public');
-    
             $image_cover = new Image(['url' => $cover_name]);
             $image_avatar = new Image(['url' => $avatar_name]);
             $cover = $fandom->cover()->create([]);
             $avatar = $fandom->avatar()->create([]);
             $cover->image()->save($image_cover);
             $avatar->image()->save($image_avatar);
+            $result = true;
         });
-        $this->reset(['avatar','cover','name','description']);
-        $this->dispatch('alert','success','New fandom created')->to(Alert::class);
-        $this->dispatch('load_fandoms');
+        if ($result) {
+            $this->reset(['avatar','cover','name','description']);
+            $this->dispatch('alert','success','New fandom created')->to(Alert::class);
+            FandomCreated::dispatch($fandom);
+        } else {
+            $this->dispatch('alert', 'error', 'Error, fandom not created');
+        }
     }
 }

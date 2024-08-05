@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\NewChat;
 use App\Models\Chat;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -14,8 +15,6 @@ class LeftSideNavigationBar extends Component
 {
     #[Locked]
     public $user = null;
-    public $followed_users = null;
-    public $blocked_users = null;
     public $preferences = [];
     public function render()
     {
@@ -25,75 +24,71 @@ class LeftSideNavigationBar extends Component
     public function mount()
     {
         if(Auth::check()) {
-            $this->user = User::with([
-                'profile',
-                'cover' => [
-                    'image',
-                ],
-                'avatar' => [
-                    'image',
-                ],
-                'members' => [
-                    'fandom' => [
-                        'discusses'
-                    ],
-                    'role',
-                ],
-                'follows',
-                'blocks'
-            ])->find(Auth::id());
-            $followed_user_ids = $this->user->follows->pluck('id');
-            $this->followed_users = User::with([
-                'profile',
-                'cover' => [
-                    'image',
-                ],
-                'avatar' => [
-                    'image',
-                ],
-            ])->whereIn('id', $followed_user_ids)->get();
-            $blocked_user_ids = $this->user->blocks->pluck('id');
-            $this->blocked_users = User::with([
-                'profile',
-                'cover' => [
-                    'image',
-                ],
-                'avatar' => [
-                    'image',
-                ],
-            ])->whereIn('id', $blocked_user_ids)->get();
-            $this->preferences = session()->get('preference-' . $this->user->username);
+            $this->load();
+            if (session()->has('preference-' . Auth::user()->username)) {
+                $this->preferences = session()->get('preference-' . Auth::user()->username);
+            } else {
+                $this->preferences = session()->get('preference-global');
+                session()->put('preference-' . Auth::user()->username, $this->preferences);
+            }
         } else {
             $this->preferences = [
-                'color_1' => '#f97316',
-                'color_2' => '#ec4899',
-                'color_3' => '#6366f1',
-                'color_primary' => '#ffffff',
-                'color_secondary' => '#000000',
-                'color_text' => '#000000',
+                'color_1' => 'pink',
+                'color_2' => 'rose',
+                'color_3' => 'red',
                 'font_size' => 16,
                 'selected_font_family' => 'mono',
+                'dark_mode' => false,
             ];
+            session()->put('preference-global', $this->preferences);
         }
     }
     public function chatTo($user_id)
     {
-        $chat = Chat::query()->whereHas('users',function (Builder $query) use ($user_id) {
-            $query->whereIn('user_id', [$this->user->id, $user_id]);
-        })->first();
-        if($chat == null)
-        {
-            $chat = new Chat();
-            $chat->save();
-            $chat->users()->attach([$this->user->id, $user_id]);
+        $user = User::find($user_id);
+        if($user != null) {
+            $chats = Chat::query()->whereHas('users',function (Builder $query) use ($user_id) {
+                $query->where('user_id', $user_id);
+            })->get();
+            $selected_chat = '';
+            if($chats->isNotEmpty()) {
+                $user_ids = collect();
+                foreach($chats as $chat) {
+                    $user_ids = ($chat->users->pluck('id'));
+                    $user_ids->flatten();
+                    if($user_ids->containsStrict($this->user->id)) {
+                        $selected_chat = $chat;
+                    } else {
+                        $selected_chat = new Chat();
+                        $selected_chat->save();
+                        $selected_chat->users()->attach([$user_id, $this->user->id]);
+                    }
+                }
+            } 
+            if($chats->isEmpty()) {
+                $selected_chat = new Chat();
+                $selected_chat->save();
+                $selected_chat->users()->attach([$user_id, $this->user->id]);
+            }
+            NewChat::dispatch($user, $this->user);
+            $this->dispatch('open')->to(RightSideNavigationBar::class);
+            $this->dispatch('openChat', $selected_chat->id)->to(ChatDetails::class);
+        } else {
+            $this->dispatch('error', 'User not found');
         }
-        $this->dispatch('refresh')->to(RightSideNavigationBar::class);
-        $this->dispatch('open')->to(RightSideNavigationBar::class);
-        $this->dispatch('openChat', $chat->id)->to(ChatDetails::class);
     }
     public function openChat()
     {
-        $this->dispatch('refresh')->to(RightSideNavigationBar::class);
         $this->dispatch('open')->to(RightSideNavigationBar::class);
+    }
+    public function load()
+    {
+        if(Auth::check()) {
+            $this->user = User::with([
+                'members' => [
+                    'fandom',
+                ],
+            ])->find(Auth::id());
+        }
     }
 }

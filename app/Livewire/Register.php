@@ -18,7 +18,6 @@ use Livewire\Component;
 #[Title('Register')]
 class Register extends Component
 {
-    #[Validate()]
     public $username = '';
     public $email = '';
     public $password = '';
@@ -36,38 +35,12 @@ class Register extends Component
     public function mount()
     {
         $this->preferences = [
-            'color_1' => '#f97316',
-            'color_2' => '#ec4899',
-            'color_3' => '#6366f1',
-            'color_primary' => '#ffffff',
-            'color_secondary' => '#000000',
-            'color_text' => '#000000',
+            'color_1' => 'pink',
+            'color_2' => 'rose',
+            'color_3' => 'red',
             'font_size' => 16,
             'selected_font_family' => 'mono',
-            'create_fandom_modal_position' => [
-                'left' => 0,
-                'right' => 0,
-                'top' => 0,
-                'bottom' => 0
-            ],
-            'account_settings_modal_position' => [
-                'left' => 0,
-                'right' => 0,
-                'top' => 0,
-                'bottom' => 0
-            ],
-            'profile_settings_modal_position' => [
-                'left' => 0,
-                'right' => 0,
-                'top' => 0,
-                'bottom' => 0
-            ],
-            'preference_settings_modal_position' => [
-                'left' => 0,
-                'right' => 0,
-                'top' => 0,
-                'bottom' => 0
-            ]
+            'dark_mode' => false,
         ];
     }
     public function render()

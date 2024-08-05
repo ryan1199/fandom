@@ -11,10 +11,6 @@ use Livewire\Component;
 class CommentList extends Component
 {
     public $comments;
-    #[Locked]
-    public $from;
-    #[Locked]
-    public $id;
     public $reply = null;
     public $preferences = [];
     public function render()

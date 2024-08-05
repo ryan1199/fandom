@@ -16,19 +16,16 @@ class Follow extends Component
     {
         return view('livewire.follow');
     }
-    public function mount($user, $followed_users, $preferences)
+    public function mount(User $user, $preferences)
     {
         $this->user = $user;
-        $user_ids = $followed_users->pluck('id');
-        $this->followed_users = User::with(['profile', 'avatar.image', 'cover.image'])->whereIn('id', $user_ids)->get();
         $this->preferences = $preferences;
+        $this->loadFollowedUsers();
     }
     public function loadFollowedUsers()
     {
-        $users = User::with(['follows'])->find(Auth::id());
-        $followed_users = $users->follows;
-        $user_ids = $followed_users->pluck('id');
-        $this->followed_users = User::with(['profile', 'avatar.image', 'cover.image'])->whereIn('id', $user_ids)->get();
+        $user = $this->user->load(['follows']);
+        $this->followed_users = $user->follows->load(['profile', 'avatar.image', 'cover.image']);
     }
     public function getListeners()
     {

@@ -51,8 +51,9 @@ class DiscussForm extends Component
         DB::transaction(function () use (&$message, &$result) {
             $message = $this->discuss->messages()->create([
                 'text' => $message,
-                'user_id' => Auth::id()
+                'user_id' => Auth::id(),
             ]);
+            $this->discuss->touch();
             $result = true;
         });
         $this->reset('content', 'raw_content');

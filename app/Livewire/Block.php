@@ -16,19 +16,16 @@ class Block extends Component
     {
         return view('livewire.block');
     }
-    public function mount($user, $blocked_users, $preferences)
+    public function mount(User $user, $preferences)
     {
         $this->user = $user;
-        $user_ids = $blocked_users->pluck('id');
-        $this->blocked_users = User::with(['profile', 'avatar.image', 'cover.image'])->whereIn('id', $user_ids)->get();
         $this->preferences = $preferences;
+        $this->loadBlockedUsers();
     }
     public function loadBlockedUsers()
     {
-        $users = User::with(['blocks'])->find(Auth::id());
-        $blocked_users = $users->blocks;
-        $user_ids = $blocked_users->pluck('id');
-        $this->blocked_users = User::with(['profile', 'avatar.image', 'cover.image'])->whereIn('id', $user_ids)->get();
+        $user = $this->user->load(['blocks']);
+        $this->blocked_users = $user->blocks->load(['profile', 'avatar.image', 'cover.image']);
     }
     public function getListeners()
     {

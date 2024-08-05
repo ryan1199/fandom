@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
-        <title>@yield('title')</title>
+        <title>Reset Password - {{ config('app.name') }}</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width" />
         @vite('resources/css/app.css')
@@ -43,17 +43,17 @@
                                         </thead>
                                         <tbody class="w-full h-fit p-2 flex flex-col space-x-0 space-y-4 rounded-lg">
                                             <tr>
-                                                <td class="text-xl font-bold">@yield('subject')</td>
+                                                <td class="text-xl font-bold">Reset Password</td>
                                                 <td></td>
                                                 <td></td>
                                             </tr>
                                             <tr class="break-words text-justify">
-                                                <td colspan="3">@yield('message')</td>
+                                                <td colspan="3">Hallo ryan this is The Admin speaking, you or someone request to reset your password, if it was you kindly click the button below, if it was not you do what you have todo.</td>
                                             </tr>
                                             <tr class="w-full h-fit flex flex-row space-x-2 space-y-0 justify-center">
                                                 <td></td>
                                                 <td>
-                                                    <a href="@yield('buttonUrl')" target="_blank" rel="noopener" class="w-fit h-fit p-2 font-semibold hover:text-rose-500 bg-rose-50 rounded-lg select-none animation-button">@yield('buttonText')</a>
+                                                    <a href="youtube.com" target="_blank" rel="noopener" class="w-fit h-fit p-2 font-semibold hover:text-rose-500 bg-rose-50 rounded-lg select-none animation-button">I am your button</a>
                                                 </td>
                                                 <td></td>
                                             </tr>
