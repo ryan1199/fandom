@@ -12,10 +12,10 @@ use Livewire\Component;
 #[Title('New Password')]
 class NewPassword extends Component
 {
-    #[Validate()]
     public $ticket = null;
     public $password = '';
     public $password_confirmation = '';
+    public $preferences = [];
     public function rules()
     {
         return [
@@ -26,6 +26,14 @@ class NewPassword extends Component
     public function mount($ticket)
     {
         $this->ticket = $ticket;
+        $this->preferences = [
+            'color_1' => 'pink',
+            'color_2' => 'rose',
+            'color_3' => 'red',
+            'font_size' => 16,
+            'selected_font_family' => 'mono',
+            'dark_mode' => false,
+        ];
     }
     public function render()
     {

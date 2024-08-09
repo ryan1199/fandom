@@ -16,6 +16,7 @@ class ForgotPassword extends Component
 {
     #[Validate()]
     public $email = '';
+    public $preferences = [];
     public function rules()
     {
         return [
@@ -25,6 +26,17 @@ class ForgotPassword extends Component
     public function render()
     {
         return view('livewire.forgot-password');
+    }
+    public function mount()
+    {
+        $this->preferences = [
+            'color_1' => 'pink',
+            'color_2' => 'rose',
+            'color_3' => 'red',
+            'font_size' => 16,
+            'selected_font_family' => 'mono',
+            'dark_mode' => false,
+        ];
     }
     public function sendEmailForgotPassword()
     {

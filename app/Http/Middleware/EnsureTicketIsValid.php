@@ -21,6 +21,7 @@ class EnsureTicketIsValid
         {
             return $next($request);
         }
+        session()->flash('error', 'Ticket not valid');
         return redirect()->route('home');
     }
 }

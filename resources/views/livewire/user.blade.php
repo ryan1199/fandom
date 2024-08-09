@@ -1,69 +1,322 @@
-<div class="w-screen h-screen max-h-[100vh] mx-auto p-2 flex flex-col space-x-0 space-y-2 justify-center items-center relative z-0">
-    <livewire:alert/>
-    <div class="container h-fit max-h-[calc(100%-48px)] overflow-clip">
-        <div class="w-full h-fit p-2 bg-gray-50/90 backdrop-blur-sm border-0 border-transparent rounded-lg">
-            <div 
-                @if($user['id'] == Auth::id()) x-data="{ 
-                    setting_modal: @entangle('setting_modal').live,
-                    profile_modal: @entangle('profile_modal').live,
-                    account_modal: @entangle('account_modal').live,
-                    preference_modal: @entangle('preference_modal').live 
-                }" @endif 
-                wire:scroll 
-                class="w-full h-screen max-h-[calc(100vh-96px)] grid grid-cols-3 grid-flow-row-dense auto-cols-max gap-1 overflow-clip">
-                <div class="col-span-2 h-screen max-h-[calc(100vh-96px)] pr-1 flex flex-col space-x-0 space-y-2 overflow-y-auto overflow-x-clip">
-                    <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-black border-0 border-transparent rounded-lg">
-                        <div class="bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 relative">
-                            <img src="{{ asset('login_cover.svg') }}" alt="Login image" title="Login image" class="w-full h-full max-h-[30vh] object-cover block">
-                            <div class="absolute top-0 bottom-0 right-0 left-0 m-auto w-40 h-40 bg-white border-0 border-transparent rounded-full"></div>
+<div class="w-full h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} select-none overflow-clip">
+    <div class="w-full h-screen max-h-[100vh] p-2 flex flex-row space-x-2 space-y-0 {{ 'bg-' . $preferences['color_2'] . '-50/95' }} overflow-clip">
+        <div class="w-full max-w-md h-screen max-h-[calc(100vh-16px)] flex flex-col space-x-0 space-y-2 overflow-y-auto">
+            <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg break-inside-avoid-column">
+                <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+                      Profile
+                    </span>
+                </div>
+                <div class="w-full h-[30vh] relative select-none">
+                    @if ($cover !== null)
+                        <img src="{{ asset('storage/covers/'.$cover->image->url) }}" alt="Cover image {{ $user->username }}" title="Cover image {{ $user->username }}" class="w-full h-[30vh] object-cover block rounded-lg" draggable="false">
+                    @else
+                        <div class="w-full h-full bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-lg">
+                            <img src="{{ asset('login_cover.svg') }}" alt="Login image" title="Login image" class="w-full h-[30vh] object-cover block rounded-lg" draggable="false">
                         </div>
-                        <div class="w-full h-hit p-2 flex flex-col space-x-0 space-y-2 text-black text-center bg-white border border-black rounded-lg">
-                            <div class="w-full h-fit flex flex-row justify-between items-center">
-                                <h1 class="w-full text-center">{{ Auth::user()->username }}</h1>
-                                @if ($user['id'] == Auth::id())
-                                    <div class="relative">
-                                        <svg x-on:click="setting_modal = ! setting_modal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 bg-white">
-                                            <path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.85 1.567L9.05 4.889c-.02.12-.115.26-.297.348a7.493 7.493 0 0 0-.986.57c-.166.115-.334.126-.45.083L6.3 5.508a1.875 1.875 0 0 0-2.282.819l-.922 1.597a1.875 1.875 0 0 0 .432 2.385l.84.692c.095.078.17.229.154.43a7.598 7.598 0 0 0 0 1.139c.015.2-.059.352-.153.43l-.841.692a1.875 1.875 0 0 0-.432 2.385l.922 1.597a1.875 1.875 0 0 0 2.282.818l1.019-.382c.115-.043.283-.031.45.082.312.214.641.405.985.57.182.088.277.228.297.35l.178 1.071c.151.904.933 1.567 1.85 1.567h1.844c.916 0 1.699-.663 1.85-1.567l.178-1.072c.02-.12.114-.26.297-.349.344-.165.673-.356.985-.57.167-.114.335-.125.45-.082l1.02.382a1.875 1.875 0 0 0 2.28-.819l.923-1.597a1.875 1.875 0 0 0-.432-2.385l-.84-.692c-.095-.078-.17-.229-.154-.43a7.614 7.614 0 0 0 0-1.139c-.016-.2.059-.352.153-.43l.84-.692c.708-.582.891-1.59.433-2.385l-.922-1.597a1.875 1.875 0 0 0-2.282-.818l-1.02.382c-.114.043-.282.031-.449-.083a7.49 7.49 0 0 0-.985-.57c-.183-.087-.277-.227-.297-.348l-.179-1.072a1.875 1.875 0 0 0-1.85-1.567h-1.843ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" clip-rule="evenodd" />
-                                        </svg>
-                                        <div x-cloak x-show="setting_modal" class="whitespace-nowrap absolute right-0 top-10 p-2 bg-white border border-black rounded-lg">
-                                            <div x-on:click="account_modal = ! account_modal">Account setting</div>
-                                            <div x-on:click="profile_modal = ! profile_modal">Profile setting</div>
-                                            <div x-on:click="preference_modal = ! preference_modal">Preference setting</div>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa ipsam excepturi perferendis libero. Explicabo quaerat vel placeat quos neque vero voluptatem maxime illum rem necessitatibus reprehenderit, deserunt est voluptatum perspiciatis?</p>
+                    @endif
+                    @if ($avatar !== null)
+                        <img src="{{ asset('storage/avatars/'.$avatar->image->url) }}" alt="Avatar image {{ $user->username }}" title="Avatar image {{ $user->username }}" class="block absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[15vh] aspect-square object-cover rounded-full" draggable="false">
+                    @else
+                        <div class="absolute top-0 bottom-0 right-0 left-0 m-auto w-[15vh] h-[15vh] bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-full"></div>
+                    @endif
+                </div>
+                <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
+                    <div class="w-full h-fit flex flex-col space-x-0 space-y-1 text-pretty">
+                        <h1 class="w-full text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)+theme(fontSize.base)-' . $preferences['font_size'] . 'px)*1.2)]' }} font-semibold">{{ $user->username }}</h1>
+                        <div 
+                            @switch($preferences['color_2'])
+                                @case('slate')
+                                    class="font-thin prose prose-base prose-slate prose-headings:text-slate-900 prose-p:text-slate-900 prose-a:text-slate-900 prose-ol:text-slate-900 prose-ul:text-slate-900 prose-blockquote:text-slate-900 prose-blockquote:border-slate-900 prose-strong:text-slate-900 prose-em:text-slate-900 prose-code:text-slate-100 prose-pre:text-slate-900 prose-hr:border-slate-200 prose-table:text-slate-900 prose-li:text-slate-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-slate-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('gray')
+                                    class="font-thin prose prose-base prose-gray prose-headings:text-gray-900 prose-p:text-gray-900 prose-a:text-gray-900 prose-ol:text-gray-900 prose-ul:text-gray-900 prose-blockquote:text-gray-900 prose-blockquote:border-gray-900 prose-strong:text-gray-900 prose-em:text-gray-900 prose-code:text-gray-100 prose-pre:text-gray-900 prose-hr:border-gray-200 prose-table:text-gray-900 prose-li:text-gray-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-gray-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('zinc')
+                                    class="font-thin prose prose-base prose-zinc prose-headings:text-zinc-900 prose-p:text-zinc-900 prose-a:text-zinc-900 prose-ol:text-zinc-900 prose-ul:text-zinc-900 prose-blockquote:text-zinc-900 prose-blockquote:border-zinc-900 prose-strong:text-zinc-900 prose-em:text-zinc-900 prose-code:text-zinc-100 prose-pre:text-zinc-900 prose-hr:border-zinc-200 prose-table:text-zinc-900 prose-li:text-zinc-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-zinc-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('neutral')
+                                    class="font-thin prose prose-base prose-neutral prose-headings:text-neutral-900 prose-p:text-neutral-900 prose-a:text-neutral-900 prose-ol:text-neutral-900 prose-ul:text-neutral-900 prose-blockquote:text-neutral-900 prose-blockquote:border-neutral-900 prose-strong:text-neutral-900 prose-em:text-neutral-900 prose-code:text-neutral-100 prose-pre:text-neutral-900 prose-hr:border-neutral-200 prose-table:text-neutral-900 prose-li:text-neutral-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-neutral-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('stone')
+                                    class="font-thin prose prose-base prose-stone prose-headings:text-stone-900 prose-p:text-stone-900 prose-a:text-stone-900 prose-ol:text-stone-900 prose-ul:text-stone-900 prose-blockquote:text-stone-900 prose-blockquote:border-stone-900 prose-strong:text-stone-900 prose-em:text-stone-900 prose-code:text-stone-100 prose-pre:text-stone-900 prose-hr:border-stone-200 prose-table:text-stone-900 prose-li:text-stone-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-stone-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('red')
+                                    class="font-thin prose prose-base prose-red prose-headings:text-red-900 prose-p:text-red-900 prose-a:text-red-900 prose-ol:text-red-900 prose-ul:text-red-900 prose-blockquote:text-red-900 prose-blockquote:border-red-900 prose-strong:text-red-900 prose-em:text-red-900 prose-code:text-red-100 prose-pre:text-red-900 prose-hr:border-red-200 prose-table:text-red-900 prose-li:text-red-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-red-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('orange')
+                                    class="font-thin prose prose-base prose-orange prose-headings:text-orange-900 prose-p:text-orange-900 prose-a:text-orange-900 prose-ol:text-orange-900 prose-ul:text-orange-900 prose-blockquote:text-orange-900 prose-blockquote:border-orange-900 prose-strong:text-orange-900 prose-em:text-orange-900 prose-code:text-orange-100 prose-pre:text-orange-900 prose-hr:border-orange-200 prose-table:text-orange-900 prose-li:text-orange-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-orange-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('amber')
+                                    class="font-thin prose prose-base prose-amber prose-headings:text-amber-900 prose-p:text-amber-900 prose-a:text-amber-900 prose-ol:text-amber-900 prose-ul:text-amber-900 prose-blockquote:text-amber-900 prose-blockquote:border-amber-900 prose-strong:text-amber-900 prose-em:text-amber-900 prose-code:text-amber-100 prose-pre:text-amber-900 prose-hr:border-amber-200 prose-table:text-amber-900 prose-li:text-amber-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-amber-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('yellow')
+                                    class="font-thin prose prose-base prose-yellow prose-headings:text-yellow-900 prose-p:text-yellow-900 prose-a:text-yellow-900 prose-ol:text-yellow-900 prose-ul:text-yellow-900 prose-blockquote:text-yellow-900 prose-blockquote:border-yellow-900 prose-strong:text-yellow-900 prose-em:text-yellow-900 prose-code:text-yellow-100 prose-pre:text-yellow-900 prose-hr:border-yellow-200 prose-table:text-yellow-900 prose-li:text-yellow-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-yellow-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('lime')
+                                    class="font-thin prose prose-base prose-lime prose-headings:text-lime-900 prose-p:text-lime-900 prose-a:text-lime-900 prose-ol:text-lime-900 prose-ul:text-lime-900 prose-blockquote:text-lime-900 prose-blockquote:border-lime-900 prose-strong:text-lime-900 prose-em:text-lime-900 prose-code:text-lime-100 prose-pre:text-lime-900 prose-hr:border-lime-200 prose-table:text-lime-900 prose-li:text-lime-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-lime-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('green')
+                                    class="font-thin prose prose-base prose-green prose-headings:text-green-900 prose-p:text-green-900 prose-a:text-green-900 prose-ol:text-green-900 prose-ul:text-green-900 prose-blockquote:text-green-900 prose-blockquote:border-green-900 prose-strong:text-green-900 prose-em:text-green-900 prose-code:text-green-100 prose-pre:text-green-900 prose-hr:border-green-200 prose-table:text-green-900 prose-li:text-green-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-green-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('emerald')
+                                    class="font-thin prose prose-base prose-emerald prose-headings:text-emerald-900 prose-p:text-emerald-900 prose-a:text-emerald-900 prose-ol:text-emerald-900 prose-ul:text-emerald-900 prose-blockquote:text-emerald-900 prose-blockquote:border-emerald-900 prose-strong:text-emerald-900 prose-em:text-emerald-900 prose-code:text-emerald-100 prose-pre:text-emerald-900 prose-hr:border-emerald-200 prose-table:text-emerald-900 prose-li:text-emerald-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-emerald-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('teal')
+                                    class="font-thin prose prose-base prose-teal prose-headings:text-teal-900 prose-p:text-teal-900 prose-a:text-teal-900 prose-ol:text-teal-900 prose-ul:text-teal-900 prose-blockquote:text-teal-900 prose-blockquote:border-teal-900 prose-strong:text-teal-900 prose-em:text-teal-900 prose-code:text-teal-100 prose-pre:text-teal-900 prose-hr:border-teal-200 prose-table:text-teal-900 prose-li:text-teal-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-teal-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('cyan')
+                                    class="font-thin prose prose-base prose-cyan prose-headings:text-cyan-900 prose-p:text-cyan-900 prose-a:text-cyan-900 prose-ol:text-cyan-900 prose-ul:text-cyan-900 prose-blockquote:text-cyan-900 prose-blockquote:border-cyan-900 prose-strong:text-cyan-900 prose-em:text-cyan-900 prose-code:text-cyan-100 prose-pre:text-cyan-900 prose-hr:border-cyan-200 prose-table:text-cyan-900 prose-li:text-cyan-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-cyan-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('sky')
+                                    class="font-thin prose prose-base prose-sky prose-headings:text-sky-900 prose-p:text-sky-900 prose-a:text-sky-900 prose-ol:text-sky-900 prose-ul:text-sky-900 prose-blockquote:text-sky-900 prose-blockquote:border-sky-900 prose-strong:text-sky-900 prose-em:text-sky-900 prose-code:text-sky-100 prose-pre:text-sky-900 prose-hr:border-sky-200 prose-table:text-sky-900 prose-li:text-sky-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-sky-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('blue')
+                                    class="font-thin prose prose-base prose-blue prose-headings:text-blue-900 prose-p:text-blue-900 prose-a:text-blue-900 prose-ol:text-blue-900 prose-ul:text-blue-900 prose-blockquote:text-blue-900 prose-blockquote:border-blue-900 prose-strong:text-blue-900 prose-em:text-blue-900 prose-code:text-blue-100 prose-pre:text-blue-900 prose-hr:border-blue-200 prose-table:text-blue-900 prose-li:text-blue-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-blue-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('indigo')
+                                    class="font-thin prose prose-base prose-indigo prose-headings:text-indigo-900 prose-p:text-indigo-900 prose-a:text-indigo-900 prose-ol:text-indigo-900 prose-ul:text-indigo-900 prose-blockquote:text-indigo-900 prose-blockquote:border-indigo-900 prose-strong:text-indigo-900 prose-em:text-indigo-900 prose-code:text-indigo-100 prose-pre:text-indigo-900 prose-hr:border-indigo-200 prose-table:text-indigo-900 prose-li:text-indigo-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-indigo-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('violet')
+                                    class="font-thin prose prose-base prose-violet prose-headings:text-violet-900 prose-p:text-violet-900 prose-a:text-violet-900 prose-ol:text-violet-900 prose-ul:text-violet-900 prose-blockquote:text-violet-900 prose-blockquote:border-violet-900 prose-strong:text-violet-900 prose-em:text-violet-900 prose-code:text-violet-100 prose-pre:text-violet-900 prose-hr:border-violet-200 prose-table:text-violet-900 prose-li:text-violet-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-violet-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('purple')
+                                    class="font-thin prose prose-base prose-purple prose-headings:text-purple-900 prose-p:text-purple-900 prose-a:text-purple-900 prose-ol:text-purple-900 prose-ul:text-purple-900 prose-blockquote:text-purple-900 prose-blockquote:border-purple-900 prose-strong:text-purple-900 prose-em:text-purple-900 prose-code:text-purple-100 prose-pre:text-purple-900 prose-hr:border-purple-200 prose-table:text-purple-900 prose-li:text-purple-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-purple-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('fuchsia')
+                                    class="font-thin prose prose-base prose-fuchsia prose-headings:text-fuchsia-900 prose-p:text-fuchsia-900 prose-a:text-fuchsia-900 prose-ol:text-fuchsia-900 prose-ul:text-fuchsia-900 prose-blockquote:text-fuchsia-900 prose-blockquote:border-fuchsia-900 prose-strong:text-fuchsia-900 prose-em:text-fuchsia-900 prose-code:text-fuchsia-100 prose-pre:text-fuchsia-900 prose-hr:border-fuchsia-200 prose-table:text-fuchsia-900 prose-li:text-fuchsia-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-fuchsia-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('pink')
+                                    class="font-thin prose prose-base prose-pink prose-headings:text-pink-900 prose-p:text-pink-900 prose-a:text-pink-900 prose-ol:text-pink-900 prose-ul:text-pink-900 prose-blockquote:text-pink-900 prose-blockquote:border-pink-900 prose-strong:text-pink-900 prose-em:text-pink-900 prose-code:text-pink-100 prose-pre:text-pink-900 prose-hr:border-pink-200 prose-table:text-pink-900 prose-li:text-pink-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-pink-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @case('rose')
+                                    class="font-thin prose prose-base prose-rose prose-headings:text-rose-900 prose-p:text-rose-900 prose-a:text-rose-900 prose-ol:text-rose-900 prose-ul:text-rose-900 prose-blockquote:text-rose-900 prose-blockquote:border-rose-900 prose-strong:text-rose-900 prose-em:text-rose-900 prose-code:text-rose-100 prose-pre:text-rose-900 prose-hr:border-rose-200 prose-table:text-rose-900 prose-li:text-rose-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-rose-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                    @break
+                                @default
+                                    class="font-thin prose prose-base prose-rose prose-headings:text-rose-900 prose-p:text-rose-900 prose-a:text-rose-900 prose-ol:text-rose-900 prose-ul:text-rose-900 prose-blockquote:text-rose-900 prose-blockquote:border-rose-900 prose-strong:text-rose-900 prose-em:text-rose-900 prose-code:text-rose-100 prose-pre:text-rose-900 prose-hr:border-rose-200 prose-table:text-rose-900 prose-li:text-rose-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-rose-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                            @endswitch>
+                            {!! $profile->status !!}
+                        </div>
+                        <div 
+                            @switch($preferences['color_2'])
+                            @case('slate')
+                                class="font-thin prose prose-base prose-slate prose-headings:text-slate-900 prose-p:text-slate-900 prose-a:text-slate-900 prose-ol:text-slate-900 prose-ul:text-slate-900 prose-blockquote:text-slate-900 prose-blockquote:border-slate-900 prose-strong:text-slate-900 prose-em:text-slate-900 prose-code:text-slate-100 prose-pre:text-slate-900 prose-hr:border-slate-200 prose-table:text-slate-900 prose-li:text-slate-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-slate-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('gray')
+                                class="font-thin prose prose-base prose-gray prose-headings:text-gray-900 prose-p:text-gray-900 prose-a:text-gray-900 prose-ol:text-gray-900 prose-ul:text-gray-900 prose-blockquote:text-gray-900 prose-blockquote:border-gray-900 prose-strong:text-gray-900 prose-em:text-gray-900 prose-code:text-gray-100 prose-pre:text-gray-900 prose-hr:border-gray-200 prose-table:text-gray-900 prose-li:text-gray-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-gray-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('zinc')
+                                class="font-thin prose prose-base prose-zinc prose-headings:text-zinc-900 prose-p:text-zinc-900 prose-a:text-zinc-900 prose-ol:text-zinc-900 prose-ul:text-zinc-900 prose-blockquote:text-zinc-900 prose-blockquote:border-zinc-900 prose-strong:text-zinc-900 prose-em:text-zinc-900 prose-code:text-zinc-100 prose-pre:text-zinc-900 prose-hr:border-zinc-200 prose-table:text-zinc-900 prose-li:text-zinc-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-zinc-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('neutral')
+                                class="font-thin prose prose-base prose-neutral prose-headings:text-neutral-900 prose-p:text-neutral-900 prose-a:text-neutral-900 prose-ol:text-neutral-900 prose-ul:text-neutral-900 prose-blockquote:text-neutral-900 prose-blockquote:border-neutral-900 prose-strong:text-neutral-900 prose-em:text-neutral-900 prose-code:text-neutral-100 prose-pre:text-neutral-900 prose-hr:border-neutral-200 prose-table:text-neutral-900 prose-li:text-neutral-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-neutral-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('stone')
+                                class="font-thin prose prose-base prose-stone prose-headings:text-stone-900 prose-p:text-stone-900 prose-a:text-stone-900 prose-ol:text-stone-900 prose-ul:text-stone-900 prose-blockquote:text-stone-900 prose-blockquote:border-stone-900 prose-strong:text-stone-900 prose-em:text-stone-900 prose-code:text-stone-100 prose-pre:text-stone-900 prose-hr:border-stone-200 prose-table:text-stone-900 prose-li:text-stone-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-stone-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('red')
+                                class="font-thin prose prose-base prose-red prose-headings:text-red-900 prose-p:text-red-900 prose-a:text-red-900 prose-ol:text-red-900 prose-ul:text-red-900 prose-blockquote:text-red-900 prose-blockquote:border-red-900 prose-strong:text-red-900 prose-em:text-red-900 prose-code:text-red-100 prose-pre:text-red-900 prose-hr:border-red-200 prose-table:text-red-900 prose-li:text-red-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-red-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('orange')
+                                class="font-thin prose prose-base prose-orange prose-headings:text-orange-900 prose-p:text-orange-900 prose-a:text-orange-900 prose-ol:text-orange-900 prose-ul:text-orange-900 prose-blockquote:text-orange-900 prose-blockquote:border-orange-900 prose-strong:text-orange-900 prose-em:text-orange-900 prose-code:text-orange-100 prose-pre:text-orange-900 prose-hr:border-orange-200 prose-table:text-orange-900 prose-li:text-orange-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-orange-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('amber')
+                                class="font-thin prose prose-base prose-amber prose-headings:text-amber-900 prose-p:text-amber-900 prose-a:text-amber-900 prose-ol:text-amber-900 prose-ul:text-amber-900 prose-blockquote:text-amber-900 prose-blockquote:border-amber-900 prose-strong:text-amber-900 prose-em:text-amber-900 prose-code:text-amber-100 prose-pre:text-amber-900 prose-hr:border-amber-200 prose-table:text-amber-900 prose-li:text-amber-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-amber-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('yellow')
+                                class="font-thin prose prose-base prose-yellow prose-headings:text-yellow-900 prose-p:text-yellow-900 prose-a:text-yellow-900 prose-ol:text-yellow-900 prose-ul:text-yellow-900 prose-blockquote:text-yellow-900 prose-blockquote:border-yellow-900 prose-strong:text-yellow-900 prose-em:text-yellow-900 prose-code:text-yellow-100 prose-pre:text-yellow-900 prose-hr:border-yellow-200 prose-table:text-yellow-900 prose-li:text-yellow-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-yellow-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('lime')
+                                class="font-thin prose prose-base prose-lime prose-headings:text-lime-900 prose-p:text-lime-900 prose-a:text-lime-900 prose-ol:text-lime-900 prose-ul:text-lime-900 prose-blockquote:text-lime-900 prose-blockquote:border-lime-900 prose-strong:text-lime-900 prose-em:text-lime-900 prose-code:text-lime-100 prose-pre:text-lime-900 prose-hr:border-lime-200 prose-table:text-lime-900 prose-li:text-lime-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-lime-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('green')
+                                class="font-thin prose prose-base prose-green prose-headings:text-green-900 prose-p:text-green-900 prose-a:text-green-900 prose-ol:text-green-900 prose-ul:text-green-900 prose-blockquote:text-green-900 prose-blockquote:border-green-900 prose-strong:text-green-900 prose-em:text-green-900 prose-code:text-green-100 prose-pre:text-green-900 prose-hr:border-green-200 prose-table:text-green-900 prose-li:text-green-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-green-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('emerald')
+                                class="font-thin prose prose-base prose-emerald prose-headings:text-emerald-900 prose-p:text-emerald-900 prose-a:text-emerald-900 prose-ol:text-emerald-900 prose-ul:text-emerald-900 prose-blockquote:text-emerald-900 prose-blockquote:border-emerald-900 prose-strong:text-emerald-900 prose-em:text-emerald-900 prose-code:text-emerald-100 prose-pre:text-emerald-900 prose-hr:border-emerald-200 prose-table:text-emerald-900 prose-li:text-emerald-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-emerald-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('teal')
+                                class="font-thin prose prose-base prose-teal prose-headings:text-teal-900 prose-p:text-teal-900 prose-a:text-teal-900 prose-ol:text-teal-900 prose-ul:text-teal-900 prose-blockquote:text-teal-900 prose-blockquote:border-teal-900 prose-strong:text-teal-900 prose-em:text-teal-900 prose-code:text-teal-100 prose-pre:text-teal-900 prose-hr:border-teal-200 prose-table:text-teal-900 prose-li:text-teal-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-teal-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('cyan')
+                                class="font-thin prose prose-base prose-cyan prose-headings:text-cyan-900 prose-p:text-cyan-900 prose-a:text-cyan-900 prose-ol:text-cyan-900 prose-ul:text-cyan-900 prose-blockquote:text-cyan-900 prose-blockquote:border-cyan-900 prose-strong:text-cyan-900 prose-em:text-cyan-900 prose-code:text-cyan-100 prose-pre:text-cyan-900 prose-hr:border-cyan-200 prose-table:text-cyan-900 prose-li:text-cyan-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-cyan-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('sky')
+                                class="font-thin prose prose-base prose-sky prose-headings:text-sky-900 prose-p:text-sky-900 prose-a:text-sky-900 prose-ol:text-sky-900 prose-ul:text-sky-900 prose-blockquote:text-sky-900 prose-blockquote:border-sky-900 prose-strong:text-sky-900 prose-em:text-sky-900 prose-code:text-sky-100 prose-pre:text-sky-900 prose-hr:border-sky-200 prose-table:text-sky-900 prose-li:text-sky-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-sky-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('blue')
+                                class="font-thin prose prose-base prose-blue prose-headings:text-blue-900 prose-p:text-blue-900 prose-a:text-blue-900 prose-ol:text-blue-900 prose-ul:text-blue-900 prose-blockquote:text-blue-900 prose-blockquote:border-blue-900 prose-strong:text-blue-900 prose-em:text-blue-900 prose-code:text-blue-100 prose-pre:text-blue-900 prose-hr:border-blue-200 prose-table:text-blue-900 prose-li:text-blue-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-blue-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('indigo')
+                                class="font-thin prose prose-base prose-indigo prose-headings:text-indigo-900 prose-p:text-indigo-900 prose-a:text-indigo-900 prose-ol:text-indigo-900 prose-ul:text-indigo-900 prose-blockquote:text-indigo-900 prose-blockquote:border-indigo-900 prose-strong:text-indigo-900 prose-em:text-indigo-900 prose-code:text-indigo-100 prose-pre:text-indigo-900 prose-hr:border-indigo-200 prose-table:text-indigo-900 prose-li:text-indigo-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-indigo-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('violet')
+                                class="font-thin prose prose-base prose-violet prose-headings:text-violet-900 prose-p:text-violet-900 prose-a:text-violet-900 prose-ol:text-violet-900 prose-ul:text-violet-900 prose-blockquote:text-violet-900 prose-blockquote:border-violet-900 prose-strong:text-violet-900 prose-em:text-violet-900 prose-code:text-violet-100 prose-pre:text-violet-900 prose-hr:border-violet-200 prose-table:text-violet-900 prose-li:text-violet-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-violet-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('purple')
+                                class="font-thin prose prose-base prose-purple prose-headings:text-purple-900 prose-p:text-purple-900 prose-a:text-purple-900 prose-ol:text-purple-900 prose-ul:text-purple-900 prose-blockquote:text-purple-900 prose-blockquote:border-purple-900 prose-strong:text-purple-900 prose-em:text-purple-900 prose-code:text-purple-100 prose-pre:text-purple-900 prose-hr:border-purple-200 prose-table:text-purple-900 prose-li:text-purple-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-purple-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('fuchsia')
+                                class="font-thin prose prose-base prose-fuchsia prose-headings:text-fuchsia-900 prose-p:text-fuchsia-900 prose-a:text-fuchsia-900 prose-ol:text-fuchsia-900 prose-ul:text-fuchsia-900 prose-blockquote:text-fuchsia-900 prose-blockquote:border-fuchsia-900 prose-strong:text-fuchsia-900 prose-em:text-fuchsia-900 prose-code:text-fuchsia-100 prose-pre:text-fuchsia-900 prose-hr:border-fuchsia-200 prose-table:text-fuchsia-900 prose-li:text-fuchsia-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-fuchsia-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('pink')
+                                class="font-thin prose prose-base prose-pink prose-headings:text-pink-900 prose-p:text-pink-900 prose-a:text-pink-900 prose-ol:text-pink-900 prose-ul:text-pink-900 prose-blockquote:text-pink-900 prose-blockquote:border-pink-900 prose-strong:text-pink-900 prose-em:text-pink-900 prose-code:text-pink-100 prose-pre:text-pink-900 prose-hr:border-pink-200 prose-table:text-pink-900 prose-li:text-pink-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-pink-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @case('rose')
+                                class="font-thin prose prose-base prose-rose prose-headings:text-rose-900 prose-p:text-rose-900 prose-a:text-rose-900 prose-ol:text-rose-900 prose-ul:text-rose-900 prose-blockquote:text-rose-900 prose-blockquote:border-rose-900 prose-strong:text-rose-900 prose-em:text-rose-900 prose-code:text-rose-100 prose-pre:text-rose-900 prose-hr:border-rose-200 prose-table:text-rose-900 prose-li:text-rose-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-rose-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                                @break
+                            @default
+                                class="font-thin prose prose-base prose-rose prose-headings:text-rose-900 prose-p:text-rose-900 prose-a:text-rose-900 prose-ol:text-rose-900 prose-ul:text-rose-900 prose-blockquote:text-rose-900 prose-blockquote:border-rose-900 prose-strong:text-rose-900 prose-em:text-rose-900 prose-code:text-rose-100 prose-pre:text-rose-900 prose-hr:border-rose-200 prose-table:text-rose-900 prose-li:text-rose-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-rose-900 prose-ol:list-decimal prose-ul:list-disc prose-ol:list-inside prose-ul:list-inside"
+                            @endswitch>
+                            {!! $profile->description !!}
                         </div>
                     </div>
-                    <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 bg-black border-0 border-transparent rounded-lg">
-                        <div class="w-full h-hit p-2 text-black text-center bg-white border border-black rounded-lg">
-                            <h1>User activity</h1>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Culpa ipsam excepturi perferendis libero. Explicabo quaerat vel placeat quos neque vero voluptatem maxime illum rem necessitatibus reprehenderit, deserunt est voluptatum perspiciatis?</p>
+                    @if ($user->id != Auth::id())
+                        <div class="w-full h-fit flex flex-row space-x-2 space-y-0 justify-center items-center select-none">
+                            @livewire(FollowUnfollowButton::class, ['user1' => Auth::user()->username, 'user2' => $user->username, 'preferences' => $preferences], key('follow-unfollow-button-from-user-' . $user->id))
+                            @livewire(BlockUnblockButton::class, ['user1' => Auth::user()->username, 'user2' => $user->username, 'preferences' => $preferences], key('block-unblock-button-from-user-' . $user->id))
+                            <div wire:click="chatTo" class="w-fit h-fit p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg cursor-pointer animation-button">Chat</div>
+                        </div>
+                    @endif
+                    <div class="w-full h-fit max-h-[40vh] flex flex-col space-x-0 space-y-2 text-center overflow-clip overflow-y-auto">
+                        <div class="w-full h-fit columns-2 gap-1">
+                            <div class="w-full h-fit mb-1 p-2 break-inside-avoid-column flex flex-col space-x-0 space-y-1 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                                <div class="w-full flex flex-row justify-center items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-10 {{ 'text-' . $preferences['color_2'] . '-900' }}">
+                                        <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="w-fit {{ 'text-' . $preferences['color_2'] . '-900' }} text-center tracking-tighter">
+                                        @if ($followers >= 1000)
+                                            {{ round($followers/1000, 1) . 'k' }}
+                                        @else
+                                            {{ $followers }}
+                                        @endif
+                                    </p>
+                                </div>
+                                <p class="font-semibold {{ 'text-' . $preferences['color_2'] . '-900' }}">Followed</p>
+                            </div>
+                            <div class="w-full h-fit mb-1 p-2 break-inside-avoid-column flex flex-col space-x-0 space-y-1 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                                <div class="w-full flex flex-row justify-center items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-10 {{ 'text-' . $preferences['color_2'] . '-900' }}">
+                                        <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
+                                    </svg>
+                                    <p class="w-fit {{ 'text-' . $preferences['color_2'] . '-900' }} text-center tracking-tighter">
+                                        @if ($following >= 1000)
+                                            {{ round($following/1000, 1) . 'k' }}
+                                        @else
+                                            {{ $following }}
+                                        @endif
+                                    </p>
+                                </div>
+                                <p class="font-semibold {{ 'text-' . $preferences['color_2'] . '-900' }}">Following</p>
+                            </div>
+                            @foreach ($user->members as $member)
+                                <a wire:navigate wire:key="{{ 'fandom-' . $member->fandom->slug }}" wire:navigate.hover href="{{ route('fandom-details', $member->fandom) }}" class="w-full h-fit mb-1 p-2 break-inside-avoid-column flex flex-col space-x-0 space-y-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                                    <div class="w-full h-screen max-h-[13vh] flex flex-col space-x-0 space-y-2 overflow-y-auto">
+                                        <p class="font-semibold {{ 'text-' . $preferences['color_2'] . '-900' }}">{{ $member->fandom->name }}</p>
+                                        <div class="w-full h-[10vh] relative">
+                                            @if ($member->fandom->cover !== null)
+                                                <img src="{{ asset('storage/covers/'.$member->fandom->cover->image->url) }}" alt="Cover image {{ $member->fandom->name }}" title="Cover image {{ $member->fandom->name }}" class="w-full h-full object-cover block rounded-lg" draggable="false">
+                                            @else
+                                                <div class="w-full h-full bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-lg">
+                                                    <img src="{{ asset('login_cover.svg') }}" alt="Login image" title="Login image" class="w-full h-[10vh] object-cover block rounded-lg" draggable="false">
+                                                </div>
+                                            @endif
+                                            @if ($member->fandom->avatar !== null)
+                                                <img src="{{ asset('storage/avatars/'.$member->fandom->avatar->image->url) }}" alt="Avatar image {{ $member->fandom->name }}" title="Avatar image {{ $member->fandom->name }}" class="block absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[8vh] aspect-square object-cover rounded-full" draggable="false">
+                                            @else
+                                                <div class="absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[8vh] aspect-square bg-gradient-to-r {{ 'from-' . $preferences['color_2'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_2'] . '-900' }} rounded-full"></div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="font-semibold {{ 'text-' . $preferences['color_2'] . '-900' }}">{{ $member->role->name }}</div>
+                                </a>
+                            @endforeach
                         </div>
                     </div>
                 </div>
-                <div wire:scroll class="h-screen max-h-[calc(100vh-96px)] pr-1 overflow-y-auto overflow-x-clip">
-                    @if ($user['id'] == Auth::id())
-                        <div>
-                            <livewire:account-setting :user="$user"/>
-                            <livewire:profile-setting :user="$user"/>
-                            <livewire:preference-setting :user="$user"/>
-                        </div>
-                    @endif
-                    <div class="mb-2 p-2 bg-black border-0 border-transparent rounded-lg">
-                        <div class="p-2 bg-white border-0 border-transparent rounded-lg">
-                            <h1>Friends</h1>
-                        </div>
+            </div>
+            <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg break-inside-avoid-column">
+                <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+                      Posts
+                    </span>
+                </div>
+                <div class="w-full h-fit p-2 text-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                    <div class="flex flex-col space-x-0 space-y-2">
+                        @if (Auth::id() == $user->id)
+                            <a wire:navigate href="{{ route('post') }}" class="w-fit h-fit mx-auto px-2 text-center {{ 'hover:text-' . $preferences['color_2'] . '-500' }} font-semibold select-none animation-button" draggable="false"><div>Write a post</div></a>
+                            <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
+                        @endif
+                        @if (Auth::id() == $user->id)
+                            @forelse ($posts['self'] as $post)
+                                <a wire:navigate wire:key="{{ 'post-self-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                    <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
+                                    <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
+                                </a>
+                            @empty
+                                <div>You don't have any posts yet</div>
+                            @endforelse
+                        @else
+                            @if (in_array(Auth::id(), $friendlist_id))
+                                @forelse ($posts['friend'] as $post)
+                                    </div>
+                                    <a wire:navigate wire:key="{{ 'post-friend-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                        <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
+                                        <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
+                                    </a>
+                                @empty
+                                    <div>{{ $user->username }} doesn't have any posts to read</div>
+                                @endforelse
+                            @else
+                                @forelse ($posts['public'] as $post)
+                                    <a wire:navigate wire:key="{{ 'post-public-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                        <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
+                                        <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
+                                    </a>
+                                @empty
+                                    <div>{{ $user->username }} doesn't have any posts to read</div>
+                                @endforelse
+                            @endif
+                        @endif
                     </div>
-                    <div class="mb-2 p-2 bg-black border-0 border-transparent rounded-lg">
-                        <div class="p-2 bg-white border-0 border-transparent rounded-lg">
-                            <h1>Chat</h1>
-                        </div>
+                </div>
+            </div>
+        </div>
+        <div class="w-full h-screen max-h-[calc(100vh-16px)] overflow-y-auto">
+            <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg break-inside-avoid-column">
+                <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+                      Images
+                    </span>
+                </div>
+                <div class="w-full h-fit p-2 text-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                        @if (Auth::id() == $user->id)
+                            <div class="w-full h-40 flex flex-row items-center justify-center">
+                                <a wire:navigate href="{{ route('gallery') }}" class="w-fit h-fit font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button" draggable="false">Upload an image</a>
+                            </div>
+                        @endif
+                        @if (Auth::id() == $user->id)
+                            @forelse ($galleries['self'] as $gallery)
+                                <a wire:navigate wire:key="{{ 'gallery-self-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
+                                    <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation-button" draggable="false">
+                                </a>
+                            @empty
+                                <div class="w-full h-40 flex flex-row items-center justify-center">You don't have any images yet</div>
+                            @endforelse
+                        @else
+                            @forelse ($galleries['public'] as $gallery)
+                                <a wire:navigate wire:key="{{ 'gallery-public-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
+                                    <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation-button" draggable="false">
+                                </a>
+                            @empty
+                                <div class="w-full h-40 flex flex-row items-center justify-center">{{ $user->username }} doesn't have any images to show</div>
+                            @endforelse
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <x-nav/>
 </div>

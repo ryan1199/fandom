@@ -4,6 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -47,5 +52,57 @@ class User extends Authenticatable
     public function getRouteKeyName()
     {
         return 'username';
+    }
+    public function avatar(): MorphOne
+    {
+        return $this->morphOne(Avatar::class, 'avatarable');
+    }
+    public function cover(): MorphOne
+    {
+        return $this->morphOne(Cover::class, 'coverable');
+    }
+    public function profile(): HasOne
+    {
+        return $this->hasOne(Profile::class);
+    }
+    public function members(): HasMany
+    {
+        return $this->hasMany(Member::class);
+    }
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
+    public function publishes(): MorphMany
+    {
+        return $this->morphMany(Publish::class, 'publishable');
+    }
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(Gallery::class);
+    }
+    public function messages(): HasMany
+    {
+        return $this->hasMany(Message::class);
+    }
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+    public function rates(): HasMany
+    {
+        return $this->hasMany(Rate::class);
+    }
+    public function chats(): BelongsToMany
+    {
+        return $this->belongsToMany(Chat::class)->using(ChatUser::class);
+    }
+    public function follows(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'follow', 'self_user_id', 'other_user_id')->using(Follow::class)->withTimestamps();
+    }
+    public function blocks(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'block', 'self_user_id', 'other_user_id')->using(Block::class)->withTimestamps();
     }
 }

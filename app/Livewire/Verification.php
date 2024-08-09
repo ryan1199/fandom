@@ -16,6 +16,7 @@ class Verification extends Component
 {
     #[Validate()]
     public $email = '';
+    public $preferences = [];
     public function rules()
     {
         return [
@@ -24,8 +25,15 @@ class Verification extends Component
     }
     public function mount($ticket = null)
     {
-        if($ticket !== null)
-        {
+        $this->preferences = [
+            'color_1' => 'pink',
+            'color_2' => 'rose',
+            'color_3' => 'red',
+            'font_size' => 16,
+            'selected_font_family' => 'mono',
+            'dark_mode' => false,
+        ];
+        if ($ticket !== null) {
             User::where('ticket', $ticket)->update([
                 'ticket' => null,
                 'email_verified_at' => now(),
@@ -41,8 +49,7 @@ class Verification extends Component
     {
         $validated = $this->validate();
         $verified_user = User::whereNot('email_verified_at', null)->first();
-        if($verified_user)
-        {
+        if ($verified_user) {
             $this->reset('email');
             $this->dispatch('alert', 'error', 'The provided email is already verified')->to(Alert::class);
         } else {
