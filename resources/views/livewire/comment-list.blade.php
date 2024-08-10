@@ -6,7 +6,7 @@
                     @if ($child_comment->user->avatar != null)
                         <img src="{{ asset('storage/avatars/'.$child_comment->user->avatar->image->url) }}" alt="{{ $child_comment->user->username }}" title="{{ $child_comment->user->username }}" class="aspect-square w-full h-full rounded-full object-cover block" draggable="false">
                     @else
-                        <div class="aspect-square w-auto h-[3vh] bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-full object-cover"></div>
+                        <div class="aspect-square w-auto h-full bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-full object-cover"></div>
                     @endif
                 </a>
                 <div x-data="{ {{ 'open_comment_' . $child_comment->id }}: false }" class="w-full flex flex-col space-x-0 space-y-2">

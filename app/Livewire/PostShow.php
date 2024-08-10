@@ -21,10 +21,8 @@ class PostShow extends Component
     }
     public function mount(Post $post)
     {
-        if(Auth::check()) {
-            $this->authorize('view', $post);
-        }
         if (Auth::check()) {
+            $this->authorize('view', $post);
             $this->preferences = session()->get('preference-' . Auth::user()->username);
         } else {
             $this->preferences = [
@@ -46,7 +44,7 @@ class PostShow extends Component
         $this->post = Post::with(['user.profile','user.avatar.image','user.cover.image','publish.publishable','comments','rates.user'])->find($post->id);
     }
     #[On('like_post')]
-    public function likepost()
+    public function likePost()
     {
         $rate = Rate::where('rateable_type', "App\Models\Post")->where('rateable_id', $this->post->id)->where('user_id', Auth::id())->first();
         if($rate == null) {
@@ -74,7 +72,7 @@ class PostShow extends Component
         $this->loadPost($this->post);
     }
     #[On('dislike_post')]
-    public function dislikepost()
+    public function dislikePost()
     {
         $rate = Rate::where('rateable_type', "App\Models\Post")->where('rateable_id', $this->post->id)->where('user_id', Auth::id())->first();
         if($rate == null) {

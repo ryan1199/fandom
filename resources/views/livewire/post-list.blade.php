@@ -47,13 +47,15 @@
                                                         <img src="{{ asset('storage/covers/'.$array['data']->cover->image->url) }}" alt="Cover image {{ $array['data']->username }}" title="Cover image {{ $array['data']->username }}" class="w-full h-full object-cover block rounded-lg" draggable="false">
                                                     @else
                                                         <div class="w-full h-full bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-lg">
-                                                            <img src="{{ asset('login_cover.svg') }}" alt="Login image" title="Login image" class="w-full h-[15vh] object-cover block rounded-lg" draggable="false">
+                                                            <div style="background-image: url('{{ asset('cover-white.svg') }}')" class="w-full h-[15vh] bg-repeat bg-center rounded-lg"></div>
                                                         </div>
                                                     @endif
                                                     @if ($array['data']->avatar !== null)
                                                         <img src="{{ asset('storage/avatars/'.$array['data']->avatar->image->url) }}" alt="Avatar image {{ $array['data']->username }}" title="Avatar image {{ $array['data']->username }}" class="block absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[10vh] aspect-square object-cover rounded-full" draggable="false">
                                                     @else
-                                                        <div class="absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[10vh] aspect-square bg-gradient-to-tr {{ 'from-' . $preferences['color_2'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_2'] . '-900' }} rounded-full"></div>
+                                                        <div class="absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[10vh] aspect-square bg-gradient-to-tr {{ 'from-' . $preferences['color_2'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_2'] . '-900' }} rounded-full">
+                                                            <div style="background-image: url('{{ asset('avatar-white.svg') }}')" class="w-full h-full bg-contain bg-repeat bg-center rounded-full"></div>
+                                                        </div>
                                                     @endif
                                                 </div>
                                                 <div class="w-full h-full flex flex-row space-x-2 space-y-0 text-left">
@@ -73,14 +75,16 @@
                                                     @if ($array['data']->cover !== null)
                                                         <img src="{{ asset('storage/covers/'.$array['data']->cover->image->url) }}" alt="Cover image {{ $array['data']->name }}" title="Cover image {{ $array['data']->name }}" class="w-full h-full object-cover block rounded-lg" draggable="false">
                                                     @else
-                                                        <div class="w-full h-full bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-lg">
-                                                            <img src="{{ asset('login_cover.svg') }}" alt="Login image" title="Login image" class="w-full h-[15vh] object-cover block rounded-lg" draggable="false">
+                                                        <div class="w-full h-fit bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-lg">
+                                                            <div style="background-image: url('{{ asset('cover-white.svg') }}')" class="w-full h-[15vh] bg-repeat bg-center rounded-lg"></div>
                                                         </div>
                                                     @endif
                                                     @if ($array['data']->avatar !== null)
                                                         <img src="{{ asset('storage/avatars/'.$array['data']->avatar->image->url) }}" alt="Avatar image {{ $array['data']->name }}" title="Avatar image {{ $array['data']->name }}" class="block absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[10vh] aspect-square object-cover rounded-full" draggable="false">
                                                     @else
-                                                        <div class="absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[10vh] aspect-square bg-gradient-to-tr {{ 'from-' . $preferences['color_2'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_2'] . '-900' }} rounded-full"></div>
+                                                        <div class="absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[10vh] aspect-square bg-gradient-to-tr {{ 'from-' . $preferences['color_2'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_2'] . '-900' }} rounded-full">
+                                                            <div style="background-image: url('{{ asset('avatar-white.svg') }}')" class="w-full h-full bg-contain bg-repeat bg-center rounded-full"></div>
+                                                        </div>
                                                     @endif
                                                 </div>
                                                 <div class="w-full h-full flex flex-row space-x-2 space-y-0 text-left">

@@ -31,45 +31,17 @@ class GalleryShow extends Component
     }
     public function mount(Gallery $gallery)
     {
-        if(Auth::check()) {
-            $this->authorize('view', $gallery);
-        }
         if (Auth::check()) {
+            $this->authorize('view', $gallery);
             $this->preferences = session()->get('preference-' . Auth::user()->username);
         } else {
             $this->preferences = [
-                'color_1' => '#f97316',
-                'color_2' => '#ec4899',
-                'color_3' => '#6366f1',
-                'color_primary' => '#ffffff',
-                'color_secondary' => '#000000',
-                'color_text' => '#000000',
+                'color_1' => 'pink',
+                'color_2' => 'rose',
+                'color_3' => 'red',
                 'font_size' => 16,
                 'selected_font_family' => 'mono',
-                'create_fandom_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ],
-                'account_settings_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ],
-                'profile_settings_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ],
-                'preference_settings_modal_position' => [
-                    'left' => 0,
-                    'right' => 0,
-                    'top' => 0,
-                    'bottom' => 0
-                ]
+                'dark_mode' => false,
             ];
         }
         Gallery::where('id', $gallery->id)->update([
@@ -83,8 +55,12 @@ class GalleryShow extends Component
         if(Auth::check()) {
             if(class_basename($this->gallery->publish->publishable_type) === 'User') {
                 if(Auth::id() == $this->gallery->user->id) {
+                    // all visible
                     $user = User::with(['publishes'])->find($this->gallery->user->id);
                 } else {
+                    // check if the user is a friend of the gallery owner
+                    // if yes friend and public visibility
+                    // if no public visibility
                     $user = User::with(['publishes' => function ($query) {
                         $query->where('visible', 'public');
                     }])->find($this->gallery->user->id);

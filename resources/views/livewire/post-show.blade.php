@@ -13,10 +13,16 @@
                     <span class="px-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg text-nowrap break-keep">{{ $tag }}</span>
                 @endforeach
             </div>
-            <div>
-                <span>Published: </span>
-                <span>{{ $post->publish->created_at->toDateString() }}</span>
-            </div>
+            @if ($post->publish != null)
+                <div>
+                    <span>Published: </span>
+                    <span>{{ $post->publish->created_at->toDateString() }}</span>
+                </div>
+            @else
+                <div>
+                    <span>Unpublished</span>
+                </div>
+            @endif
         </div>
         <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 mx-auto">
             <div 
@@ -100,37 +106,39 @@
                         <span>Views: </span>
                         <span>{{ $post->view }}</span>
                     </div>
-                    <span>
-                        @if (class_basename($post->publish->publishable_type) === 'User')
-                            <a href="{{ route('user', $post->publish->publishable) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-br-[99px] rounded-tr-[99px] rounded-bl-[50px] rounded-tl-[50px]" draggable="false">
+                    @if ($post->publish != null)
+                        <span>
+                            @if (class_basename($post->publish->publishable_type) === 'User')
+                                <a href="{{ route('user', $post->publish->publishable) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-br-[99px] rounded-tr-[99px] rounded-bl-[50px] rounded-tl-[50px]" draggable="false">
+                                    <div class="flex flex-col">
+                                        <span>Published on: </span>
+                                        <span>{{ $post->publish->publishable->username }}</span>
+                                    </div>
+                                    <img src="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}"
+                                        alt="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}" class="w-10 h-auto aspect-square object-cover rounded-full" draggable="false">
+                                </a>
+                            @else
+                                <a href="{{ route('fandom-details', $post->publish->publishable) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-br-[99px] rounded-tr-[99px] rounded-bl-[50px] rounded-tl-[50px]" draggable="false">
+                                    <div class="flex flex-col">
+                                        <span>Published on: </span>
+                                        <span>{{ $post->publish->publishable->name }}</span>
+                                    </div>
+                                    <img src="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}"
+                                        alt="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}" class="w-10 h-auto aspect-square object-cover rounded-full" draggable="false">
+                                </a>
+                            @endif
+                        </span>
+                        <span>
+                            <a href="{{ route('user', $post->user) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-br-[99px] rounded-tr-[99px] rounded-bl-[50px] rounded-tl-[50px]" draggable="false">
                                 <div class="flex flex-col">
-                                    <span>Published on: </span>
-                                    <span>{{ $post->publish->publishable->username }}</span>
+                                    <span>Published by: </span>
+                                    <span>{{ $post->user->username }}</span>
                                 </div>
-                                <img src="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}"
-                                    alt="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}" class="w-10 h-auto aspect-square object-cover rounded-full" draggable="false">
+                                <img src="{{ asset('storage/avatars/'.$post->user->avatar->image->url) }}" alt="{{ asset('storage/avatars/'.$post->user->avatar->image->url) }}"
+                                    class="w-10 h-auto aspect-square object-cover rounded-full" draggable="false">
                             </a>
-                        @else
-                            <a href="{{ route('fandom-details', $post->publish->publishable) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-br-[99px] rounded-tr-[99px] rounded-bl-[50px] rounded-tl-[50px]" draggable="false">
-                                <div class="flex flex-col">
-                                    <span>Published on: </span>
-                                    <span>{{ $post->publish->publishable->name }}</span>
-                                </div>
-                                <img src="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}"
-                                    alt="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}" class="w-10 h-auto aspect-square object-cover rounded-full" draggable="false">
-                            </a>
-                        @endif
-                    </span>
-                    <span>
-                        <a href="{{ route('user', $post->user) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-br-[99px] rounded-tr-[99px] rounded-bl-[50px] rounded-tl-[50px]" draggable="false">
-                            <div class="flex flex-col">
-                                <span>Published by: </span>
-                                <span>{{ $post->user->username }}</span>
-                            </div>
-                            <img src="{{ asset('storage/avatars/'.$post->user->avatar->image->url) }}" alt="{{ asset('storage/avatars/'.$post->user->avatar->image->url) }}"
-                                class="w-10 h-auto aspect-square object-cover rounded-full" draggable="false">
-                        </a>
-                    </span>
+                        </span>
+                    @endif
                 </div>
                 @auth
                     <div class="flex flex-row space-x-2 space-y-0 items-stretch">

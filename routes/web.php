@@ -74,3 +74,4 @@ Route::fallback(function () {
 // pass model binding tidak bisa dengan relationship nya
 // home page, comments post show, gallery show and alert component style (not yet)
 // post recommendation component by tags and title ? (author, publisher and public post)
+// broadcast fandom created to (gallery create upload location, post list publish on, fandom list)
