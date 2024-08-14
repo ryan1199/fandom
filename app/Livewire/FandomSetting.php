@@ -20,6 +20,8 @@ class FandomSetting extends Component
     public $avatar;
     #[Validate('required|max:500')]
     public $description = '';
+    public $current_route_name = null;
+    public $current_route_parameter = null;
     public $preferences = [];
     public function render()
     {
@@ -29,6 +31,7 @@ class FandomSetting extends Component
     {
         $this->fandom = $fandom;
         $this->preferences = $preferences;
+        $this->setCurrentRoute();
     }
     public function updatedCover($value)
     {
@@ -50,7 +53,7 @@ class FandomSetting extends Component
         $this->cover->storeAs('covers', $cover_name, 'public');
 
         $this->reset(['cover']);
-        return redirect()->route('fandom-details', $fandom->name)->with('success', 'Done, fandom cover updated');
+        $this->loadPage(['status' => 'success', 'message' => 'Done, fandom cover has been updated']);
     }
     public function updatedAvatar($value)
     {
@@ -72,7 +75,7 @@ class FandomSetting extends Component
         $this->avatar->storeAs('avatars', $avatar_name, 'public');
 
         $this->reset(['avatar']);
-        return redirect()->route('fandom-details', $fandom->name)->with('success', 'Done, fandom avatar updated');
+        $this->loadPage(['status' => 'success', 'message' => 'Done, fandom avatar has been updated']);
     }
     public function updatedDescription($value)
     {
@@ -89,6 +92,30 @@ class FandomSetting extends Component
         ]);
 
         $this->reset(['description']);
-        return redirect()->route('fandom-details', $this->fandom->name)->with('success', 'Done, fandom description updated');
+        $this->loadPage(['status' => 'success', 'message' => 'Done, fandom description has been updated']);
+    }
+    public function setCurrentRoute()
+    {
+        $this->current_route_name = request()->route()->getName();
+        if ($this->current_route_name == 'fandom-details') {
+            $this->current_route_parameter = request()->route('fandom');
+        }
+        if ($this->current_route_name == 'user') {
+            $this->current_route_parameter = request()->route('user');
+        }
+        if ($this->current_route_name == 'post.show') {
+            $this->current_route_parameter = request()->route('post');
+        }
+        if ($this->current_route_name == 'gallery.show') {
+            $this->current_route_parameter = request()->route('gallery');
+        }
+    }
+    public function loadPage($alert)
+    {
+        if($this->current_route_parameter != null) {
+            return redirect()->route($this->current_route_name, $this->current_route_parameter)->with($alert['status'], $alert['message']);
+        } else {
+            return redirect()->route($this->current_route_name)->with($alert['status'], $alert['message']);
+        }
     }
 }

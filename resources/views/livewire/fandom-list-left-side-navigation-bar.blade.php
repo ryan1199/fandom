@@ -35,31 +35,31 @@
                     <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 1 1-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 0 1-1.06-1.06l7.5-7.5Z" clip-rule="evenodd" />
                 </svg>
             </div>
-            <div x-transition x-cloak x-show="{{ 'open_discusses_fandom_' . $fandom->id }}" class="pl-1 flex flex-col space-x-0 space-y-1">
+            <div x-transition x-cloak x-show="{{ 'open_discusses_fandom_' . $fandom->id }}" class="flex flex-col space-x-0 space-y-1">
                 @if ($discusses->isNotEmpty())
                     <div class="flex flex-col space-x-0 space-y-1">
                         @foreach ($discusses as $discuss)
                             @switch($discuss->visible)
                                 @case('manager')
                                     @if ($member->role->name == 'Manager')
-                                        <div wire:key="{{ 'discuss' . $discuss->id }}" class="w-full h-fit p-2 flex flex-row space-x-2 space-y-0 justify-between items-start {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg select-none">
+                                        <div wire:key="{{ 'discuss' . $discuss->id }}" class="w-full h-fit p-2 flex flex-row space-x-2 space-y-0 justify-between items-start {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg select-none">
                                             <p class="font-semibold self-center line-clamp-3">{{ $discuss->name }}</p>
-                                            <p wire:click="discussTo({{ $discuss->id }})" class="w-fit h-full p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg cursor-pointer animation-button">Discuss</p>
+                                            <p wire:click="discussTo({{ $discuss->id }})" class="w-fit h-full p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">Discuss</p>
                                         </div>
                                     @endif
                                     @break
                                 @case('member')
                                     @if ($member->role->name == 'Manager' || $member->role->name == 'Member')
-                                        <div wire:key="{{ 'discuss' . $discuss->id }}" class="w-full h-fit p-2 flex flex-row space-x-2 space-y-0 justify-between items-start {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg select-none">
+                                        <div wire:key="{{ 'discuss' . $discuss->id }}" class="w-full h-fit p-2 flex flex-row space-x-2 space-y-0 justify-between items-start {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg select-none">
                                             <p class="font-semibold self-center line-clamp-3">{{ $discuss->name }}</p>
-                                            <p wire:click="discussTo({{ $discuss->id }})" class="w-fit h-full p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg cursor-pointer animation-button">Discuss</p>
+                                            <p wire:click="discussTo({{ $discuss->id }})" class="w-fit h-full p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">Discuss</p>
                                         </div>
                                     @endif
                                     @break
                                 @default
-                                    <div wire:key="{{ 'discuss' . $discuss->id }}" class="w-full h-fit p-2 flex flex-row space-x-2 space-y-0 justify-between items-start {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg select-none">
+                                    <div wire:key="{{ 'discuss' . $discuss->id }}" class="w-full h-fit p-2 flex flex-row space-x-2 space-y-0 justify-between items-start {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg select-none">
                                         <p class="font-semibold self-center line-clamp-3">{{ $discuss->name }}</p>
-                                        <p wire:click="discussTo({{ $discuss->id }})" class="w-fit h-full p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg cursor-pointer animation-button">Discuss</p>
+                                        <p wire:click="discussTo({{ $discuss->id }})" class="w-fit h-full p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">Discuss</p>
                                     </div>
                             @endswitch
                         @endforeach

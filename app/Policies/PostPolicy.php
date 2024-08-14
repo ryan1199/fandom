@@ -19,14 +19,26 @@ class PostPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Post $post): bool
+    public function view(?User $user, Post $post): bool
     {
         $post = Post::with(['user','publish.publishable'])->find($post->id);
         if($post->publish != null) {
             if(class_basename($post->publish->publishable_type) === 'User') {
-                if($post->publish->publishable_id == $user->id) {
-                    return true;
-                } else {
+                if($user != null) {
+                    if($post->publish->publishable_id == $user->id) {
+                        return true;
+                    } else {
+                        switch($post->publish->visible) {
+                            case 'public':
+                                return true;
+                                break;
+                            case 'self':
+                                return false;
+                                break;
+                        }
+                    }
+                } 
+                if($user == null) {
                     switch($post->publish->visible) {
                         case 'public':
                             return true;
@@ -38,9 +50,21 @@ class PostPolicy
                 }
             }
             if(class_basename($post->publish->publishable_type) === 'Fandom') {
-                if(in_array($user->id, $post->publish->publishable->members->pluck('user.id')->toArray())) {
-                    return true;
-                } else {
+                if($user != null) {
+                    if(in_array($user->id, $post->publish->publishable->members->pluck('user.id')->toArray())) {
+                        return true;
+                    } else {
+                        switch($post->publish->visible) {
+                            case 'public':
+                                return true;
+                                break;
+                            case 'member':
+                                return false;
+                                break;
+                        }
+                    }
+                }
+                if($user == null) {
                     switch($post->publish->visible) {
                         case 'public':
                             return true;
@@ -52,10 +76,18 @@ class PostPolicy
                 }
             }
         } 
-        if($post->publish == null && $post->user_id == $user->id) {
-            return true;
+        if($post->publish == null) {
+            if($user != null) {
+                if($post->user_id == $user->id) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            if($user == null) {
+                return false;
+            }
         }
-        return false;
     }
 
     /**

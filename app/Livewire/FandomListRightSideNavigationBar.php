@@ -34,8 +34,8 @@ class FandomListRightSideNavigationBar extends Component
     public function getListeners()
     {
         return [
-            "echo-private:DeleteDiscussion.{$this->fandom->id},DeleteDiscussion" => 'loadDiscusses',
-            "echo-private:CreateDiscussion.{$this->fandom->id},CreateDiscussion" => 'loadDiscusses',
+            "echo-private:FandomListRightSideNavigationBar.{$this->fandom->id},DeleteDiscussion" => 'loadDiscusses',
+            "echo-private:FandomListRightSideNavigationBar.{$this->fandom->id},CreateDiscussion" => 'loadDiscusses',
             "echo-private:FandomListRightSideNavigationBar.{$this->fandom->id},NewDiscussionMessage" => 'loadDiscusses',
         ];
     }

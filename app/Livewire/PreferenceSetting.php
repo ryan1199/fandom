@@ -35,7 +35,8 @@ class PreferenceSetting extends Component
     public $font_size = 16;
     public $selected_font_family = 'mono';
     public $dark_mode = false;
-    public $current_route_name;
+    public $current_route_name = null;
+    public $current_route_parameter = null;
     public $preferences = [];
     public function rules()
     {
@@ -69,7 +70,7 @@ class PreferenceSetting extends Component
                 break;
         }
         $this->dark_mode = $this->preferences['dark_mode'];
-        $this->current_route_name = request()->route()->getName(); //ada parameter di beberapa route
+        $this->setCurrentRoute();
     }
     public function render()
     {
@@ -89,7 +90,7 @@ class PreferenceSetting extends Component
         ]);
         $this->preferences = session()->get('preference-' . $this->user->username);
         $this->reset(['color_1','color_2','color_3','font_size','selected_font_family','dark_mode']);
-        return redirect()->route($this->current_route_name)->with('success', 'Done, new preferences saved');
+        $this->loadPage(['status' => 'success', 'message' => 'Done, new preferences saved']);
     }
     public function resetPreference()
     {
@@ -105,7 +106,7 @@ class PreferenceSetting extends Component
         ]);
         $this->preferences = session()->get('preference-' . $this->user->username);
         $this->mount($this->user, $this->preferences);
-        return redirect()->refresh()->with('success', 'Done, your preferences are reseted');
+        $this->loadPage(['status' => 'success', 'message' => 'Done, your preferences are reseted']);
     }
     public function setColorScheme($selected_color_scheme, $selected_color)
     {
@@ -164,6 +165,30 @@ class PreferenceSetting extends Component
                 $this->color_3 = $this->available_color_scheme_2[0];
                 $this->selected_color = $this->color_2;
                 break;
+        }
+    }
+    public function setCurrentRoute()
+    {
+        $this->current_route_name = request()->route()->getName();
+        if ($this->current_route_name == 'fandom-details') {
+            $this->current_route_parameter = request()->route('fandom');
+        }
+        if ($this->current_route_name == 'user') {
+            $this->current_route_parameter = request()->route('user');
+        }
+        if ($this->current_route_name == 'post.show') {
+            $this->current_route_parameter = request()->route('post');
+        }
+        if ($this->current_route_name == 'gallery.show') {
+            $this->current_route_parameter = request()->route('gallery');
+        }
+    }
+    public function loadPage($alert)
+    {
+        if($this->current_route_parameter != null) {
+            return redirect()->route($this->current_route_name, $this->current_route_parameter)->with($alert['status'], $alert['message']);
+        } else {
+            return redirect()->route($this->current_route_name)->with($alert['status'], $alert['message']);
         }
     }
     public function updated($property)

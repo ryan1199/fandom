@@ -111,8 +111,8 @@ class FandomDetails extends Component
     public function getListeners()
     {
         return [
-            "echo-private:DeleteDiscussion.{$this->fandom->id},DeleteDiscussion" => 'loadDiscussion',
-            "echo-private:CreateDiscussion.{$this->fandom->id},CreateDiscussion" => 'loadDiscussion',
+            "echo-private:FandomDetails.{$this->fandom->id},DeleteDiscussion" => 'loadDiscussion',
+            "echo-private:FandomDetails.{$this->fandom->id},CreateDiscussion" => 'loadDiscussion',
         ];
     }
     public function loadDiscussion($event)

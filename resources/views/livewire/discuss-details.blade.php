@@ -1,4 +1,4 @@
-<div x-data="{ openDiscuss: @entangle('openDiscuss').live }" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg">
+<div x-data="{ openDiscuss: @entangle('openDiscuss').live }" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
     <div class="w-full h-fit flex flex-col space-x-0 space-y-2 select-none">
         <div class="w-full h-fit flex flex-row space-x-2 space-y-0 items-center justify-between">
             <p class="font-semibold">{{ $discuss->name }}</p>

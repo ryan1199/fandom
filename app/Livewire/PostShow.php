@@ -15,15 +15,20 @@ class PostShow extends Component
     public $preferences = [];
     #[Locked]
     public $post;
+    // totalComments
+    // totalViews
     public function render()
     {
         return view('livewire.post-show')->title($this->post->title);
     }
     public function mount(Post $post)
     {
+        $this->authorize('view', $post);
         if (Auth::check()) {
-            $this->authorize('view', $post);
             $this->preferences = session()->get('preference-' . Auth::user()->username);
+            Post::where('id', $post->id)->update([
+                'view' => $post->view+1
+            ]);
         } else {
             $this->preferences = [
                 'color_1' => 'pink',
@@ -34,9 +39,6 @@ class PostShow extends Component
                 'dark_mode' => false,
             ];
         }
-        Post::where('id', $post->id)->update([
-            'view' => $post->view+1
-        ]);
         $this->loadPost($post);
     }
     public function loadPost(Post $post)

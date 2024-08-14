@@ -30,7 +30,7 @@ class FandomCreated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new Channel('FandomList', $this->fandom->id),
+            new Channel('Fandom', $this->fandom->id),
         ];
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\LogoutController;
+use App\Livewire\Fandom;
 use App\Livewire\FandomCreate;
 use App\Livewire\FandomDetails;
 use App\Livewire\FandomList;
@@ -38,7 +39,7 @@ Route::get('/verification', Verification::class)->middleware(['throttle:verifica
 Route::get('/verification/{ticket}', Verification::class)->middleware(['throttle:verification', 'no_auth', 'valid_ticket'])->name('verification.verify');
 Route::post('/logout', LogoutController::class)->middleware(['throttle:logout', 'auth'])->name('logout');
 Route::get('/user/{user}', User::class)->middleware('auth')->name('user');
-Route::get('/fandom-list', FandomList::class)->name('fandom-list');
+Route::get('/fandom-list', Fandom::class)->name('fandom-list');
 Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-details');
 Route::get('/post-management', Post::class)->middleware('auth')->name('post');
 Route::get('/post-show/{post}', PostShow::class)->name('post.show');
@@ -66,12 +67,15 @@ Route::fallback(function () {
 // broadcast for profile updates (not yet)
 // hover in fandom detail (user list, post list and gallery list) (done)
 // vote feature (not yet)
-// slug for post, image (not yet)
+// slug for post, gallery (not yet)
 // discusses list style (not yet)
 // benerin nama channel (done)
 // benerin semua event (done)
 // terapkan yang ada di follow (progress)
 // pass model binding tidak bisa dengan relationship nya
-// home page, comments post show, gallery show and alert component style (not yet)
+// home page, comments post show, gallery show and ir component style (not yet)
 // post recommendation component by tags and title ? (author, publisher and public post)
 // broadcast fandom created to (gallery create upload location, post list publish on, fandom list)
+// broadcast for updated fandom (not yet)
+// post and post management components (not yet)
+// gallery and gallery management components (not yet)

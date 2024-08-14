@@ -3,59 +3,65 @@
 namespace App\Livewire;
 
 use App\Models\Fandom;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Attributes\On;
-use Livewire\Attributes\Title;
+use App\Models\Gallery;
+use App\Models\Post;
+use Illuminate\Support\Number;
+use Livewire\Attributes\Locked;
 use Livewire\Component;
 
-#[Title('Fandom List')]
 class FandomList extends Component
 {
-    public $create_fandom_modal = false;
+    #[Locked]
+    public $fandom;
+    public $totalMembers;
+    public $totalGalleries;
+    public $totalPosts;
     public $preferences = [];
-    public $fandoms;
     public function render()
     {
         return view('livewire.fandom-list');
     }
-    public function mount()
+    public function mount(Fandom $fandom, $preferences)
     {
-        $this->fandoms = Fandom::with(['avatar.image', 'cover.image', 'members'])->get();
-        if (Auth::check()) {
-            $this->preferences = session()->get('preference-' . Auth::user()->username);
-        } else {
-            $this->preferences = [
-                'color_1' => 'pink',
-                'color_2' => 'rose',
-                'color_3' => 'red',
-                'font_size' => 16,
-                'selected_font_family' => 'mono',
-                'dark_mode' => false,
-            ];
-        }
+        $this->fandom = Fandom::with([
+            'avatar' => [
+                'image'
+            ],
+            'cover' => [
+                'image'
+            ],
+            'members' => [
+                'user' => [
+                    'profile',
+                    'cover' => [
+                        'image'
+                    ],
+                    'avatar' => [
+                        'image'
+                    ],
+                ],
+                'role'
+            ],
+        ])->find($fandom->id);
+        $this->preferences = $preferences;
+        $this->getTotalMembers();
+        $this->getTotalGalleries();
+        $this->getTotalPosts();
     }
-    #[On('loadFandoms')]
-    public function loadFandoms($event)
+    public function getTotalMembers()
     {
-        $fandom = Fandom::find($event['fandom']['id']);
-        $this->fandoms->push($fandom);
+        $this->totalMembers = Number::abbreviate(count($this->fandom->members));
     }
-    #[On('removeFandom')]
-    public function removeFandom($event)
+    public function getTotalGalleries()
     {
-        $this->fandoms = Fandom::with(['avatar.image', 'cover.image', 'members'])->get();
+        $this->fandom->load('publishes');
+        $fandom_publish_ids = $this->fandom->publishes->pluck('id')->toArray();
+        $this->totalGalleries = Number::abbreviate(Gallery::whereIn('publish_id', $fandom_publish_ids)->count());
     }
-    public function updated($property)
+    public function getTotalPosts()
     {
-        if (Auth::check()) {
-            session()->put('last-active-' . Auth::user()->username, now());
-        }
-    }
-    public function getListeners()
-    {
-        return [
-            "echo:FandomList,FandomCreated" => 'loadFandoms',
-            // "echo:FandomList,FandomRemoved" => 'removeFandom',
-        ];
+        $this->fandom->load('publishes');
+        $fandom_publish_ids = $this->fandom->publishes->pluck('id')->toArray();
+        $this->totalPosts = Number::abbreviate(Post::whereIn('publish_id', $fandom_publish_ids)->count());
     }
 }

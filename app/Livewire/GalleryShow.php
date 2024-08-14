@@ -16,7 +16,6 @@ use Livewire\Component;
 
 class GalleryShow extends Component
 {
-    public $preferences = [];
     #[Locked]
     public $gallery;
     #[Locked]
@@ -25,15 +24,21 @@ class GalleryShow extends Component
         'fandom' => null,
         'tags' => null
     ];
+    // totalComments
+    // totalViews
+    public $preferences = [];
     public function render()
     {
         return view('livewire.gallery-show')->title($this->gallery->tags);
     }
     public function mount(Gallery $gallery)
     {
+        $this->authorize('view', $gallery);
         if (Auth::check()) {
-            $this->authorize('view', $gallery);
             $this->preferences = session()->get('preference-' . Auth::user()->username);
+            Gallery::where('id', $gallery->id)->update([
+                'view' => $gallery->view+1
+            ]);
         } else {
             $this->preferences = [
                 'color_1' => 'pink',
@@ -44,14 +49,15 @@ class GalleryShow extends Component
                 'dark_mode' => false,
             ];
         }
-        Gallery::where('id', $gallery->id)->update([
-            'view' => $gallery->view+1
-        ]);
         $this->loadGallery($gallery);
+        $this->loadRecommendations();
     }
     public function loadGallery(Gallery $gallery)
     {
         $this->gallery = Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable','comments','rates.user'])->find($gallery->id);
+    }
+    public function loadRecommendations()
+    {
         if(Auth::check()) {
             if(class_basename($this->gallery->publish->publishable_type) === 'User') {
                 if(Auth::id() == $this->gallery->user->id) {

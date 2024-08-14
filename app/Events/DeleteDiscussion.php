@@ -31,6 +31,8 @@ class DeleteDiscussion implements ShouldBroadcast
     {
         return [
             new PrivateChannel('FandomListLeftSideNavigationBar.' . $this->fandom->id),
+            new PrivateChannel('FandomListRightSideNavigationBar.' . $this->fandom->id),
+            new PrivateChannel('FandomDetails.' . $this->fandom->id),
         ];
     }
 }

@@ -19,27 +19,31 @@
     <body class="antialiased">
         <div 
             @auth
-                class="w-screen h-screen antialiased bg-gradient-to-tr {{ 'from-' . session()->get('preference-' . Auth::user()->username)['color_1'] . '-500/0' }} {{ 'via-' . session()->get('preference-' . Auth::user()->username)['color_2'] . '-500/0' }} {{ 'to-' . session()->get('preference-' . Auth::user()->username)['color_3'] . '-500/0' }} {{ 'font-[' . session()->get('preference-' . Auth::user()->username)['selected_font_family'] . ']' }} overflow-clip"
+                class="w-screen h-screen antialiased bg-gradient-to-tr {{ 'from-' . session()->get('preference-' . Auth::user()->username)['color_1'] . '-50' }} {{ 'via-' . session()->get('preference-' . Auth::user()->username)['color_2'] . '-50' }} {{ 'to-' . session()->get('preference-' . Auth::user()->username)['color_3'] . '-50' }} overflow-clip"
             @endauth
             @guest
-                class="w-screen h-screen antialiased bg-gradient-to-tr from-orange-500 via-pink-500 to-indigo-500 select-none font-mono overflow-clip"
+                class="w-screen h-screen antialiased bg-gradient-to-tr from-pink-50 via-rose-50 to-red-50 overflow-clip"
             @endguest>
-            <div style="background-image: url('{{ asset('bg-white.svg') }}')" class="w-full h-full bg-repeat bg-auto bg-center">
-                <div 
+            <div 
                 @auth
-                    class="{{ 'bg-' . session()->get('preference-' . Auth::user()->username)['color_2'] . '-50/5' }} backdrop-blur-3xl"
+                    style="background-image: url('{{ asset(session()->get('preference-' . Auth::user()->username)['color_2'] . '.png') }}')" class="w-screen h-screen bg-cover bg-no-repeat bg-center"
                 @endauth
                 @guest
-                    class="bg-white/5 backdrop-blur-3xl"
+                    style="background-image: url('{{ asset('rose.png') }}')" class="w-screen h-screen bg-cover bg-no-repeat bg-center"
                 @endguest>
-                    <div class="w-screen h-screen flex flex-row overflow-clip relative">
-                        @livewire(LeftSideNavigationBar::class)
-                        @livewire(Alert::class)
-                        <div class="w-full h-screen">
-                            {{ $slot }}
-                        </div>
-                        @livewire(RightSideNavigationBar::class)
+                <div
+                    @auth
+                        class="w-screen h-screen flex flex-row overflow-clip relative {{ 'bg-' . session()->get('preference-' . Auth::user()->username)['color_2'] . '-50/70' }} backdrop-blur-3xl"
+                    @endauth
+                    @guest
+                        class="w-screen h-screen flex flex-row overflow-clip relative bg-rose-50/70 backdrop-blur-3xl"
+                    @endguest>
+                    @livewire(LeftSideNavigationBar::class)
+                    @livewire(Alert::class)
+                    <div class="w-full h-screen">
+                        {{ $slot }}
                     </div>
+                    @livewire(RightSideNavigationBar::class)
                 </div>
             </div>
         </div>

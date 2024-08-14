@@ -1,4 +1,4 @@
-<div class="w-full max-w-sm h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} border-r-2 {{ 'border-' . $preferences['color_2'] . '-900' }} border-dashed select-none overflow-y-auto">
+<div class="w-full max-w-sm h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} border-r-2 {{ 'border-' . $preferences['color_2'] . '-900' }} border-dashed select-none overflow-y-auto">
     <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-1">
         @guest
             <a wire:navigate href="{{ route('home') }}" class="w-fit" draggable="false">Fandom</a>
