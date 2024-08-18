@@ -175,8 +175,8 @@
                     </div>
                     @if ($user->id != Auth::id())
                         <div class="w-full h-fit flex flex-row space-x-2 space-y-0 justify-center items-center select-none">
-                            @livewire(FollowUnfollowButton::class, ['user1' => Auth::user()->username, 'user2' => $user->username, 'preferences' => $preferences], key('follow-unfollow-button-from-user-' . $user->id))
-                            @livewire(BlockUnblockButton::class, ['user1' => Auth::user()->username, 'user2' => $user->username, 'preferences' => $preferences], key('block-unblock-button-from-user-' . $user->id))
+                            @livewire(FollowUnfollowButton::class, ['user1' => Auth::user()->username, 'user2' => $user->username, 'preferences' => $preferences], key('user-' . Auth::id() . '-follow-unfollow-button-for-user-' . $user->id))
+                            @livewire(BlockUnblockButton::class, ['user1' => Auth::user()->username, 'user2' => $user->username, 'preferences' => $preferences], key('user-' . Auth::id() . '-block-unblock-button-for-user-' . $user->id))
                             <div wire:click="chatTo" class="w-fit h-fit p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg cursor-pointer animation-button">Chat</div>
                         </div>
                     @endif
@@ -213,7 +213,7 @@
                                 <p class="font-semibold {{ 'text-' . $preferences['color_2'] . '-900' }}">Following</p>
                             </div>
                             @foreach ($user->members as $member)
-                                <a wire:navigate wire:key="{{ 'fandom-' . $member->fandom->slug }}" wire:navigate.hover href="{{ route('fandom-details', $member->fandom) }}" class="w-full h-fit mb-1 p-2 break-inside-avoid-column flex flex-col space-x-0 space-y-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                                <a wire:navigate wire:key="{{ 'user-' . $user->id . '-fandom-' . $member->fandom->slug }}" wire:navigate.hover href="{{ route('fandom-details', $member->fandom) }}" class="w-full h-fit mb-1 p-2 break-inside-avoid-column flex flex-col space-x-0 space-y-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
                                     <div class="w-full h-screen max-h-[13vh] flex flex-col space-x-0 space-y-2 overflow-y-auto">
                                         <p class="font-semibold {{ 'text-' . $preferences['color_2'] . '-900' }}">{{ $member->fandom->name }}</p>
                                         <div class="w-full h-[10vh] relative">
@@ -254,7 +254,7 @@
                         @endif
                         @if (Auth::id() == $user->id)
                             @forelse ($posts['self'] as $post)
-                                <a wire:navigate wire:key="{{ 'post-self-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-self-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
                                     <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
                                     <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
                                 </a>
@@ -265,7 +265,7 @@
                             @if (in_array(Auth::id(), $friendlist_id))
                                 @forelse ($posts['friend'] as $post)
                                     </div>
-                                    <a wire:navigate wire:key="{{ 'post-friend-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                    <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-friend-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
                                         <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
                                         <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
                                     </a>
@@ -274,7 +274,7 @@
                                 @endforelse
                             @else
                                 @forelse ($posts['public'] as $post)
-                                    <a wire:navigate wire:key="{{ 'post-public-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                    <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-public-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
                                         <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
                                         <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
                                     </a>
@@ -303,7 +303,7 @@
                         @endif
                         @if (Auth::id() == $user->id)
                             @forelse ($galleries['self'] as $gallery)
-                                <a wire:navigate wire:key="{{ 'gallery-self-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
+                                <a wire:navigate wire:key="{{ 'user-' . $user->id . '-gallery-self-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
                                     <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation-button" draggable="false">
                                 </a>
                             @empty
@@ -311,7 +311,7 @@
                             @endforelse
                         @else
                             @forelse ($galleries['public'] as $gallery)
-                                <a wire:navigate wire:key="{{ 'gallery-public-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
+                                <a wire:navigate wire:key="{{ 'user-' . $user->id . '-gallery-public-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
                                     <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation-button" draggable="false">
                                 </a>
                             @empty

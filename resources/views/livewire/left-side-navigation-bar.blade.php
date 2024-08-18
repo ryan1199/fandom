@@ -31,7 +31,7 @@
                             </svg>
                         </div>
                         <div x-transition x-cloak x-show="open_followed_user_list">
-                            @livewire(Follow::class, ['user' => $user->username, 'preferences' => $preferences])
+                            @livewire(Follow::class, ['user' => $user->username, 'preferences' => $preferences], key('follow-from-left-side-navigation-bar-on-user-' . $user->id))
                         </div>
                     </div>
                     <div x-data="{ open_blocked_user_list: false }" class="flex flex-col space-x-0 space-y-1">
@@ -45,7 +45,7 @@
                             </svg>
                         </div>
                         <div x-transition x-cloak x-show="open_blocked_user_list">
-                            @livewire(Block::class, ['user' => $user->username, 'preferences' => $preferences])
+                            @livewire(Block::class, ['user' => $user->username, 'preferences' => $preferences], key('block-from-left-side-navigation-bar-on-user-' . $user->id))
                         </div>
                     </div>
                     <div x-data="{ open_setting: false }" class="flex flex-col space-x-0 space-y-1">
@@ -70,7 +70,7 @@
                                     </svg>
                                 </div>
                                 <div x-transition x-cloak x-show="open_account_setting" class="flex flex-col space-x-0 space-y-1">
-                                    @livewire(AccountSetting::class, ['user' => $user->username, 'preferences' => $preferences])
+                                    @livewire(AccountSetting::class, ['user' => $user->username, 'preferences' => $preferences], key('account-setting-from-left-side-navigation-bar-on-user-' . $user->id))
                                 </div>
                             </div>
                             <div x-data="{ open_profile_setting: false }" class="flex flex-col space-x-0 space-y-1">
@@ -84,7 +84,7 @@
                                     </svg>
                                 </div>
                                 <div x-transition x-cloak x-show="open_profile_setting" class="flex flex-col space-x-0 space-y-1">
-                                    @livewire(ProfileSetting::class, ['user' => $user->username, 'preferences' => $preferences])
+                                    @livewire(ProfileSetting::class, ['user' => $user->username, 'preferences' => $preferences], key('profile-setting-from-left-side-navigation-bar-on-user-' . $user->id))
                                 </div>
                             </div>
                             <div x-data="{ open_preference_setting: false }" class="flex flex-col space-x-0 space-y-1">
@@ -98,7 +98,7 @@
                                     </svg>
                                 </div>
                                 <div x-transition x-cloak x-show="open_preference_setting" class="flex flex-col space-x-0 space-y-1">
-                                    @livewire(PreferenceSetting::class, ['user' => $user->username, 'preferences' => $preferences])
+                                    @livewire(PreferenceSetting::class, ['user' => $user->username, 'preferences' => $preferences], key('preference-setting-from-left-side-navigation-bar-on-user-' . $user->id))
                                 </div>
                             </div>
                         </div>
@@ -117,7 +117,7 @@
                 </div>
                 <div x-transition x-cloak x-show="open_fandom_list" class="pl-1 flex flex-col space-x-0 space-y-1">
                     @foreach ($user->members as $member)
-                        @livewire(FandomListLeftSideNavigationBar::class, ['fandom' => $member->fandom->slug, 'member' => $member->id, 'user' => $user->username, 'preferences' => $preferences], key('fandom-list-left-side-navigation-bar-' . $member->fandom->id))
+                        @livewire(FandomListLeftSideNavigationBar::class, ['fandom' => $member->fandom->slug, 'member' => $member->id, 'user' => $user->username, 'preferences' => $preferences], key('fandom-list-fandom-' . $member->fandom->id . '-from-left-side-navigation-bar-on-user-' . $user->id))
                     @endforeach
                     <div x-data="{ open_create_fandom: false }" class="flex flex-col space-x-0 space-y-1">
                         <div class="flex flex-row justify-between items-center">
@@ -130,7 +130,7 @@
                             </svg>
                         </div>
                         <div x-transition x-cloak x-show="open_create_fandom" class="flex flex-col space-x-0 space-y-1">
-                            @livewire(FandomCreate::class, ['preferences' => $preferences])
+                            @livewire(FandomCreate::class, ['preferences' => $preferences], key('fandom-create-from-left-side-navigation-bar-on-user-' . $user->id))
                         </div>
                     </div>
                 </div>

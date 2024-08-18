@@ -80,7 +80,7 @@
         <div class="w-full grid gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2">
             @foreach ($available_publish_on as $array)
                 @if ($array['from'] == 'user')
-                    <div wire:key="{{ 'publish-on-user-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border @if($publish_on['from'] == $array['from'] && $publish_on['name'] == Auth::user()->username) {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @endif rounded-lg">
+                    <div wire:key="{{ 'gallery-create-edit-publish-on-user-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border @if($publish_on['from'] == $array['from'] && $publish_on['name'] == Auth::user()->username) {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @endif rounded-lg">
                         <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                             <div class="{{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                 <h1 class="bg-clip-text line-clamp-2 text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">{{ $array['data']->username }}</h1>
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 @else
-                    <div wire:key="{{ 'publish-on-fandom-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border @if($publish_on['from'] == $array['from'] && $publish_on['name'] == $array['data']->name) {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @endif rounded-lg">
+                    <div wire:key="{{ 'gallery-create-edit-publish-on-fandom-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border @if($publish_on['from'] == $array['from'] && $publish_on['name'] == $array['data']->name) {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @endif rounded-lg">
                         <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                             <div class="{{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                 <h1 class="bg-clip-text line-clamp-2 text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">{{ $array['data']->name }}</h1>

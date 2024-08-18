@@ -1,6 +1,6 @@
 <form wire:submit="submitComment()">
     @csrf
-    <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 items-stretch justify-stretch {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg z-10">
+    <div class="w-full h-fit flex flex-col space-x-0 space-y-2 items-stretch justify-stretch z-10">
         @if ($comment != null)
             <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-4 {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg">
                 <div class="w-full flex flex-row space-x-2 space-y-0 justify-between items-center">
@@ -16,7 +16,7 @@
                         <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 0 1 1.06 0L12 10.94l5.47-5.47a.75.75 0 1 1 1.06 1.06L13.06 12l5.47 5.47a.75.75 0 1 1-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 0 1-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
                     </svg>
                 </div>
-                <div x-data="{ {{ 'open_comment_' . $comment->id }}: false }" x-on:click="{{ 'open_comment_' . $comment->id . ' = ! ' . 'open_comment_' . $comment->id }}" :class="{{ 'open_comment_' . $comment->id }} ? 'line-clamp-none' : 'line-clamp-2'" 
+                <div x-data="{ {{ 'open_preview_comment_' . $comment->id }}: false }" x-on:click="{{ 'open_preview_comment_' . $comment->id . ' = ! ' . 'open_preview_comment_' . $comment->id }}" :class="{{ 'open_preview_comment_' . $comment->id }} ? 'line-clamp-none' : 'line-clamp-2'" 
                     @switch($preferences['color_2'])
                         @case('slate')
                             class="max-w-none p-2 font-thin prose prose-base prose-slate prose-headings:text-slate-900 prose-p:text-slate-900 prose-a:text-slate-900 prose-ol:text-slate-900 prose-ul:text-slate-900 prose-blockquote:text-slate-900 prose-blockquote:border-slate-900 prose-strong:text-slate-900 prose-em:text-slate-900 prose-code:text-slate-100 prose-pre:text-slate-900 prose-hr:border-slate-200 prose-table:text-slate-900 prose-li:text-slate-900 prose-ol:text-pretty prose-ul:text-pretty marker:text-slate-900 prose-ol:list-decimal prose-ul:list-disc"
@@ -99,7 +99,7 @@
                 </ul>
             </div>
         @enderror
-        <textarea id="commentForm" wire:model="content" class="form-textarea {{ 'bg-' . $preferences['color_2'] . '-50' }} border @error('content') {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @enderror {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" rows="5" cols="100"></textarea>
-        <button type="submit" class="w-fit p-2 text-nowrap font-semibold {{ 'bg-' . $preferences['color_2'] . '-50' }} {{ 'hover:text-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer select-none animation-button">Submit</button>
+        <textarea id="commentForm" wire:model="content" class="form-textarea {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border @error('content') {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @enderror {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} {{ 'selection:text-' . $preferences['color_2'] . '-50' }} {{ 'selection:bg-' . $preferences['color_2'] . '-500' }} rounded-lg animation" rows="5" cols="100"></textarea>
+        <button type="submit" class="w-fit p-2 text-nowrap font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer select-none animation-button">Submit</button>
     </div>
 </form>

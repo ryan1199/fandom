@@ -27,8 +27,8 @@ class PostListHome extends Component
         $this->post = Post::with(['user.profile','user.avatar.image','user.cover.image','publish.publishable','comments','rates.user'])->find($post->id);
         $this->publish = $this->post->publish;
         $this->views = Number::abbreviate($this->post->view);
-        $this->likes = Number::abbreviate($this->post->rates()->where('like', 1)->get()->count());
-        $this->dislikes = Number::abbreviate($this->post->rates()->where('dislike', 1)->get()->count());
+        $this->likes = Number::abbreviate(collect($post->rates)->where('like', true)->count());
+        $this->dislikes = Number::abbreviate(collect($post->rates)->where('dislike', true)->count());
         if (class_basename($post->publish->publishable) == 'User') {
             $this->publisher = $this->post->publish->publishable->username;
         } else {

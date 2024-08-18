@@ -1,7 +1,7 @@
 <div class="w-full h-full flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
     @if ($from == 'post')
         @foreach ($posts as $post)
-            <div wire:key="{{ 'post-' . $post->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg">
+            <div wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg">
                 <div class="flex flex-row justify-between items-center">
                     <div class="{{ 'hover:text-' . $preferences['color_2'] . '-500' }} animation-button">
                         <h1><a wire:navigate href="{{ route('post.show', $post) }}" class="font-semibold cursor-pointer" draggable="false">{{ $post->title }}</a></h1>
@@ -32,12 +32,12 @@
                 </div>
                 <div class="flex flex-col space-x-0 space-y-1 select-none">
                     @if ($post->publish_id == null)
-                        <div x-data="{ {{ 'open_' . $post->id }}: false }" class="flex flex-col space-x-0 space-y-1">
-                            <div x-on:click="{{ 'open_' . $post->id }} = ! {{ 'open_' . $post->id }}" class="w-fit h-fit mx-auto p-2 text-center font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">Publish On</div>
-                            <div x-cloak x-show="{{ 'open_' . $post->id }}" class="flex flex-col space-x-0 space-y-1 rounded-lg">
+                        <div x-data="{ {{ 'open_publish_on_for_post_' . $post->id }}: false }" class="flex flex-col space-x-0 space-y-1">
+                            <div x-on:click="{{ 'open_publish_on_for_post_' . $post->id }} = ! {{ 'open_publish_on_for_post_' . $post->id }}" class="w-fit h-fit mx-auto p-2 text-center font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">Publish On</div>
+                            <div x-cloak x-show="{{ 'open_publish_on_for_post_' . $post->id }}" class="flex flex-col space-x-0 space-y-1 rounded-lg">
                                 @foreach ($publish_on as $array)
                                     @if ($array['from'] == 'user')
-                                        <div wire:key="{{ 'publish-on-user-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                                        <div wire:key="{{ 'post-list-from-' . $from . '-publish-on-user-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                                             <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                                                 <div class="{{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                                     <h1 class="bg-clip-text line-clamp-2 text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">{{ $array['data']->username }}</h1>
@@ -66,7 +66,7 @@
                                             </div>
                                         </div>
                                     @else
-                                        <div wire:key="{{ 'publish-on-fandom-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                                        <div wire:key="{{ 'post-list-from-' . $from . 'publish-on-fandom-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                                             <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                                                 <div class="{{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                                     <h1 class="bg-clip-text line-clamp-2 text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">{{ $array['data']->name }}</h1>
@@ -106,7 +106,7 @@
     @endif
     @if ($from == 'fandom')
         @foreach ($posts as $post)
-            <a wire:navigate wire:key="{{ 'post-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+            <a wire:navigate wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
                 <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
                 <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
             </a>

@@ -11,7 +11,7 @@
                     <p class="font-semibold">Errors:</p>
                     <ul class="pl-4 flex flex-col space-x-0 space-y-1 text-pretty {{ 'marker:text-[' . $preferences['color_2'] . ']' }} list-disc list-outside">
                         @foreach ($errors->all() as $error)
-                            <li wire:key="{{ 'error' . $loop->index }}">{{ $error }}</li>
+                            <li wire:key="{{ 'forgot-password-error-' . $loop->index }}">{{ $error }}</li>
                         @endforeach
                     </ul>
                 </div>

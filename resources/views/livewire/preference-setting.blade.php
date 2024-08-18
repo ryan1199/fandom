@@ -12,7 +12,7 @@
             <p class="font-semibold">Errors:</p>
             <ul class="pl-4 flex flex-col space-x-0 space-y-2 text-pretty {{ 'marker:text-' . $preferences['color_2'] . '-500' }} list-disc list-outside">
                 @foreach ($errors->all() as $error)
-                    <li wire:key="{{ 'error' . $loop->index }}">{{ $error }}</li>
+                    <li wire:key="{{ 'preference-setting-user-' . $user->id . '-error-' . $loop->index }}">{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
@@ -35,7 +35,7 @@
                 <div>
                     <div class="w-full h-fit grid grid-cols-5">
                         @foreach ($available_color_scheme_1 as $color_scheme_1)
-                            <div wire:click="setColorScheme('color_scheme_1', '{{ $color_scheme_1 }}')" wire:key="{{ 'color-scheme-' . $color_scheme_1 }}" class="w-full h-10 flex flex-col justify-center items-center {{ 'bg-' . $color_scheme_1 . '-500' }} cursor-pointer" title="{{ $color_scheme_1 }}">
+                            <div wire:click="setColorScheme('color_scheme_1', '{{ $color_scheme_1 }}')" wire:key="{{ 'preference-setting-user-' . $user->id . '-color-scheme-1-' . $color_scheme_1 }}" class="w-full h-10 flex flex-col justify-center items-center {{ 'bg-' . $color_scheme_1 . '-500' }} cursor-pointer" title="{{ $color_scheme_1 }}">
                                 <svg x-cloak x-show="selected_color == '{{ $color_scheme_1 }}'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 {{ 'text-' . $preferences['color_2'] . '-50' }}">
                                     <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
                                 </svg>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="w-full h-fit grid grid-cols-5">
                         @foreach ($available_color_scheme_2 as $color_scheme_2)
-                            <div wire:click="setColorScheme('color_scheme_2', '{{ $color_scheme_2 }}')" wire:key="{{ 'color-scheme-' . $color_scheme_1 }}" class="w-full h-10 flex flex-col justify-center items-center {{ 'bg-' . $color_scheme_2 . '-500' }} cursor-pointer" title="{{ $color_scheme_2 }}">
+                            <div wire:click="setColorScheme('color_scheme_2', '{{ $color_scheme_2 }}')" wire:key="{{ 'preference-setting-user-' . $user->id . 'color-scheme-2-' . $color_scheme_1 }}" class="w-full h-10 flex flex-col justify-center items-center {{ 'bg-' . $color_scheme_2 . '-500' }} cursor-pointer" title="{{ $color_scheme_2 }}">
                                 <svg x-cloak x-show="selected_color == '{{ $color_scheme_2 }}'" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 {{ 'text-' . $preferences['color_2'] . '-50' }}">
                                     <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
                                 </svg>

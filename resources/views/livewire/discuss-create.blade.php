@@ -16,7 +16,7 @@
             <p class="font-semibold">Errors:</p>
             <ul class="pl-4 flex flex-col space-x-0 space-y-1 text-pretty {{ 'marker:text-' . $preferences['color_2'] . '-500' }} list-disc list-outside">
                 @foreach ($errors->all() as $error)
-                    <li wire:key="{{ 'error' . $loop->index }}">{{ $error }}</li>
+                    <li wire:key="{{ 'fandom-' . $fandom->id . '-error-' . $loop->index }}">{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
@@ -33,9 +33,9 @@
                 <select wire:model.live="visible" id="visible" class="w-full h-fit form-select {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
                     @foreach ($available_visible as $value)
                         @if ($loop->first)
-                            <option wire:key="{{ 'visible' . $loop->index }}" selected value="{{ $value }}">{{ $value }}</option>
+                            <option wire:key="{{ 'fandom-' . $fandom->id . '-visible-' . $loop->index }}" selected value="{{ $value }}">{{ $value }}</option>
                         @else
-                            <option wire:key="{{ 'visible' . $loop->index }}" value="{{ $value }}">{{ $value }}</option>
+                            <option wire:key="{{ 'fandom-' . $fandom->id . '-visible-' . $loop->index }}" value="{{ $value }}">{{ $value }}</option>
                         @endif
                     @endforeach
                 </select>

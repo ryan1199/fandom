@@ -69,7 +69,7 @@
             <div class="font-semibold {{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }}">Galleries</div>
             <div class="w-full h-fit grid gap-2 grid-cols-4 md:grid-cols-6 lg:grid-cols-4 xl:grid-cols-6">
                 @foreach ($galleries as $gallery)
-                    <img wire:key="{{ 'gallery-' . $gallery->id }}" wire:click="addImage('{{ $gallery->image->url }}')" src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation-button" draggable="false">
+                    <img wire:key="{{ 'post-create-edit-gallery-' . $gallery->id }}" wire:click="addImage('{{ $gallery->image->url }}')" src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation-button" draggable="false">
                 @endforeach
             </div>
         </div>
@@ -92,9 +92,9 @@
         </div>
         <div class="w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-2">
             <textarea wire:model.live="raw_body" x-data="{ 
-                startPosition: @entangle('startPosition').live,
-                endPosition: @entangle('endPosition').live,
-             }" x-ref="textarea" x-on:click="startPosition = $refs.textarea.selectionStart, endPosition = $refs.textarea.selectionEnd" class="w-full h-full min-h-96 form-textarea {{ 'bg-' . $preferences['color_2'] . '-50' }} border @error('raw-body') {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @enderror {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation"></textarea>
+                start_position: @entangle('startPosition').live,
+                end_position: @entangle('endPosition').live,
+             }" x-ref="textarea" x-on:click="start_position = $refs.textarea.selectionStart, end_position = $refs.textarea.selectionEnd" class="w-full h-full min-h-96 form-textarea {{ 'bg-' . $preferences['color_2'] . '-50' }} border @error('raw-body') {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @enderror {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation"></textarea>
              <div class="w-full h-fit min-h-96 p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg overflow-clip">
                  <div 
                     @switch($preferences['color_2'])

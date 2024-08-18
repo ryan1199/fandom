@@ -2,7 +2,7 @@
     @if ($from == 'gallery')
         <div class="w-full h-fit grid gap-2 grid-cols-2">
             @foreach ($galleries as $gallery)
-                <div wire:key="{{ 'gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                     <div class="flex flex-col space-x-0 space-y-2">
                         <div class="w-full h-fit relative">
                             <a wire:navigate href="{{ route('gallery.show', $gallery) }}" draggable="false">
@@ -41,7 +41,7 @@
     @if ($from == 'fandom')
         <div class="w-full h-fit grid gap-2 grid-cols-3">
             @foreach ($galleries as $gallery)
-                <div wire:key="{{ 'gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation">
+                <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation">
                     <div class="flex flex-col space-x-0 space-y-2">
                         <a wire:navigate href="{{ route('gallery.show', $gallery) }}" draggable="false">
                             <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center rounded-lg" draggable="false">

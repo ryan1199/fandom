@@ -10,7 +10,7 @@
                 <p class="{{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold text-center tracking-widest">~Hangout place for fans~</p>
                 <div
                     x-data="{
-                        colorAvailable: [{{ '"' . $preferences['color_1'] . '"' }}, {{ '"' . $preferences['color_2'] . '"' }}, {{ '"' . $preferences['color_3'] . '"' }}],
+                        color_available: [{{ '"' . $preferences['color_1'] . '"' }}, {{ '"' . $preferences['color_2'] . '"' }}, {{ '"' . $preferences['color_3'] . '"' }}],
                         color1: null,
                         color2: null,
                         color3: null,
@@ -19,15 +19,15 @@
                         num2: null,
                         num3: null,
                         init() {
-                            this.colorAvailable = [{{ '"' . $preferences['color_1'] . '"' }}, {{ '"' . $preferences['color_2'] . '"' }}, {{ '"' . $preferences['color_3'] . '"' }}];
+                            this.color_available = [{{ '"' . $preferences['color_1'] . '"' }}, {{ '"' . $preferences['color_2'] . '"' }}, {{ '"' . $preferences['color_3'] . '"' }}];
                             this.timer = setInterval(() => {
-                                this.colorAvailable.sort(function(){return 0.2 - Math.random()});
+                                this.color_available.sort(function(){return 0.2 - Math.random()});
                                 this.num1 = Math.floor(Math.random() * 3);
                                 this.num2 = Math.floor(Math.random() * 3);
                                 this.num3 = Math.floor(Math.random() * 3);
-                                this.color1 = this.colorAvailable[0];
-                                this.color2 = this.colorAvailable[1];
-                                this.color3 = this.colorAvailable[2];
+                                this.color1 = this.color_available[0];
+                                this.color2 = this.color_available[1];
+                                this.color3 = this.color_available[2];
                             }, 100);
                         },
                     }"
@@ -48,7 +48,7 @@
                 <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
                     {{-- with paginate --}}
                     @foreach ($fandoms as $fandom)
-                        @livewire(FandomList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('home-fandom-list-fandom-' . $fandom->id))
+                        @livewire(FandomList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('public-fandom-' . $fandom->id))
                     @endforeach
                 </div>
             </div>
@@ -90,7 +90,7 @@
                             <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
                                 {{-- with paginate --}}
                                 @foreach ($userFollowedUsers['gallery'] as $userFollowedUserGallery)
-                                    @livewire(GalleryListHome::class, ['gallery' => $userFollowedUserGallery->id, 'preferences' => $preferences], key('followed-users-by-user-' . Auth::id() . '-gallery-' . $userFollowedUserGallery->id))
+                                    @livewire(GalleryListHome::class, ['gallery' => $userFollowedUserGallery->id, 'preferences' => $preferences], key('user-' . Auth::id() . '-followed-user-gallery-' . $userFollowedUserGallery->id))
                                 @endforeach
                             </div>
                         @else
@@ -100,7 +100,7 @@
                             <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
                                 {{-- with paginate --}}
                                 @foreach ($userFollowedUsers['post'] as $userFollowedUserPost)
-                                    @livewire(PostListHome::class, ['post' => $userFollowedUserPost->id, 'preferences' => $preferences], key('followed-users-by-user-' . Auth::id() . '-post-' . $userFollowedUserPost->id))
+                                    @livewire(PostListHome::class, ['post' => $userFollowedUserPost->id, 'preferences' => $preferences], key('user-' . Auth::id() . '-followed-user-post-' . $userFollowedUserPost->id))
                                 @endforeach
                             </div>
                         @else
@@ -119,7 +119,7 @@
                             <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
                                 {{-- with paginate --}}
                                 @foreach ($userFandoms['gallery'] as $userFandomrGallery)
-                                    @livewire(GalleryListHome::class, ['gallery' => $userFandomrGallery->id, 'preferences' => $preferences], key('joined-into-fandoms-by-user-' . Auth::id() . '-gallery-' . $userFandomrGallery->id))
+                                    @livewire(GalleryListHome::class, ['gallery' => $userFandomrGallery->id, 'preferences' => $preferences], key('user-' . Auth::id() . '-joined-fandom-gallery-' . $userFandomrGallery->id))
                                 @endforeach
                             </div>
                         @else
@@ -129,7 +129,7 @@
                             <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
                                 {{-- with paginate --}}
                                 @foreach ($userFandoms['post'] as $userFandomrPost)
-                                    @livewire(PostListHome::class, ['post' => $userFandomrPost->id, 'preferences' => $preferences], key('joined-into-fandoms-by-user-' . Auth::id() . '-post-' . $userFandomrPost->id))
+                                    @livewire(PostListHome::class, ['post' => $userFandomrPost->id, 'preferences' => $preferences], key('user-' . Auth::id() . '-joined-fandom-post-' . $userFandomrPost->id))
                                 @endforeach
                             </div>
                         @else

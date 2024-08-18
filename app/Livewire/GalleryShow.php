@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Number;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
@@ -24,8 +25,9 @@ class GalleryShow extends Component
         'fandom' => null,
         'tags' => null
     ];
-    // totalComments
-    // totalViews
+    public $totalLikes;
+    public $totalDislikes;
+    public $totalComments;
     public $preferences = [];
     public function render()
     {
@@ -55,6 +57,9 @@ class GalleryShow extends Component
     public function loadGallery(Gallery $gallery)
     {
         $this->gallery = Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable','comments','rates.user'])->find($gallery->id);
+        $this->totalLikes = Number::abbreviate(collect($gallery->rates)->where('like', true)->count());
+        $this->totalDislikes = Number::abbreviate(collect($gallery->rates)->where('dislike', true)->count());
+        $this->totalComments = Number::abbreviate($gallery->comments->count());
     }
     public function loadRecommendations()
     {

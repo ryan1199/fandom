@@ -1,39 +1,36 @@
 <div class="w-full h-screen {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
     <div class="w-full h-screen p-2 grid grid-cols-12 grid-flow-row-dense auto-rows-max auto-cols-max gap-2">
         {{-- fandom details --}}
-        <div class="w-full h-full max-h-[calc(100vh-16px)] col-span-12 lg:col-span-6 p-2 shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg overflow-y-auto">
-            <div x-data="{ tab: @entangle('tab').live }" class="w-full h-fit flex flex-col space-x-0 space-y-2 rounded-lg">
+        <div class="w-full h-fit max-h-[calc(100vh-16px)] col-span-12 lg:col-span-6 shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg overflow-y-auto">
+            <div x-data="{ tab: @entangle('tab').live }" class="w-full h-fit p-4 flex flex-col space-x-0 space-y-4 rounded-lg">
                 {{-- header --}}
-                <div class="w-full h-fit p-2 relative rounded-lg">
-                    <img src="{{ asset('storage/covers/' . $fandom->cover->image->url) }}" alt="Cover image {{ $fandom->name }}" title="Cover image {{ $fandom->name }}" class="w-full h-[30vh] object-cover shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg select-none" draggable="false">
-                    <div class="absolute left-0 top-0 w-full h-[30vh]">
-                        <div class="w-full h-[30vh] p-4 flex flex-col justify-center items-center space-x-0 space-y-4">
-                            <img src="{{ asset('storage/avatars/' . $fandom->avatar->image->url) }}" alt="Avatar image {{ $fandom->name }}" title="Avatar image {{ $fandom->name }}" class="p-2 w-auto h-[50%] aspect-square object-cover {{ 'bg-' . $preferences['color_2'] . '-50/10' }} backdrop-blur-sm shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-full select-none" draggable="false">
-                            <div class="w-full h-fit max-h-[15vh] p-2 {{ 'text-' . $preferences['color_2'] . '-100' }} {{ 'bg-' . $preferences['color_2'] . '-50/10' }} backdrop-blur-xl rounded-lg overflow-clip">
-                                <div x-data="{ open: false }" class="flex flex-row space-x-1 space-y-0 justify-center items-center">
-                                    <h1 class="w-fit text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-semibold">{{ $fandom->name }}</h1>
-                                    @auth
-                                        <span class="relative">
-                                            <svg x-on:click="open = ! open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 bg-inherit {{ 'text-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-100' }} rounded-full">
-                                                <path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd" />
-                                            </svg>
-                                            @if (in_array(Auth::id(), $members['id']))
-                                                <div wire:click="leave" wire:confirm="Are you sure you want to leave this fandom?" x-cloak x-show="open" class="absolute -top-1 -right-[72px] w-fit h-fit mx-auto px-2 py-1 bg-inherit border {{ 'border-' . $preferences['color_2'] . '-100' }} rounded-full select-none cursor-pointer">Leave</div>
-                                            @else
-                                                <div wire:click="join" wire:confirm="Are you sure you want to join this fandom?" x-cloak x-show="open" class="absolute -top-1 -right-[72px] w-fit h-fit mx-auto px-2 py-1 bg-inherit border {{ 'border-' . $preferences['color_2'] . '-100' }} rounded-full select-none cursor-pointer">Join</div>
-                                            @endif
-                                        </span>
-                                    @endauth
-                                </div>
-                                <div class="w-fit max-w-full h-fit max-h-[10vh] mx-auto mt-1 text-left overflow-clip overflow-y-auto">
-                                    <p>{{ $fandom->description }}</p>
-                                </div>
+                <div style="background-image: url('{{ asset('storage/covers/' . $fandom->cover->image->url) }}')" class="w-full h-fit bg-cover bg-no-repeat bg-center rounded-lg">
+                    <div class="w-full h-fit p-4 flex flex-col justify-center items-center space-x-0 space-y-4">
+                        <img src="{{ asset('storage/avatars/' . $fandom->avatar->image->url) }}" alt="Avatar image {{ $fandom->name }}" title="Avatar image {{ $fandom->name }}" class="p-2 w-auto h-40 aspect-square object-cover {{ 'bg-' . $preferences['color_2'] . '-50/10' }} backdrop-blur-sm shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-full select-none" draggable="false">
+                        <div class="w-full h-fit p-2 {{ 'text-' . $preferences['color_2'] . '-100' }} {{ 'bg-' . $preferences['color_2'] . '-50/10' }} backdrop-blur-xl {{ 'selection:bg-' . $preferences['color_2'] . '-50' }} {{ 'selection:text-' . $preferences['color_2'] . '-500' }} rounded-lg overflow-clip">
+                            <div x-data="{ open_leave_join_button: false }" class="flex flex-row space-x-1 space-y-0 justify-center items-center">
+                                <h1 class="w-fit max-w-full p-2 text-nowrap text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-semibold overflow-x-auto">{{ $fandom->name }}</h1>
+                                @auth
+                                    <span class="relative">
+                                        <svg x-on:click="open_leave_join_button = ! open_leave_join_button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 bg-inherit {{ 'text-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-100' }} rounded-full">
+                                            <path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd" />
+                                        </svg>
+                                        @if (in_array(Auth::id(), $members['id']))
+                                            <div wire:click="leave" wire:confirm="Are you sure you want to leave this fandom?" x-cloak x-show="open_leave_join_button" class="absolute -top-1 -right-[72px] w-fit h-fit mx-auto px-2 py-1 bg-inherit border {{ 'border-' . $preferences['color_2'] . '-100' }} rounded-full select-none cursor-pointer">Leave</div>
+                                        @else
+                                            <div wire:click="join" wire:confirm="Are you sure you want to join this fandom?" x-cloak x-show="open_leave_join_button" class="absolute -top-1 -right-[72px] w-fit h-fit mx-auto px-2 py-1 bg-inherit border {{ 'border-' . $preferences['color_2'] . '-100' }} rounded-full select-none cursor-pointer">Join</div>
+                                        @endif
+                                    </span>
+                                @endauth
+                            </div>
+                            <div class="w-fit max-w-full h-fit max-h-40 mx-auto p-2 text-left overflow-clip overflow-y-auto">
+                                <p>{{ $fandom->description }}</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 {{-- nav --}}
-                <div class="px-2">
+                <div class="">
                     <div class="w-full h-fit {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg select-none">
                         <div class="w-fit max-w-full flex flex-row text-nowrap overflow-x-auto overflow-y-clip">
                             <div :class="tab == 'home' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'home'" class="p-4 font-semibold cursor-pointer">Home</div>
@@ -47,8 +44,8 @@
                     </div>
                 </div>
                 {{-- content --}}
-                <div class="w-full h-fit">
-                    <div x-transition x-cloak x-show="tab == 'home'" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-4">
+                <div class="w-full h-fit {{ 'selection:bg-' . $preferences['color_2'] . '-500' }} {{ 'selection:text-' . $preferences['color_2'] . '-50' }}">
+                    <div x-transition x-cloak x-show="tab == 'home'" class="w-full h-fit flex flex-col space-x-0 space-y-4">
                         {{-- post --}}
                         <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                             <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
@@ -59,7 +56,7 @@
                             <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                                 @if (in_array(Auth::id(), $members['id']))
                                     @forelse ($posts['member'] as $post)
-                                        <a wire:key="{{ 'post-member-' . $loop->index }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                        <a wire:key="{{ 'fandom-' . $fandom->id . '-post-member-' . $loop->index }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
                                             <h1 class="font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation">{{ $post->title }}</h1>
                                             <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
                                         </a>
@@ -68,7 +65,7 @@
                                     @endforelse
                                 @else
                                     @forelse ($posts['public'] as $post)
-                                        <a wire:key="{{ 'post-public-' . $loop->index }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                        <a wire:key="{{ 'fandom-' . $fandom->id . '-post-public-' . $loop->index }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
                                             <h1 class="font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation">{{ $post->title }}</h1>
                                             <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
                                         </a>
@@ -88,7 +85,7 @@
                             <div class="w-full h-fit grid gap-2 grid-cols-3">
                                 @if (in_array(Auth::id(), $members['id']))
                                     @forelse ($galleries['member'] as $gallery)
-                                        <div wire:key="{{ 'gallery-member-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                                        <div wire:key="{{ 'fandom-' . $fandom->id . '-gallery-member-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
                                             <div class="flex flex-col space-x-0 space-y-2">
                                                 <a href="{{ route('gallery.show', $gallery) }}" draggable="false">
                                                     <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center rounded-lg" draggable="false">
@@ -101,7 +98,7 @@
                                     @endforelse
                                 @else
                                     @forelse ($galleries['public'] as $gallery)
-                                        <div wire:key="{{ 'gallery-public' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                                        <div wire:key="{{ 'fandom-' . $fandom->id . '-gallery-public' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
                                             <div class="flex flex-col space-x-0 space-y-2">
                                                 <a href="{{ route('gallery.show', $gallery) }}" draggable="false">
                                                     <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center rounded-lg" draggable="false">
@@ -149,7 +146,7 @@
                             </div>
                         </div>
                     </div>
-                    <div x-transition x-cloak x-show="tab == 'post'" class="w-full h-fit p-2">
+                    <div x-transition x-cloak x-show="tab == 'post'" class="w-full h-fit">
                         <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                             <div class="w-full h-fit flex flex-row justify-between items-center">
                                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
@@ -167,11 +164,11 @@
                                     @endif
                                 @endauth
                             </div>
-                            @livewire(PostSearch::class, ['preferences' => $preferences, 'from' => 'fandom'])
-                            @livewire(PostList::class, ['preferences' => $preferences, 'from' => 'fandom', 'id' => $fandom->id])
+                            @livewire(PostSearch::class, ['preferences' => $preferences, 'from' => 'fandom'], key('post-search-for-fandom-', $fandom->id))
+                            @livewire(PostList::class, ['preferences' => $preferences, 'from' => 'fandom', 'id' => $fandom->id], key('post-list-for-fandom-', $fandom->id))
                         </div>
                     </div>
-                    <div x-transition x-cloak x-show="tab == 'gallery'" class="w-full h-fit p-2">
+                    <div x-transition x-cloak x-show="tab == 'gallery'" class="w-full h-fit">
                         <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                             <div class="w-full h-fit flex flex-row justify-between items-center">
                                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
@@ -189,11 +186,11 @@
                                     @endif
                                 @endauth
                             </div>
-                            @livewire(GallerySearch::class, ['preferences' => $preferences, 'from' => 'fandom'])
-                            @livewire(GalleryList::class, ['preferences' => $preferences, 'from' => 'fandom', 'id' => $fandom->id])
+                            @livewire(GallerySearch::class, ['preferences' => $preferences, 'from' => 'fandom'], key('gallery-search-for-fandom-', $fandom->id))
+                            @livewire(GalleryList::class, ['preferences' => $preferences, 'from' => 'fandom', 'id' => $fandom->id], key('gallery-list-for-fandom-', $fandom->id))
                         </div>
                     </div>
-                    <div x-transition x-cloak x-show="tab == 'user'" class="w-full h-fit p-2">
+                    <div x-transition x-cloak x-show="tab == 'user'" class="w-full h-fit">
                         <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                             <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                 <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
@@ -207,7 +204,7 @@
                                     <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
                                     <div class="flex flex-row flex-wrap">
                                         @forelse ($members['manager']['list'] as $manager)
-                                            <a wire:key="{{ 'user-manager-' . $loop->index }}" href="{{ route('user', $manager->user) }}" class="w-fit m-1 p-2 flex flex-row space-x-2 space-y-0 justify-start items-center {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" title="{{ $manager->user->username }}" draggable="false">
+                                            <a wire:key="{{ 'fandom-' . $fandom->id . '-user-manager-' . $loop->index }}" href="{{ route('user', $manager->user) }}" class="w-fit m-1 p-2 flex flex-row space-x-2 space-y-0 justify-start items-center {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" title="{{ $manager->user->username }}" draggable="false">
                                                 <img src="{{ asset('storage/avatars/' . $manager->user->avatar->image->url) }}" alt="{{ $manager->user->username }}" class="w-10 h-10 object-cover object-center rounded-full" draggable="false">
                                                 <p class="font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $manager->user->username }}</p>
                                             </a>
@@ -222,7 +219,7 @@
                                     <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
                                     <div class="flex flex-row flex-wrap">
                                         @forelse ($members['member']['list'] as $member)
-                                            <a wire:key="{{ 'user-member-' . $loop->index }}" href="{{ route('user', $member->user) }}" class="w-fit m-1 p-2 flex flex-row space-x-2 space-y-0 justify-start items-center {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" title="{{ $member->user->username }}" draggable="false">
+                                            <a wire:key="{{ 'fandom-' . $fandom->id . '-user-member-' . $loop->index }}" href="{{ route('user', $member->user) }}" class="w-fit m-1 p-2 flex flex-row space-x-2 space-y-0 justify-start items-center {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" title="{{ $member->user->username }}" draggable="false">
                                                 <img src="{{ asset('storage/avatars/' . $member->user->avatar->image->url) }}" alt="{{ $member->user->username }}" class="w-10 h-10 object-cover object-center rounded-full" draggable="false">
                                                 <p class="font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $member->user->username }}</p>
                                             </a>
@@ -235,35 +232,35 @@
                         </div>
                     </div>
                     @if (in_array(Auth::id(), $members['manager']['id']))
-                        <div x-transition x-cloak x-show="tab == 'setting'" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
-                            @livewire(FandomSetting::class, ['fandom' => $fandom->slug, 'preferences' => $preferences])
+                        <div x-transition x-cloak x-show="tab == 'setting'" class="w-full h-fit flex flex-col space-x-0 space-y-2">
+                            @livewire(FandomSetting::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('fandom-setting-for-fandom-', $fandom->id))
                         </div>
                     @endif
                 </div>
             </div>
         </div>
         {{-- discusses --}}
-        <div @if (in_array(Auth::id(), $members['manager']['id'])) x-data="{ openDiscussCreateComponent: false }" @endif class="w-full h-fit max-h-[calc(100vh-16px)] p-2 col-span-12 lg:col-span-6 flex flex-col space-x-0 space-y-2 shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg overflow-y-auto">
-            <div class="w-full h-fit flex flex-row justify-between items-center select-none">
+        <div @if (in_array(Auth::id(), $members['manager']['id'])) x-data="{ open_discuss_create_component: false }" @endif class="w-full h-fit max-h-[calc(100vh-16px)] p-4 col-span-12 lg:col-span-6 flex flex-col space-x-0 space-y-4 shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg overflow-y-auto">
+            <div class="w-full h-fit p-2 flex flex-row justify-between items-center {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg select-none">
                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
                         Discusses
                     </span>
                 </div>
                 @if (in_array(Auth::id(), $members['manager']['id']))
-                    <svg x-on:click="openDiscussCreateComponent = ! openDiscussCreateComponent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">
+                    <svg x-on:click="open_discuss_create_component = ! open_discuss_create_component" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">
                         <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
                     </svg>
                 @endif
             </div>
             @if (in_array(Auth::id(), $members['manager']['id']))
-                <div x-cloak x-show="openDiscussCreateComponent" class="w-full h-fit">
-                    @livewire(DiscussCreate::class, ['fandom' => $fandom->slug, 'preferences' => $preferences])
+                <div x-cloak x-show="open_discuss_create_component" class="w-full h-fit">
+                    @livewire(DiscussCreate::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('discuss-create-for-fandom-', $fandom->id))
                 </div>
             @endif
             @if ($discusses->isNotEmpty())
                 <div class="w-full h-fit">
-                    @livewire(Discuss::class, ['discuss_ids' => $discusses->pluck('id'), 'preferences' => $preferences, 'from' => 'fandom-discuss-' . $fandom->id], key("fandom-discuss"))
+                    @livewire(Discuss::class, ['discuss_ids' => $discusses->pluck('id'), 'preferences' => $preferences, 'from' => 'discussion-for-fandom-' . $fandom->id], key("discussion-for-fandom-" . $fandom->id))
                 </div>
             @endif
         </div>

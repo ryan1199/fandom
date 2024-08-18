@@ -1,9 +1,15 @@
-<div x-data="{ openChat: @entangle('openChat').live }" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg">
-    <div x-on:click="openChat = ! openChat"  class="w-full h-fit flex flex-row space-x-2 space-y-0 items-center select-none">
-        <img src="{{ asset('storage/avatars/'.$user->avatar->image->url) }}" alt="{{ $user->username }}" title="{{ $user->username }}" class="aspect-square w-auto h-[5vh] rounded-full object-cover" draggable="false">
+<div x-data="{ open_chat: @entangle('openChat').live }" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg">
+    <div x-on:click="open_chat = ! open_chat"  class="w-full h-fit flex flex-row space-x-2 space-y-0 items-center select-none">
+        @if ($user->avatar !== null)
+            <img src="{{ asset('storage/avatars/'.$user->avatar->image->url) }}" alt="{{ $user->username }}" title="{{ $user->username }}" class="aspect-square w-auto h-[5vh] rounded-full object-cover" draggable="false">
+        @else
+            <div class="aspect-square w-auto h-[5vh] rounded-full bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-500' }} {{ 'via-' . $preferences['color_2'] . '-500' }} {{ 'to-' . $preferences['color_3'] . '-500' }} rounded-full">
+                <div style="background-image: url('{{ asset('avatar-white.svg') }}')" class="w-full h-full bg-cover bg-repeat bg-center rounded-full"></div>
+            </div>
+        @endif
         <p class="font-bold">{{ $user->username }}</p>
     </div>
-    <div x-cloak x-show="!openChat" class="flex flex-col space-x-0 space-y-0">
+    <div x-cloak x-show="!open_chat" class="flex flex-col space-x-0 space-y-0">
         <div 
             @switch($preferences['color_2'])
                 @case('slate')
@@ -82,12 +88,12 @@
             @endif
         </div>
     </div>
-    <div x-cloak x-show="openChat" class="w-full h-fit flex flex-col space-x-0 space-y-1 relative">
+    <div x-cloak x-show="open_chat" class="w-full h-fit flex flex-col space-x-0 space-y-1 relative">
         <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
         <div class="w-full h-fit max-h-[25vh] flex flex-col-reverse space-x-0 space-y-1 space-y-reverse overflow-x-clip overflow-y-auto">
             @foreach ($messages as $message)
                 @if ($message->user->id == Auth::id())
-                    <div wire:key="{{ 'message-' . $message->id }}" class="w-10/12 h-fit p-2 self-end flex flex-col space-x-0 space-y-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg">
+                    <div wire:key="{{ 'user-' . $message->user->id . '-message-' . $message->id }}" class="w-10/12 h-fit p-2 self-end flex flex-col space-x-0 space-y-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg">
                         <p class="font-semibold text-right">{{ $message->user->username }}</p>
                         <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
                         <div 
@@ -165,7 +171,7 @@
                         </div>
                     </div>
                 @else
-                    <div wire:key="{{ 'message-' . $message->id }}" class="w-10/12 h-fit p-2 flex flex-col space-x-0 space-y-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg">
+                    <div wire:key="{{ 'user-' . $message->user->id . '-message-' . $message->id }}" class="w-10/12 h-fit p-2 flex flex-col space-x-0 space-y-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg">
                         <p class="font-semibold">{{ $message->user->username }}</p>
                         <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
                         <div

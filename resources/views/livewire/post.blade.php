@@ -12,10 +12,10 @@
                         <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
                     </svg>
                 </div>
-                @livewire(PostSearch::class, ['preferences' => $preferences, 'from' => 'user'])
-                @livewire(PostList::class, ['preferences' => $preferences, 'from' => 'post'])
+                @livewire(PostSearch::class, ['preferences' => $preferences, 'from' => 'user'], key('post-search-for-user'))
+                @livewire(PostList::class, ['preferences' => $preferences, 'from' => 'post'], key('post-list-for-user'))
             </div>
         </div>
-        @livewire(PostCreateEdit::class, ['preferences' => $preferences])
+        @livewire(PostCreateEdit::class, ['preferences' => $preferences], key('post-create-edit-for-user'))
     </div>
 </div>

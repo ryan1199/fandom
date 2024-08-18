@@ -5,18 +5,18 @@
             <select wire:model.live="sort_by" class="w-full sm:w-fit lg:w-full xl:w-fit h-14 form-select {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
                 @foreach ($sort_by_available as $value)
                     @if ($loop->first)
-                        <option wire:key="{{ 'sort-by-' . $loop->index }}" selected value="{{ $value }}">{{ $value }}</option>
+                        <option wire:key="{{ 'post-search-sort-by-' . $loop->index }}" selected value="{{ $value }}">{{ $value }}</option>
                     @else
-                        <option wire:key="{{ 'sort-by-' . $loop->index }}" value="{{ $value }}">{{ $value }}</option>
+                        <option wire:key="{{ 'post-search-sort-by-' . $loop->index }}" value="{{ $value }}">{{ $value }}</option>
                     @endif
                 @endforeach
             </select>
             <select wire:model.live="sort" class="w-full sm:w-fit lg:w-full xl:w-fit h-14 form-select {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
                 @foreach ($sort_available as $value)
                     @if ($loop->first)
-                        <option wire:key="{{ 'sort-' . $loop->index }}" selected value="{{ $value }}">{{ $value }}</option>
+                        <option wire:key="{{ 'post-search-sort-' . $loop->index }}" selected value="{{ $value }}">{{ $value }}</option>
                     @else
-                        <option wire:key="{{ 'sort-' . $loop->index }}" value="{{ $value }}">{{ $value }}</option>
+                        <option wire:key="{{ 'post-search-sort-' . $loop->index }}" value="{{ $value }}">{{ $value }}</option>
                     @endif
                 @endforeach
             </select>
@@ -33,7 +33,7 @@
             <p class="font-semibold">Errors:</p>
             <ul class="pl-4 flex flex-col space-x-0 space-y-1 text-pretty {{ 'marker:text-' . $preferences['color_2'] . '-500' }} list-disc list-outside">
                 @foreach ($errors->all() as $error)
-                    <li wire:key="{{ 'error-' . $loop->index }}">{{ $error }}</li>
+                    <li wire:key="{{ 'post-search-error-' . $loop->index }}">{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
