@@ -10,6 +10,7 @@ use App\Models\Post;
 use App\Models\User as ModelsUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Number;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -101,8 +102,8 @@ class User extends Component
     }
     public function loadFollowersAndFollowing()
     {
-        $this->followers = Follow::where('other_user_id', $this->user->id)->get()->count();
-        $this->following = Follow::where('self_user_id', $this->user->id)->get()->count();
+        $this->followers = Number::abbreviate(Follow::where('other_user_id', $this->user->id)->get()->count());
+        $this->following = Number::abbreviate(Follow::where('self_user_id', $this->user->id)->get()->count());
     }
     public function chatTo()
     {

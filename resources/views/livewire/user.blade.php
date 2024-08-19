@@ -1,29 +1,29 @@
 <div class="w-full h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} select-none overflow-clip">
-    <div class="w-full h-screen max-h-[100vh] p-2 flex flex-row space-x-2 space-y-0 {{ 'bg-' . $preferences['color_2'] . '-50' }} overflow-clip">
-        <div class="w-full max-w-md h-screen max-h-[calc(100vh-16px)] flex flex-col space-x-0 space-y-2 overflow-y-auto">
-            <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg break-inside-avoid-column">
+    <div class="w-full h-screen max-h-[100vh] p-2 flex flex-row space-x-2 space-y-0 overflow-clip">
+        <div class="w-full max-w-md h-screen max-h-[calc(100vh-1rem)] p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg overflow-y-auto">
+            <div class="w-full h-fit flex flex-col space-x-0 space-y-2 break-inside-avoid-column">
                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
                       Profile
                     </span>
                 </div>
-                <div class="w-full h-[30vh] relative select-none">
-                    @if ($cover !== null)
-                        <img src="{{ asset('storage/covers/'.$cover->image->url) }}" alt="Cover image {{ $user->username }}" title="Cover image {{ $user->username }}" class="w-full h-[30vh] object-cover block rounded-lg" draggable="false">
-                    @else
-                        <div class="w-full h-full bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-500' }} {{ 'via-' . $preferences['color_2'] . '-500' }} {{ 'to-' . $preferences['color_3'] . '-500' }} rounded-lg">
-                            <div style="background-image: url('{{ asset('cover-white.svg') }}')" class="w-full h-[30vh] bg-repeat bg-center rounded-lg"></div>
-                        </div>
-                    @endif
-                    @if ($avatar !== null)
-                        <img src="{{ asset('storage/avatars/'.$avatar->image->url) }}" alt="Avatar image {{ $user->username }}" title="Avatar image {{ $user->username }}" class="block absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[15vh] aspect-square object-cover rounded-full" draggable="false">
-                    @else
-                        <div class="absolute top-0 bottom-0 right-0 left-0 m-auto w-[15vh] h-[15vh] bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-500' }} {{ 'via-' . $preferences['color_2'] . '-500' }} {{ 'to-' . $preferences['color_3'] . '-500' }} rounded-full">
-                            <div style="background-image: url('{{ asset('avatar-white.svg') }}')" class="w-full h-full bg-contain bg-repeat bg-center rounded-full"></div>
-                        </div>
-                    @endif
-                </div>
-                <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
+                <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
+                    <div class="w-full h-[30vh] relative select-none">
+                        @if ($cover !== null)
+                            <img src="{{ asset('storage/covers/'.$cover->image->url) }}" alt="Cover image {{ $user->username }}" title="Cover image {{ $user->username }}" class="w-full h-[30vh] object-cover block rounded-lg" draggable="false">
+                        @else
+                            <div class="w-full h-full bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-500' }} {{ 'via-' . $preferences['color_2'] . '-500' }} {{ 'to-' . $preferences['color_3'] . '-500' }} rounded-lg">
+                                <div style="background-image: url('{{ asset('cover-white.svg') }}')" class="w-full h-[30vh] bg-repeat bg-center rounded-lg"></div>
+                            </div>
+                        @endif
+                        @if ($avatar !== null)
+                            <img src="{{ asset('storage/avatars/'.$avatar->image->url) }}" alt="Avatar image {{ $user->username }}" title="Avatar image {{ $user->username }}" class="block absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[15vh] aspect-square object-cover rounded-full" draggable="false">
+                        @else
+                            <div class="absolute top-0 bottom-0 right-0 left-0 m-auto w-[15vh] h-[15vh] bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-500' }} {{ 'via-' . $preferences['color_2'] . '-500' }} {{ 'to-' . $preferences['color_3'] . '-500' }} rounded-full">
+                                <div style="background-image: url('{{ asset('avatar-white.svg') }}')" class="w-full h-full bg-contain bg-repeat bg-center rounded-full"></div>
+                            </div>
+                        @endif
+                    </div>
                     <div class="w-full h-fit flex flex-col space-x-0 space-y-1 text-pretty">
                         <h1 class="w-full text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)+theme(fontSize.base)-' . $preferences['font_size'] . 'px)*1.2)]' }} font-semibold">{{ $user->username }}</h1>
                         <div 
@@ -180,74 +180,72 @@
                             <div wire:click="chatTo" class="w-fit h-fit p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg cursor-pointer animation-button">Chat</div>
                         </div>
                     @endif
-                    <div class="w-full h-fit max-h-[40vh] flex flex-col space-x-0 space-y-2 text-center overflow-clip overflow-y-auto">
-                        <div class="w-full h-fit columns-2 gap-1">
-                            <div class="w-full h-fit mb-1 p-2 break-inside-avoid-column flex flex-col space-x-0 space-y-1 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                    <div class="w-full h-fit max-h-[40vh] flex flex-col space-x-0 space-y-1 text-center overflow-clip overflow-y-auto">
+                        {{-- following and follower --}}
+                        <div class="w-full h-fit grid grid-cols-2 gap-2">
+                            <div class="w-full h-fit mb-1 p-2 break-inside-avoid-column flex flex-col space-x-0 space-y-1 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                                 <div class="w-full flex flex-row justify-center items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-10 {{ 'text-' . $preferences['color_2'] . '-900' }}">
                                         <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
                                     </svg>
                                     <p class="w-fit {{ 'text-' . $preferences['color_2'] . '-900' }} text-center tracking-tighter">
-                                        @if ($followers >= 1000)
-                                            {{ round($followers/1000, 1) . 'k' }}
-                                        @else
-                                            {{ $followers }}
-                                        @endif
+                                        {{ $followers }}
                                     </p>
                                 </div>
                                 <p class="font-semibold {{ 'text-' . $preferences['color_2'] . '-900' }}">Followed</p>
                             </div>
-                            <div class="w-full h-fit mb-1 p-2 break-inside-avoid-column flex flex-col space-x-0 space-y-1 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                            <div class="w-full h-fit mb-1 p-2 break-inside-avoid-column flex flex-col space-x-0 space-y-1 items-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                                 <div class="w-full flex flex-row justify-center items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-10 {{ 'text-' . $preferences['color_2'] . '-900' }}">
                                         <path fill-rule="evenodd" d="M7.5 6a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM3.751 20.105a8.25 8.25 0 0 1 16.498 0 .75.75 0 0 1-.437.695A18.683 18.683 0 0 1 12 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 0 1-.437-.695Z" clip-rule="evenodd" />
                                     </svg>
                                     <p class="w-fit {{ 'text-' . $preferences['color_2'] . '-900' }} text-center tracking-tighter">
-                                        @if ($following >= 1000)
-                                            {{ round($following/1000, 1) . 'k' }}
-                                        @else
-                                            {{ $following }}
-                                        @endif
+                                        {{ $following }}
                                     </p>
                                 </div>
                                 <p class="font-semibold {{ 'text-' . $preferences['color_2'] . '-900' }}">Following</p>
                             </div>
+                        </div>
+                        {{-- fandom --}}
+                        <div class="w-full h-fit grid grid-cols-1 gap-2">
                             @foreach ($user->members as $member)
-                                <a wire:navigate wire:key="{{ 'user-' . $user->id . '-fandom-' . $member->fandom->slug }}" wire:navigate.hover href="{{ route('fandom-details', $member->fandom) }}" class="w-full h-fit mb-1 p-2 break-inside-avoid-column flex flex-col space-x-0 space-y-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
-                                    <div class="w-full h-screen max-h-[13vh] flex flex-col space-x-0 space-y-2 overflow-y-auto">
-                                        <p class="font-semibold {{ 'text-' . $preferences['color_2'] . '-900' }}">{{ $member->fandom->name }}</p>
-                                        <div class="w-full h-[10vh] relative">
-                                            @if ($member->fandom->cover !== null)
-                                                <img src="{{ asset('storage/covers/'.$member->fandom->cover->image->url) }}" alt="Cover image {{ $member->fandom->name }}" title="Cover image {{ $member->fandom->name }}" class="w-full h-full object-cover block rounded-lg" draggable="false">
-                                            @else
-                                                <div class="w-full h-full bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-lg">
-                                                    <div style="background-image: url('{{ asset('cover-white.svg') }}')" class="w-full h-[10vh] bg-repeat bg-center rounded-lg"></div>
-                                                </div>
-                                            @endif
-                                            @if ($member->fandom->avatar !== null)
-                                                <img src="{{ asset('storage/avatars/'.$member->fandom->avatar->image->url) }}" alt="Avatar image {{ $member->fandom->name }}" title="Avatar image {{ $member->fandom->name }}" class="block absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[8vh] aspect-square object-cover rounded-full" draggable="false">
-                                            @else
-                                                <div class="absolute top-0 bottom-0 right-0 left-0 m-auto w-auto h-[8vh] aspect-square bg-gradient-to-r {{ 'from-' . $preferences['color_2'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_2'] . '-900' }} rounded-full">
-                                                    <div style="background-image: url('{{ asset('avatar-white.svg') }}')" class="w-full h-full bg-contain bg-repeat bg-center rounded-full"></div>
-                                                </div>
-                                            @endif
+                                <div wire:key="{{ 'user-' . $user->id . '-fandom-list-fandom-' . $member->fandom->id }}" class="w-full h-fit bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} {{ 'selection:bg-' . $preferences['color_2'] . '-50' }} {{ 'selection:text-' . $preferences['color_2'] . '-500' }} rounded-lg">
+                                    <div
+                                        @if ($member->fandom->cover != null)
+                                            style="background-image: url('{{ asset('storage/covers/'.$member->fandom->cover->image->url) }}')"
+                                        @else
+                                            style="background-image: url('{{ asset('cover-black.svg') }}')"
+                                        @endif
+                                        class="w-full h-fit p-4 bg-cover bg-no-repeat bg-center rounded-lg">
+                                        <div class="w-full max-w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/10' }} backdrop-blur-xl {{ 'text-' . $preferences['color_2'] . '-100' }} {{ 'selection:bg-' . $preferences['color_2'] . '-50' }} {{ 'selection:text-' . $preferences['color_2'] . '-500' }} rounded-lg">
+                                            <h2 class="w-full h-fit overflow-x-scroll max-w-full text-nowrap {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-semibold">{{ $member->fandom->name }}</h2>
+                                            <p class="w-full h-fit max-h-20 overflow-y-auto">
+                                                {{ $member->fandom->description }}
+                                            </p>
+                                            <div class="w-full h-fit flex flex-row space-x-2 space-y-0 items-center justify-between">
+                                                <div class="{{ 'text-' . $preferences['color_2'] . '-100' }}">Role: {{ $member->role->name }}</div>
+                                                <a wire:navigate.hover href="{{ route('fandom-details', $member->fandom) }}" class="self-end" draggable="false" title="{{ $member->fandom->name }}">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">
+                                                        <path fill-rule="evenodd" d="M12.97 3.97a.75.75 0 0 1 1.06 0l7.5 7.5a.75.75 0 0 1 0 1.06l-7.5 7.5a.75.75 0 1 1-1.06-1.06l6.22-6.22H3a.75.75 0 0 1 0-1.5h16.19l-6.22-6.22a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="font-semibold {{ 'text-' . $preferences['color_2'] . '-900' }}">{{ $member->role->name }}</div>
-                                </a>
+                                </div>
                             @endforeach
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg break-inside-avoid-column">
+            <div class="w-full h-fit flex flex-col space-x-0 space-y-2 break-inside-avoid-column">
                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
                       Posts
                     </span>
                 </div>
                 <div class="w-full h-fit p-2 text-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
-                    <div class="flex flex-col space-x-0 space-y-2">
+                    <div class="w-full h-fit max-h-[40vh] flex flex-col space-x-0 space-y-2 overflow-y-auto">
                         @if (Auth::id() == $user->id)
                             <a wire:navigate href="{{ route('post') }}" class="w-fit h-fit mx-auto px-2 text-center {{ 'hover:text-' . $preferences['color_2'] . '-500' }} font-semibold select-none animation-button" draggable="false"><div>Write a post</div></a>
                             <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
@@ -287,38 +285,36 @@
                 </div>
             </div>
         </div>
-        <div class="w-full h-screen max-h-[calc(100vh-16px)] overflow-y-auto">
-            <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg break-inside-avoid-column">
-                <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                    <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
-                      Images
-                    </span>
-                </div>
-                <div class="w-full h-fit p-2 text-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-                        @if (Auth::id() == $user->id)
-                            <div class="w-full h-40 flex flex-row items-center justify-center">
-                                <a wire:navigate href="{{ route('gallery') }}" class="w-fit h-fit font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button" draggable="false">Upload an image</a>
-                            </div>
-                        @endif
-                        @if (Auth::id() == $user->id)
-                            @forelse ($galleries['self'] as $gallery)
-                                <a wire:navigate wire:key="{{ 'user-' . $user->id . '-gallery-self-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
-                                    <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation-button" draggable="false">
-                                </a>
-                            @empty
-                                <div class="w-full h-40 flex flex-row items-center justify-center">You don't have any images yet</div>
-                            @endforelse
-                        @else
-                            @forelse ($galleries['public'] as $gallery)
-                                <a wire:navigate wire:key="{{ 'user-' . $user->id . '-gallery-public-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
-                                    <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation-button" draggable="false">
-                                </a>
-                            @empty
-                                <div class="w-full h-40 flex flex-row items-center justify-center">{{ $user->username }} doesn't have any images to show</div>
-                            @endforelse
-                        @endif
-                    </div>
+        <div class="w-full h-fit max-h-[calc(100vh-1rem)] p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg break-inside-avoid-column overflow-clip">
+            <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+                  Images
+                </span>
+            </div>
+            <div class="w-full h-fit max-h-full p-2 text-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg overflow-y-auto">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
+                    @if (Auth::id() == $user->id)
+                        <div class="w-full h-40 flex flex-row items-center justify-center">
+                            <a wire:navigate href="{{ route('gallery') }}" class="w-fit h-fit font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button" draggable="false">Upload an image</a>
+                        </div>
+                    @endif
+                    @if (Auth::id() == $user->id)
+                        @forelse ($galleries['self'] as $gallery)
+                            <a wire:navigate wire:key="{{ 'user-' . $user->id . '-gallery-self-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
+                                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" draggable="false">
+                            </a>
+                        @empty
+                            <div class="w-full h-40 flex flex-row items-center justify-center">You don't have any images yet</div>
+                        @endforelse
+                    @else
+                        @forelse ($galleries['public'] as $gallery)
+                            <a wire:navigate wire:key="{{ 'user-' . $user->id . '-gallery-public-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
+                                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" draggable="false">
+                            </a>
+                        @empty
+                            <div class="w-full h-40 flex flex-row items-center justify-center">{{ $user->username }} doesn't have any images to show</div>
+                        @endforelse
+                    @endif
                 </div>
             </div>
         </div>

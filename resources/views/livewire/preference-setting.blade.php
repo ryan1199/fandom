@@ -1,11 +1,8 @@
-<div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-100' }} rounded-lg">
-    <div class="w-full h-fit flex flex-row justify-between items-center">
-        <div class="w-fit {{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-            <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
-              Preference
-            </span>
-        </div>
-        <div wire:click="resetPreference" wire:confirm="Are you sure you want to reset your preference settings?" class="w-fit h-fit p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg select-none cursor-pointer animation-button">Reset</div>
+<div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+    <div class="w-fit {{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+        <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+          Preference
+        </span>
     </div>
     @if ($errors->any())
         <div class="w-full h-full flex flex-col space-x-0 space-y-1 {{ 'text-[calc(theme(fontSize.sm)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.sm)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} select-none">
@@ -18,7 +15,7 @@
         </div>
     @endif
     <form wire:submit="updatePreference">
-        <div class="w-full h-fit flex flex-col space-x-0 space-y-2 rounded-lg justify-center">
+        <div class="w-full h-fit flex flex-col space-x-0 space-y-2 rounded-lg justify-center {{ 'selection:bg-' . $preferences['color_2'] . '-500' }} {{ 'selection:text-' . $preferences['color_2'] . '-50' }}">
             <div class="w-full h-fit flex flex-row justify-between items-center">
                 <span>Mode</span>
                 <div x-data="{ dark_mode: @entangle('dark_mode') }" class="flex flex-row space-x-2">
@@ -53,20 +50,23 @@
                     </div>
                 </div>
             </div>
-            <label for="font_size" class="grid grid-cols-2 gap-2 items-center  ">
+            <label for="font_size" class="grid grid-cols-2 gap-2 items-center">
                 <span class="w-full h-fit font-medium text-left select-none whitespace-nowrap">Font size</span>
-                <input wire:model="font_size" name="font_size" type="number" id="font_size" min="11" max="127" class="w-full h-10 form-input text-center align-middle p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border @error('font_size') {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @enderror {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} animation rounded-lg">
+                <input wire:model="font_size" name="font_size" type="number" id="font_size" min="11" max="127" class="w-full h-10 form-input text-center align-middle p-2 {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border @error('font_size') {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @enderror {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} animation rounded-lg">
              </label>
-            <div class="grid grid-cols-2 gap-2 items-center  ">
+            <div class="grid grid-cols-2 gap-2 items-center">
                 <label for="fonts" class="w-full h-fit font-medium text-left select-none whitespace-nowrap">Font family</label>
-                <select wire:model="selected_font_family" name="selected_font_family" id="fonts" class="w-full h-10 form-select {{ 'bg-' . $preferences['color_2'] . '-50' }} border @error('selected_font_family') {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @enderror {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation">
+                <select wire:model="selected_font_family" name="selected_font_family" id="fonts" class="w-full h-10 form-select {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border @error('selected_font_family') {{ 'border-' . $preferences['color_2'] . '-500' }} @else {{ 'border-' . $preferences['color_2'] . '-200' }} @enderror {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation">
                     <option disabled>Select a font family</option>
                     @foreach ($available_font_families as $available_font_family)
                         <option value="{{ $available_font_family }}" class="{{ 'font-[' . $available_font_family . ']' }} cursor-pointer">{{ $available_font_family }}</option>
                     @endforeach
                 </select>
             </div>
-            <button type="submit" class="w-fit h-fit p-2 self-end font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg select-none animation-button">Update</button>
+            <div class="w-full h-fit flex flex-row space-x-2 space-y-0 justify-between items-center">
+                <div wire:click="resetPreference" wire:confirm="Are you sure you want to reset your preference settings?" class="w-fit h-fit p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} select-none cursor-pointer animation-button">Reset</div>
+                <button type="submit" class="w-fit h-fit p-2 self-end font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} select-none animation-button">Update</button>
+            </div>
         </div>
     </form>
 </div>
