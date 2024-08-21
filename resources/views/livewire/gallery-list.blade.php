@@ -2,7 +2,7 @@
     @if ($from == 'gallery')
         <div class="w-full h-fit grid gap-2 grid-cols-2">
             @foreach ($galleries as $gallery)
-                <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                     <div class="flex flex-col space-x-0 space-y-2">
                         <div class="w-full h-fit relative">
                             <a wire:navigate href="{{ route('gallery.show', $gallery) }}" draggable="false">
@@ -18,8 +18,8 @@
                             </div>
                         </div>
                         <div class="flex flex-col space-x-0 space-y-2">
-                            <p class="text-center"><span class="font-semibold">Uploaded</span> by {{ $gallery->user->username }} {{ $gallery->created_at->diffForHumans(['options' => null]) }}</p>
-                            <p class="text-center">
+                            <p class="text-left"><span class="font-semibold">Uploaded</span> by {{ $gallery->user->username }} {{ $gallery->created_at->diffForHumans(['options' => null]) }}</p>
+                            <p class="text-left">
                                 @if ($gallery->publish != null)
                                     <span class="font-semibold">Published</span> on
                                     @if (class_basename($gallery->publish->publishable_type) === 'User')
@@ -31,7 +31,16 @@
                                     <span class="font-semibold">Unpublished</span>
                                 @endif
                             </p>
-                            <p class="text-center"><span class="font-semibold">Tags:</span> {{ $gallery->tags }}</p>
+                            <div class="w-fit h-fit pb-1 flex flex-row flex-wrap text-left">
+                                <span class="mr-1 mb-1 font-semibold">Tags: </span>
+                                @foreach (explode(',', $gallery->tags) as $tag)
+                                    @if ($loop->last)
+                                        <span class="mr-1 mb-1 text-wrap break-all">{{ $tag }}</span>
+                                    @else
+                                        <span class="mr-1 mb-1 text-wrap break-all">{{ $tag }},</span>
+                                    @endif
+                                @endforeach
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -41,12 +50,12 @@
     @if ($from == 'fandom')
         <div class="w-full h-fit grid gap-2 grid-cols-3">
             @foreach ($galleries as $gallery)
-                <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation">
+                <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation">
                     <div class="flex flex-col space-x-0 space-y-2">
                         <a wire:navigate href="{{ route('gallery.show', $gallery) }}" draggable="false">
                             <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center rounded-lg" draggable="false">
                         </a>
-                        <p class="text-center {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation"><span class="font-semibold">Uploaded</span> by {{ $gallery->user->username }} {{ $gallery->created_at->diffForHumans(['options' => null]) }}</p>
+                        <p class="text-left {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation"><span class="font-semibold">Uploaded</span> by {{ $gallery->user->username }} {{ $gallery->created_at->diffForHumans(['options' => null]) }}</p>
                     </div>
                 </div>
             @endforeach

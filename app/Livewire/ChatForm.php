@@ -64,11 +64,12 @@ class ChatForm extends Component
                     $user_ids->flatten();
                     if($user_ids->containsStrict($this->user1->id)) {
                         $selected_chat = $chat;
-                    } else {
-                        $selected_chat = new Chat();
-                        $selected_chat->save();
-                        $selected_chat->users()->attach([$this->user2->id, $this->user1->id]);
                     }
+                }
+                if($selected_chat == '') {
+                    $selected_chat = new Chat();
+                    $selected_chat->save();
+                    $selected_chat->users()->attach([$this->user2->id, $this->user1->id]);
                 }
             } 
             if($chats->isEmpty()) {

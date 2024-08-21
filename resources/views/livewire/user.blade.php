@@ -1,6 +1,6 @@
 <div class="w-full h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} select-none overflow-clip">
     <div class="w-full h-screen max-h-[100vh] p-2 flex flex-row space-x-2 space-y-0 overflow-clip">
-        <div class="w-full max-w-md h-screen max-h-[calc(100vh-1rem)] p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg overflow-y-auto">
+        <div class="w-full max-w-md h-fit max-h-[calc(100vh-1rem)] p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg overflow-y-auto">
             <div class="w-full h-fit flex flex-col space-x-0 space-y-2 break-inside-avoid-column">
                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
@@ -244,7 +244,7 @@
                       Posts
                     </span>
                 </div>
-                <div class="w-full h-fit p-2 text-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                <div class="w-full h-fit p-2 text-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                     <div class="w-full h-fit max-h-[40vh] flex flex-col space-x-0 space-y-2 overflow-y-auto">
                         @if (Auth::id() == $user->id)
                             <a wire:navigate href="{{ route('post') }}" class="w-fit h-fit mx-auto px-2 text-center {{ 'hover:text-' . $preferences['color_2'] . '-500' }} font-semibold select-none animation-button" draggable="false"><div>Write a post</div></a>
@@ -252,7 +252,7 @@
                         @endif
                         @if (Auth::id() == $user->id)
                             @forelse ($posts['self'] as $post)
-                                <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-self-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-self-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
                                     <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
                                     <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
                                 </a>
@@ -263,7 +263,7 @@
                             @if (in_array(Auth::id(), $friendlist_id))
                                 @forelse ($posts['friend'] as $post)
                                     </div>
-                                    <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-friend-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                    <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-friend-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
                                         <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
                                         <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
                                     </a>
@@ -272,7 +272,7 @@
                                 @endforelse
                             @else
                                 @forelse ($posts['public'] as $post)
-                                    <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-public-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                                    <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-public-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
                                         <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
                                         <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
                                     </a>

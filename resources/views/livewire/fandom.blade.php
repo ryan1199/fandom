@@ -1,5 +1,5 @@
 <div class="w-full max-w-[calc(100vw-24rem)] h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} select-none overflow-clip">
-    <div class="w-full h-screen max-h-[100vh] p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 grid-flow-row-dense auto-rows-max auto-cols-max gap-4 overflow-y-auto">
+    <div class="w-full h-screen max-h-[100vh] p-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 grid-flow-row-dense auto-rows-max auto-cols-max gap-4 overflow-y-auto">
         @forelse ($fandoms as $fandom)
             @livewire(FandomList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('fandom-list-fandom-' . $fandom->id))
         @empty
