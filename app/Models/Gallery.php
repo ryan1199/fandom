@@ -13,7 +13,7 @@ class Gallery extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id', 'publish_id', 'tags', 'view'
+        'user_id', 'publish_id', 'slug', 'tags', 'view'
     ];
     public function image(): MorphOne
     {

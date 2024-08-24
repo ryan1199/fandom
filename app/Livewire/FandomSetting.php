@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\FandomUpdated;
 use App\Models\Fandom;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -53,6 +54,7 @@ class FandomSetting extends Component
         $this->cover->storeAs('covers', $cover_name, 'public');
 
         $this->reset(['cover']);
+        FandomUpdated::dispatch($this->fandom);
         $this->loadPage(['status' => 'success', 'message' => 'Done, fandom cover has been updated']);
     }
     public function updatedAvatar($value)
@@ -75,6 +77,7 @@ class FandomSetting extends Component
         $this->avatar->storeAs('avatars', $avatar_name, 'public');
 
         $this->reset(['avatar']);
+        FandomUpdated::dispatch($this->fandom);
         $this->loadPage(['status' => 'success', 'message' => 'Done, fandom avatar has been updated']);
     }
     public function updatedDescription($value)
@@ -92,6 +95,7 @@ class FandomSetting extends Component
         ]);
 
         $this->reset(['description']);
+        FandomUpdated::dispatch($this->fandom);
         $this->loadPage(['status' => 'success', 'message' => 'Done, fandom description has been updated']);
     }
     public function setCurrentRoute()

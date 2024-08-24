@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\UserProfileUpdated;
 use App\Livewire\User as LivewireUser;
 use App\Models\Avatar;
 use App\Models\Cover;
@@ -67,7 +68,7 @@ class ProfileSetting extends Component
         });
         $this->reset(['cover']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
-        $this->dispatch('loadProfile')->to(LivewireUser::class);
+        UserProfileUpdated::dispatch($this->user);
     }
     public function updatedAvatar($value)
     {
@@ -95,7 +96,7 @@ class ProfileSetting extends Component
         });
         $this->reset(['avatar']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
-        $this->dispatch('loadProfile')->to(LivewireUser::class);
+        UserProfileUpdated::dispatch($this->user);
     }
     public function updatedStatus($value)
     {
@@ -110,7 +111,7 @@ class ProfileSetting extends Component
         ]);
         $this->reset(['status']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
-        $this->dispatch('loadProfile')->to(LivewireUser::class);
+        UserProfileUpdated::dispatch($this->user);
     }
     public function updatedDescription($value)
     {
@@ -125,7 +126,7 @@ class ProfileSetting extends Component
         ]);
         $this->reset(['description']);
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
-        $this->dispatch('loadProfile')->to(LivewireUser::class);
+        UserProfileUpdated::dispatch($this->user);
     }
     public function updated($property)
     {

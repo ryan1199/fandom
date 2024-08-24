@@ -35,7 +35,6 @@ class Comment extends Component
         $this->gallery = $gallery;
         $this->loadComments();
     }
-    #[On('load_comments')]
     public function loadComments()
     {
         if ($this->post != null) {
@@ -47,6 +46,18 @@ class Comment extends Component
             $this->comments = $this->gallery->comments->load(['user.cover.image', 'user.avatar.image', 'message', 'rates.user']);
         }
         // $this->comments = ModelsComment::with(['user.cover.image', 'user.avatar.image', 'message', 'rates.user'])->where('commentable_id', $this->id)->where('commentable_type', $this->from)->get();
+        $this->sortComments();
+    }
+    public function loadMissingComments()
+    {
+        if ($this->post != null) {
+            $this->post->loadMissing(['comments']);
+            $this->comments = $this->post->comments->loadMissing(['user.cover.image', 'user.avatar.image', 'message', 'rates.user']);
+        }
+        if ($this->gallery != null) {
+            $this->gallery->loadMissing(['comments']);
+            $this->comments = $this->gallery->comments->loadMissing(['user.cover.image', 'user.avatar.image', 'message', 'rates.user']);
+        }
         $this->sortComments();
     }
     #[On('like_comment')]
@@ -145,5 +156,18 @@ class Comment extends Component
                 break;
         }
         $this->comments = $sorted_comments->values()->all();
+    }
+    public function getListeners()
+    {
+        if ($this->post != null) {
+            return [
+                "echo-private:Comment.{$this->post->id},NewPostComment" => 'loadMissingComments',
+            ];
+        }
+        if ($this->gallery!= null) {
+            return [
+                "echo-private:Comment.{$this->gallery->id},NewGalleryComment" => 'loadMissingComments',
+            ];
+        }
     }
 }

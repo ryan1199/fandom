@@ -13,15 +13,15 @@
         </select>
     </div>
     @if ($post != null)
-        @livewire(CommentForm::class, ['preferences' => $preferences, 'post' => $post, 'gallery' => null, 'reply' => null], key('comment-form-for-post-' . $post->id))
         @auth
-            @livewire(CommentList::class, ['preferences' => $preferences, 'reply' => null, 'comments' => $comments], key('comment-list-for-post-' . $post->id))
+            @livewire(CommentForm::class, ['preferences' => $preferences, 'post' => $post, 'gallery' => null, 'reply' => null], key('comment-form-for-post-' . $post->id))
         @endauth
+        @livewire(CommentList::class, ['preferences' => $preferences, 'reply' => null, 'comments' => $comments], key('comment-list-for-post-' . $post->id))
     @endif
     @if ($gallery != null)
-        @livewire(CommentForm::class, ['preferences' => $preferences, 'post' => null, 'gallery' => $gallery, 'reply' => null], key('comment-form-for-gallery-' . $gallery->id))
         @auth
-            @livewire(CommentList::class, ['preferences' => $preferences, 'reply' => null, 'comments' => $comments], key('comment-list-for-gallery-' . $gallery->id))
+            @livewire(CommentForm::class, ['preferences' => $preferences, 'post' => null, 'gallery' => $gallery, 'reply' => null], key('comment-form-for-gallery-' . $gallery->id))
         @endauth
+        @livewire(CommentList::class, ['preferences' => $preferences, 'reply' => null, 'comments' => $comments], key('comment-list-for-gallery-' . $gallery->id))
     @endif
 </div>

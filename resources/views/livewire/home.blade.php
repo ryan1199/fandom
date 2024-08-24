@@ -36,9 +36,6 @@
             </div>
         </div>
         <div class="flex flex-col space-x-0 space-y-8">
-            {{-- <div wire:click="resetFandoms" class="w-fit h-fit p-2 border-2 rounded-lg cursor-pointer">
-                Reset Fandoms
-            </div> --}}
             <div class="flex flex-col space-x-0 space-y-2">
                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
@@ -47,9 +44,15 @@
                 </div>
                 <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
                     {{-- with paginate --}}
-                    @foreach ($fandoms as $fandom)
+                    @forelse ($fandoms as $fandom)
                         @livewire(FandomList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('public-fandom-' . $fandom->id))
-                    @endforeach
+                    @empty
+                        <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                            <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                                No fandoms found
+                            </div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
             <div class="flex flex-col space-x-0 space-y-2">
@@ -60,9 +63,15 @@
                 </div>
                 <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
                     {{-- with paginate --}}
-                    @foreach ($galleries as $gallery)
+                    @forelse ($galleries as $gallery)
                         @livewire(GalleryListHome::class, ['gallery' => $gallery->id, 'preferences' => $preferences], key('public-gallery-' . $gallery->id))
-                    @endforeach
+                    @empty
+                        <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                            <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                                No galleries found
+                            </div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
             <div class="flex flex-col space-x-0 space-y-2">
@@ -73,9 +82,15 @@
                 </div>
                 <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
                     {{-- with paginate --}}
-                    @foreach ($posts as $post)
+                    @forelse ($posts as $post)
                         @livewire(PostListHome::class, ['post' => $post->id, 'preferences' => $preferences], key('public-post-' . $post->id))
-                    @endforeach
+                    @empty
+                        <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                            <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                                No posts found
+                            </div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
             @auth
@@ -94,7 +109,13 @@
                                 @endforeach
                             </div>
                         @else
-                            <div>No galleries</div>
+                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
+                                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                                    <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                                        No galleries found
+                                    </div>
+                                </div>
+                            </div>
                         @endif
                         @if ($userFollowedUsers['post']->isNotEmpty())
                             <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
@@ -104,7 +125,13 @@
                                 @endforeach
                             </div>
                         @else
-                            <div>No posts</div>
+                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
+                                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                                    <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                                        No posts found
+                                    </div>
+                                </div>
+                            </div>
                         @endif
                     </div>
                 @endif
@@ -123,7 +150,13 @@
                                 @endforeach
                             </div>
                         @else
-                            <div>No galleries</div>
+                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
+                                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                                <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                                    No galleries found
+                                </div>
+                            </div>
+                        </div>
                         @endif
                         @if ($userFandoms['post']->isNotEmpty())
                             <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
@@ -133,7 +166,13 @@
                                 @endforeach
                             </div>
                         @else
-                            <div>No posts</div>
+                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
+                                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                                    <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                                        No posts found
+                                    </div>
+                                </div>
+                            </div>
                         @endif
                     </div>
                 @endif

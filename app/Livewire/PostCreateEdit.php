@@ -89,9 +89,6 @@ class PostCreateEdit extends Component
         if ($this->id != null) {
             $post = Post::find($this->id);
             $this->authorize('update', $post);
-            $validation_for_title = ['required', 'between:5,50', Rule::unique('posts', 'title')->ignore($this->id)];
-        } else {
-            $validation_for_title = ['required', 'between:5,50', Rule::unique('posts', 'title')];
         }
         $validated = Validator::make(
             [
@@ -101,7 +98,7 @@ class PostCreateEdit extends Component
                 'raw_body' => $this->raw_body
             ],
             [
-                'title' => $validation_for_title,
+                'title' => ['required', 'between:5,50'],
                 'description' => ['required', 'between:10,100'],
                 'tags' => ['required', 'between:1,100'],
                 'raw_body' => ['max:4294967295']
@@ -122,7 +119,13 @@ class PostCreateEdit extends Component
         $this->toMarkdown();
         $this->cleanMarkdown();
         $title = $this->title;
-        $slug = Str::slug($title . '-post-by-' . Auth::user()->username);
+        $slug = 'P-' . Auth::user()->username . '-' . now()->year . now()->month . now()->day . '-';
+        $posts = Post::where('slug', 'like', '%' . $slug . '%')->get();
+        if ($posts->count() > 0) {
+            $slug.= $posts->count() + 1;
+        } else {
+            $slug.= '1';
+        }
         $description = $this->description;
         $body = $this->body;
         $raw_body = $this->raw_body;
@@ -218,7 +221,6 @@ class PostCreateEdit extends Component
         $post->update([
             'publish_id' => $post->publish_id,
             'title' => $data['title'],
-            'slug' => $data['slug'],
             'description' => $data['description'],
             'body' => $data['body'],
             'raw_body' => $data['raw_body'],

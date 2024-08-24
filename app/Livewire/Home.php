@@ -55,10 +55,6 @@ class Home extends Component
             $this->loadUserFandoms();
         }
     }
-    public function resetFandoms()
-    {
-        $this->fandoms = collect([]);
-    }
     public function loadFandoms()
     {
         $this->fandoms = Fandom::orderBy('name', 'ASC')->get();

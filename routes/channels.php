@@ -3,6 +3,8 @@
 use App\Models\Chat;
 use App\Models\Discuss;
 use App\Models\Fandom;
+use App\Models\Gallery;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
@@ -56,4 +58,10 @@ Broadcast::channel('FandomListLeftSideNavigationBar.{id}', function ($id) {
 });
 Broadcast::channel('FandomDetails.{id}', function ($id) {
     return Fandom::find($id) != null;
+});
+Broadcast::channel('FandomList.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
+Broadcast::channel('Comment.{id}', function ($id) {
+    return Post::find($id) != null || Gallery::find($id) != null;
 });

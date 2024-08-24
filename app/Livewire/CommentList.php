@@ -10,6 +10,7 @@ use Livewire\Component;
 
 class CommentList extends Component
 {
+    #[Reactive]
     public $comments;
     public $reply = null;
     public $preferences = [];

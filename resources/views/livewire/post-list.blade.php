@@ -1,7 +1,7 @@
 <div class="w-full h-full flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
     @if ($from == 'post')
         @foreach ($posts as $post)
-            <div wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg">
+            <div wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
                 <div class="flex flex-row justify-between items-center">
                     <div class="{{ 'hover:text-' . $preferences['color_2'] . '-500' }} animation-button">
                         <h1><a wire:navigate href="{{ route('post.show', $post) }}" class="font-semibold cursor-pointer" draggable="false">{{ $post->title }}</a></h1>
@@ -37,7 +37,7 @@
                             <div x-cloak x-show="{{ 'open_publish_on_for_post_' . $post->id }}" class="flex flex-col space-x-0 space-y-1 rounded-lg">
                                 @foreach ($publish_on as $array)
                                     @if ($array['from'] == 'user')
-                                        <div wire:key="{{ 'post-list-from-' . $from . '-publish-on-user-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                                        <div wire:key="{{ 'post-list-from-' . $from . '-publish-on-user-' . $array['data']->id }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                                             <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                                                 <div class="{{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                                     <h1 class="bg-clip-text line-clamp-2 text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">{{ $array['data']->username }}</h1>
@@ -59,14 +59,14 @@
                                                     @endif
                                                 </div>
                                                 <div class="w-full h-full flex flex-row space-x-2 space-y-0 text-left">
-                                                    <div wire:click="publishPost({{ $post }}, '{{ $array['from'] }}', {{ Auth::id() }}, 'self')" class="w-fit h-fit p-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} text-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer {{ 'hover:border-' . $preferences['color_2'] . '-500' }} active:border-2 rounded-lg cursor-pointer animation-button">Self</div>
-                                                    <div wire:click="publishPost({{ $post }}, '{{ $array['from'] }}', {{ Auth::id() }}, 'friend')" class="w-fit h-fit p-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} text-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer {{ 'hover:border-' . $preferences['color_2'] . '-500' }} active:border-2 rounded-lg cursor-pointer animation-button">Friend</div>
-                                                    <div wire:click="publishPost({{ $post }}, '{{ $array['from'] }}', {{ Auth::id() }}, 'public')" class="w-fit h-fit p-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} text-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer {{ 'hover:border-' . $preferences['color_2'] . '-500' }} active:border-2 rounded-lg cursor-pointer animation-button">Public</div>
+                                                    <div wire:click="publishPost({{ $post }}, '{{ $array['from'] }}', {{ Auth::id() }}, 'self')" class="w-fit h-fit p-1 text-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer {{ 'hover:border-' . $preferences['color_2'] . '-500' }} active:border-2 rounded-lg cursor-pointer animation-button">Self</div>
+                                                    <div wire:click="publishPost({{ $post }}, '{{ $array['from'] }}', {{ Auth::id() }}, 'friend')" class="w-fit h-fit p-1 text-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer {{ 'hover:border-' . $preferences['color_2'] . '-500' }} active:border-2 rounded-lg cursor-pointer animation-button">Friend</div>
+                                                    <div wire:click="publishPost({{ $post }}, '{{ $array['from'] }}', {{ Auth::id() }}, 'public')" class="w-fit h-fit p-1 text-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer {{ 'hover:border-' . $preferences['color_2'] . '-500' }} active:border-2 rounded-lg cursor-pointer animation-button">Public</div>
                                                 </div>
                                             </div>
                                         </div>
                                     @else
-                                        <div wire:key="{{ 'post-list-from-' . $from . 'publish-on-fandom-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                                        <div wire:key="{{ 'post-list-from-' . $from . 'publish-on-fandom-' . $array['data']->id }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                                             <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                                                 <div class="{{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                                     <h1 class="bg-clip-text line-clamp-2 text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">{{ $array['data']->name }}</h1>
@@ -88,8 +88,8 @@
                                                     @endif
                                                 </div>
                                                 <div class="w-full h-full flex flex-row space-x-2 space-y-0 text-left">
-                                                    <div wire:click="publishPost({{ $post }}, '{{ $array['from'] }}', {{ $array['data']->id }}, 'member')" class="w-fit h-fit p-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} text-center border {{ 'border-' . $preferences['color_2'] .'-200' }} rounded-lg cursor-pointer {{ 'hover:border-' . $preferences['color_2'] . '-500' }} active:border-2 rounded-lg cursor-pointer animation-button">Member</div>
-                                                    <div wire:click="publishPost({{ $post }}, '{{ $array['from'] }}', {{ $array['data']->id }}, 'public')" class="w-fit h-fit p-1 {{ 'bg-' . $preferences['color_2'] . '-50' }} text-center border {{ 'border-' . $preferences['color_2'] .'-200' }} rounded-lg cursor-pointer {{ 'hover:border-' . $preferences['color_2'] . '-500' }} active:border-2 rounded-lg cursor-pointer animation-button">Public</div>
+                                                    <div wire:click="publishPost({{ $post }}, '{{ $array['from'] }}', {{ $array['data']->id }}, 'member')" class="w-fit h-fit p-1 text-center border {{ 'border-' . $preferences['color_2'] .'-200' }} rounded-lg cursor-pointer {{ 'hover:border-' . $preferences['color_2'] . '-500' }} active:border-2 rounded-lg cursor-pointer animation-button">Member</div>
+                                                    <div wire:click="publishPost({{ $post }}, '{{ $array['from'] }}', {{ $array['data']->id }}, 'public')" class="w-fit h-fit p-1 text-center border {{ 'border-' . $preferences['color_2'] .'-200' }} rounded-lg cursor-pointer {{ 'hover:border-' . $preferences['color_2'] . '-500' }} active:border-2 rounded-lg cursor-pointer animation-button">Public</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -106,7 +106,7 @@
     @endif
     @if ($from == 'fandom')
         @foreach ($posts as $post)
-            <a wire:navigate wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+            <a wire:navigate wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
                 <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
                 <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
             </a>

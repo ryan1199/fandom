@@ -18,12 +18,12 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Publish::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('title');
-            $table->string('slug');
+            $table->longText('slug')->nullable();
             $table->string('description');
             $table->longText('body');
             $table->longText('raw_body');
-            $table->string('tags');
-            $table->bigInteger('view');
+            $table->string('tags')->nullable();
+            $table->bigInteger('view')->default(0);
             $table->timestamps();
         });
     }

@@ -113,6 +113,7 @@ class FandomDetails extends Component
         return [
             "echo-private:FandomDetails.{$this->fandom->id},DeleteDiscussion" => 'loadDiscussion',
             "echo-private:FandomDetails.{$this->fandom->id},CreateDiscussion" => 'loadDiscussion',
+            "echo-private:FandomDetails.{$this->fandom->id},FandomUpdated" => 'loadUpdatedFandom',
         ];
     }
     public function loadDiscussion($event)
@@ -122,6 +123,10 @@ class FandomDetails extends Component
             $query->where('visible', '=', 'public');
         }])->where('name', $name)->first();
         $this->discusses = $fandom->discusses;
+    }
+    public function loadUpdatedFandom()
+    {
+        $this->loadFandomDetails($this->fandom->name);
     }
     // public function updated($property)
     // {

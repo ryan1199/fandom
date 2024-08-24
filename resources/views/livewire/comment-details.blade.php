@@ -1,4 +1,4 @@
-<div x-data="{ {{ 'open_replies_comment_' . $comment->id }}: false }" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 items-start {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg">
+<div x-data="{ {{ 'open_replies_comment_' . $comment->id }}: false }" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 items-start">
     <div class="w-full h-fit p-2 flex flex-row space-x-4 space-y-0 items-start border-l-2 {{ 'border-' . $preferences['color_2'] . '-200' }}">
         <a wire:navigate href="{{ route('user', $comment->user) }}" class="aspect-square w-[7vh] h-[7vh] block object-cover" draggable="false">
             @if ($comment->user->avatar != null)

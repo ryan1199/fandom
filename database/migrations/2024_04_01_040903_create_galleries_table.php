@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignIdFor(Publish::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->string('tags');
-            $table->bigInteger('view');
+            $table->longText('slug')->nullable();
+            $table->string('tags')->nullable();
+            $table->bigInteger('view')->default(0);
             $table->timestamps();
         });
     }

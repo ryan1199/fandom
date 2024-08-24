@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Events\NewGalleryComment;
+use App\Events\NewPostComment;
 use App\Livewire\Comment as LivewireComment;
 use App\Models\Comment;
 use App\Models\Gallery;
@@ -71,12 +73,17 @@ class CommentForm extends Component
             $result = true;
         });
         if ($result) {
+            if ($this->post != null) {
+                NewPostComment::dispatch($this->post);
+            }
+            if ($this->gallery!= null) {
+                NewGalleryComment::dispatch($this->gallery);
+            }
             $this->dispatch('alert','success', 'Done, comment submited');
         } else {
             $this->dispatch('alert', 'error', 'Error, comment not submited');
         }
         $this->reset(['content']);
-        $this->dispatch('load_comments')->to(LivewireComment::class);
     }
     #[On('reply_comment')]
     public function replyComment($id)

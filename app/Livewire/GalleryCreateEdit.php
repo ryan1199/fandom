@@ -203,12 +203,20 @@ class GalleryCreateEdit extends Component
         if (!in_array($data['visible'], $available_visible, true)) {
             $visible = 'public';
         }
+        $slug = 'G-' . Auth::user()->username . '-' . now()->year . now()->month . now()->day . '-';
+        $galleries = Gallery::where('slug', 'like', '%' . $slug . '%')->get();
+        if ($galleries->count() > 0) {
+            $slug.= $galleries->count() + 1;
+        } else {
+            $slug.= '1';
+        }
         if ($data['publish_on']['from'] == 'user') {
             if ($user->id == $data['publish_on']['id']) {
-                DB::transaction(function () use ($visible, $user, $data) {
+                DB::transaction(function () use ($visible, $user, $data, $slug) {
                     $publish = new Publish(['visible' => $visible]);
                     $publish = $user->publishes()->save($publish);
                     $gallery = $user->galleries()->create([
+                        'slug' => $slug,
                         'tags' => $data['tags'],
                         'view' => 0,
                         'publish_id' => $publish->id
@@ -221,10 +229,11 @@ class GalleryCreateEdit extends Component
         if ($data['publish_on']['from'] == 'fandom') {
             if (in_array($data['publish_on']['id'], $fandoms_id, true)) {
                 $fandom = Fandom::find($data['publish_on']['id']);
-                DB::transaction(function () use ($visible, $user, $fandom, $data) {
+                DB::transaction(function () use ($visible, $user, $fandom, $data, $slug) {
                     $publish = new Publish(['visible' => $visible]);
                     $publish = $fandom->publishes()->save($publish);
                     $gallery = $user->galleries()->create([
+                        'slug' => $slug,
                         'tags' => $data['tags'],
                         'view' => 0,
                         'publish_id' => $publish->id

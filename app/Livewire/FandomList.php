@@ -23,26 +23,7 @@ class FandomList extends Component
     }
     public function mount(Fandom $fandom, $preferences)
     {
-        $this->fandom = Fandom::with([
-            'avatar' => [
-                'image'
-            ],
-            'cover' => [
-                'image'
-            ],
-            'members' => [
-                'user' => [
-                    'profile',
-                    'cover' => [
-                        'image'
-                    ],
-                    'avatar' => [
-                        'image'
-                    ],
-                ],
-                'role'
-            ],
-        ])->find($fandom->id);
+        $this->loadfandom($fandom);
         $this->preferences = $preferences;
         $this->getTotalMembers();
         $this->getTotalGalleries();
@@ -63,5 +44,39 @@ class FandomList extends Component
         $this->fandom->load('publishes');
         $fandom_publish_ids = $this->fandom->publishes->pluck('id')->toArray();
         $this->totalPosts = Number::abbreviate(Post::whereIn('publish_id', $fandom_publish_ids)->count());
+    }
+    public function loadfandom(Fandom $fandom)
+    {
+        $this->fandom = Fandom::with([
+            'avatar' => [
+                'image'
+            ],
+            'cover' => [
+                'image'
+            ],
+            'members' => [
+                'user' => [
+                    'profile',
+                    'cover' => [
+                        'image'
+                    ],
+                    'avatar' => [
+                        'image'
+                    ],
+                ],
+                'role'
+            ],
+        ])->find($fandom->id);
+    }
+    public function loadUpdatedFandom($event)
+    {
+        $fandom = Fandom::find($event['fandom']['id']);
+        $this->loadfandom($fandom);
+    }
+    public function getListeners()
+    {
+        return [
+            "echo:FandomList.{$this->fandom->id},FandomUpdated" => 'loadUpdatedFandom',
+        ];
     }
 }

@@ -84,7 +84,6 @@ class User extends Component
         $this->loadFollowersAndFollowing();
         $this->state = false;
     }
-    #[On('loadProfile')]
     public function loadProfile()
     {
         $user = ModelsUser::with([
@@ -142,6 +141,7 @@ class User extends Component
             "echo-private:User.{$this->user->id},UserFollowed" => 'loadFollowersAndFollowing',
             "echo-private:User.{$this->user->id},UserUnfollowed" => 'loadFollowersAndFollowing',
             "echo-private:User.{$this->user->id},UserBlocked" => 'loadFollowersAndFollowing',
+            "echo-private:User.{$this->user->id},UserProfileUpdated" => 'loadProfile',
         ];
     }
     public function updatedState($value)

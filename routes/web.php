@@ -42,7 +42,7 @@ Route::get('/user/{user}', User::class)->middleware('auth')->name('user');
 Route::get('/fandom-list', Fandom::class)->name('fandom-list');
 Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-details');
 Route::get('/post-management', Post::class)->middleware('auth')->name('post');
-Route::get('/post-show/{post}', PostShow::class)->name('post.show');
+Route::get('/post-show/{post:slug}', PostShow::class)->name('post.show');
 Route::get('/gallery-management', Gallery::class)->middleware('auth')->name('gallery');
 Route::get('/gallery-show/{gallery}', GalleryShow::class)->name('gallery.show');
 // Route::get('test-email-forgot-password', function (Request $request) {
@@ -61,25 +61,26 @@ Route::fallback(function () {
 // model binding (user, follow, block, post, gallery, account setting, profile setting, preferences setting, left side navigation bar) (done)
 // create fandom pindah ke navigasi saja (done)
 // broadcast fandom created and fandom deleted on fandom list (done only for created)
-// broadcast for comment (not yet)
+// broadcast for comment (done)
 // preferences colors (done)
-// broadcast for profile updates (not yet)
+// broadcast for profile updates (done)
 // hover in fandom detail (user list, post list and gallery list) (done)
 // vote feature (not yet)
-// slug for post, gallery (not yet)
+// slug for post, gallery (done)
 // discusses list style (done)
 // benerin nama channel (done)
 // benerin semua event (done)
 // terapkan yang ada di follow (progress)
 // pass model binding tidak bisa dengan relationship nya
 // home page, comments, post show, gallery show and alert component style (done)
-// user component style (not yet)
-// post create edit component style (not yet)
-// gallery create edit component style (not yet)
-// chat component style (not yet)
+// user component style (done)
+// post create edit component style (done)
+// gallery create edit component style (done)
+// chat component style (done)
 // post recommendation component by tags and title ? (author, publisher and public post) (not yet)
-// broadcast fandom created to (gallery create upload location, post list publish on, fandom list) (not yet)
-// broadcast for updated fandom (not yet)
+// broadcast fandom created to (fandom list) (done)
+// broadcast for updated fandom to (fandom details and fandom list) (done)
 // post and post management components (not yet)
 // gallery and gallery management components (not yet)
 // format alpine data (done)
+// navigasi pindahkan (not yet)
