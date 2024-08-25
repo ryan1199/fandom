@@ -1,5 +1,5 @@
 <div class="w-full h-full {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
-    @if ($from == 'gallery')
+    @if ($from == 'gallery-management')
         <div class="w-full h-fit grid gap-2 grid-cols-2">
             @foreach ($galleries as $gallery)
                 <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">

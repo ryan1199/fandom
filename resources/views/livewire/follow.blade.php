@@ -5,7 +5,9 @@
                 @if ($followed_user->avatar !== null)
                     <img src="{{ asset('storage/avatars/'.$followed_user->avatar->image->url) }}" alt="{{ $followed_user->username }}" title="{{ $followed_user->username }}" class="aspect-square w-auto h-[3vh] rounded-full object-cover" draggable="false">
                 @else
-                    <div class="aspect-square w-auto h-[3vh] bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-full object-cover"></div>
+                    <div class="w-auto h-[3vh] aspect-square bg-gradient-to-r {{ 'from-' . $preferences['color_2'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_2'] . '-900' }} rounded-full">
+                        <div style="background-image: url('{{ asset('avatar-white.svg') }}')" class="w-full h-full bg-contain bg-repeat bg-center rounded-full"></div>
+                    </div>
                 @endif
                 <a wire:navigate href="{{ route('user', $followed_user) }}" class="w-fit font-bold line-clamp-3" draggable="false">{{ $followed_user->username }}</a>
             </div>

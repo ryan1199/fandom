@@ -35,8 +35,9 @@ class PostCreateEdit extends Component
     {
         return view('livewire.post-create-edit');
     }
-    public function mount()
+    public function mount($preferences)
     {
+        $this->preferences = $preferences;
         if(session()->has('temporary-post-' . Auth::user()->username)) {
             $post = session()->get('temporary-post-'. Auth::user()->username);
             $this->id = $post['id'];

@@ -38,8 +38,9 @@ class GalleryCreateEdit extends Component
     {
         return view('livewire.gallery-create-edit');
     }
-    public function mount()
+    public function mount($preferences)
     {
+        $this->preferences = $preferences;
         $users_fandom = User::with(['members.fandom'])->where('id', Auth::id())->first();
         $fandom_ids = $users_fandom->members->pluck('fandom.id');
         $fandoms = Fandom::with([
@@ -94,10 +95,7 @@ class GalleryCreateEdit extends Component
         $gallery = Gallery::with(['publish.publishable'])->find($gallery->id);
         if(class_basename($gallery->publish->publishable_type) === 'User')
         {   
-            // dd($this->publish_on);
-            // dd('User', $gallery->publish->publishable->id, $gallery->publish->publishable->username, $gallery->publish->visible);
             $this->setUploadLocation('user', $gallery->publish->publishable->id, $gallery->publish->publishable->username, $gallery->publish->visible);
-            // dd($this->publish_on);
         }
         if(class_basename($gallery->publish->publishable_type) === 'Fandom')
         {   

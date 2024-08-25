@@ -22,8 +22,9 @@ class GallerySearch extends Component
     {
         return view('livewire.gallery-search');
     }
-    public function mount()
+    public function mount($preferences)
     {
+        $this->preferences = $preferences;
         $this->search();
     }
     #[On('search')]

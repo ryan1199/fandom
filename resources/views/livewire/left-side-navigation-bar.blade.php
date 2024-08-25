@@ -135,8 +135,8 @@
                     </div>
                 </div>
             </div>
-            <a wire:navigate href="{{ route('post') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Post</a>
-            <a wire:navigate href="{{ route('gallery') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Gallery</a>
+            <a wire:navigate href="{{ route('post-management') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Post Management</a>
+            <a wire:navigate href="{{ route('gallery-management') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Gallery Management</a>
             <form action="{{ route('logout') }}" method="post" draggable="false">
                 @csrf
                 <button type="submit" class="w-full h-fit p-2 text-left {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Logout</button>

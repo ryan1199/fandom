@@ -95,6 +95,7 @@ class FandomDetails extends Component
                 'role_id' => $role->id
             ]);
             $this->loadFandomDetails($this->fandom->name);
+            // UserJoined::dispatch($this->fandom, $user);
             $this->dispatch('alert', 'success', 'Done, now you are part of this fandom')->to(Alert::class);
         }
     }
@@ -103,6 +104,7 @@ class FandomDetails extends Component
         if(in_array(Auth::id(), $this->members['id'])) {
             $this->fandom->members()->where('user_id', Auth::id())->delete();
             $this->loadFandomDetails($this->fandom->name);
+            // UserLeaved::dispatch($this->fandom, $user);
             $this->dispatch('alert', 'success', 'Done, now you are no longer part of this fandom, hope you find a new one');
         } else {
             $this->dispatch('alert', 'error', 'Failed, you are not part of this fandom');

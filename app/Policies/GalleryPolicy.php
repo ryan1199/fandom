@@ -32,6 +32,17 @@ class GalleryPolicy
                             case 'public':
                                 return true;
                                 break;
+                            case 'friend':
+                                $user->load('follows');
+                                $followed_user = false;
+                                foreach ($user->follows as $follow) {
+                                    if($follow->id == $gallery->publish->publishable_id) {
+                                        $followed_user = true;
+                                        break;
+                                    }
+                                }
+                                return $followed_user;
+                                break;
                             case 'self':
                                 return false;
                                 break;
@@ -42,6 +53,9 @@ class GalleryPolicy
                     switch($gallery->publish->visible) {
                         case 'public':
                             return true;
+                            break;
+                        case 'friend':
+                            return false;
                             break;
                         case 'self':
                             return false;

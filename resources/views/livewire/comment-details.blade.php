@@ -4,7 +4,9 @@
             @if ($comment->user->avatar != null)
                 <img src="{{ asset('storage/avatars/'.$comment->user->avatar->image->url) }}" alt="{{ $comment->user->username }}" title="{{ $comment->user->username }}" class="aspect-square w-full h-full rounded-full object-cover block" draggable="false">
             @else
-                <div class="aspect-square w-auto h-full bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} rounded-full object-cover"></div>
+                <div class="w-auto h-full aspect-square bg-gradient-to-r {{ 'from-' . $preferences['color_2'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_2'] . '-900' }} rounded-full">
+                    <div style="background-image: url('{{ asset('avatar-white.svg') }}')" class="w-full h-full bg-contain bg-repeat bg-center rounded-full"></div>
+                </div>
             @endif
         </a>
         <div x-data="{ {{ 'open_comment_' . $comment->id }}: false }" class="w-full flex flex-col space-x-0 space-y-2">

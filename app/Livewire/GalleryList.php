@@ -26,8 +26,9 @@ class GalleryList extends Component
     {
         return view('livewire.gallery-list');
     }
-    public function mount($from, $id = null)
+    public function mount($preferences, $from, $id = null)
     {
+        $this->preferences = $preferences;
         $this->from = $from;
         $this->id = $id;
         $this->dispatch('search')->to(GallerySearch::class);
@@ -47,7 +48,7 @@ class GalleryList extends Component
         $sort_by = ($sort_by == 'View') ? 'view' : 'created_at';
         $sort = ($sort == 'ASC') ? 'ASC' : 'DESC';
 
-        if ($this->from == 'gallery') {
+        if ($this->from == 'gallery-management') {
             $galleries = Gallery::with(['user', 'publish.publishable', 'image'])->where('user_id', Auth::id())->where('tags', 'like', $search)->get();
         }
         if ($this->from == 'fandom') {

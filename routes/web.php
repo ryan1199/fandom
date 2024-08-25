@@ -2,16 +2,14 @@
 
 use App\Http\Controllers\LogoutController;
 use App\Livewire\Fandom;
-use App\Livewire\FandomCreate;
 use App\Livewire\FandomDetails;
-use App\Livewire\FandomList;
 use App\Livewire\ForgotPassword;
-use App\Livewire\Gallery;
+use App\Livewire\GalleryManagement;
 use App\Livewire\GalleryShow;
 use App\Livewire\Home;
 use App\Livewire\Login;
 use App\Livewire\NewPassword;
-use App\Livewire\Post;
+use App\Livewire\PostManagement;
 use App\Livewire\PostShow;
 use App\Livewire\Register;
 use App\Livewire\User;
@@ -41,13 +39,10 @@ Route::post('/logout', LogoutController::class)->middleware(['throttle:logout', 
 Route::get('/user/{user}', User::class)->middleware('auth')->name('user');
 Route::get('/fandom-list', Fandom::class)->name('fandom-list');
 Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-details');
-Route::get('/post-management', Post::class)->middleware('auth')->name('post');
+Route::get('/post-management', PostManagement::class)->middleware('auth')->name('post-management');
 Route::get('/post-show/{post:slug}', PostShow::class)->name('post.show');
-Route::get('/gallery-management', Gallery::class)->middleware('auth')->name('gallery');
+Route::get('/gallery-management', GalleryManagement::class)->middleware('auth')->name('gallery-management');
 Route::get('/gallery-show/{gallery}', GalleryShow::class)->name('gallery.show');
-// Route::get('test-email-forgot-password', function (Request $request) {
-//     return view('forgot-password');
-// });
 Route::view('test-email-forgot-password', 'forgot-password');
 Route::fallback(function () {
     return redirect()->route('home');
@@ -80,7 +75,8 @@ Route::fallback(function () {
 // post recommendation component by tags and title ? (author, publisher and public post) (not yet)
 // broadcast fandom created to (fandom list) (done)
 // broadcast for updated fandom to (fandom details and fandom list) (done)
-// post and post management components (not yet)
-// gallery and gallery management components (not yet)
+// post and post management components (progress)
+// gallery and gallery management components (progress)
 // format alpine data (done)
 // navigasi pindahkan (not yet)
+// broadcast joined or leaved fandoms members (not yet)

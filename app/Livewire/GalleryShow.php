@@ -69,12 +69,25 @@ class GalleryShow extends Component
                     // all visible
                     $user = User::with(['publishes'])->find($this->gallery->user->id);
                 } else {
-                    // check if the user is a friend of the gallery owner
-                    // if yes friend and public visibility
-                    // if no public visibility
-                    $user = User::with(['publishes' => function ($query) {
-                        $query->where('visible', 'public');
-                    }])->find($this->gallery->user->id);
+                    // friend or public visibility
+                    $user = User::find(Auth::id());
+                    $user->load('follows');
+                    $followed_user = false;
+                    foreach ($user->follows as $follow) {
+                        if($follow->id == $this->gallery->user->id) {
+                            $followed_user = true;
+                            break;
+                        }
+                    }
+                    if($followed_user) {
+                        $user = User::with(['publishes' => function ($query) {
+                            $query->where('visible', 'friend')->orWhere('visible', 'public');
+                        }])->find($this->gallery->user->id);
+                    } else {
+                        $user = User::with(['publishes' => function ($query) {
+                            $query->where('visible', 'public');
+                        }])->find($this->gallery->user->id);
+                    }
                 }
                 $this->recommends['user'] = collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->whereIn('publish_id', $user->publishes->pluck('id'))->get())->shuffle()->take(10);
                 $this->recommends['user'] = $this->recommends['user']->isEmpty() ? null : $this->recommends['user'];
@@ -93,9 +106,24 @@ class GalleryShow extends Component
                 if(Auth::id() == $this->gallery->user->id) {
                     $user = User::with(['publishes'])->find($this->gallery->user->id);
                 } else {
-                    $user = User::with(['publishes' => function ($query) {
-                        $query->where('visible', 'public');
-                    }])->find($this->gallery->user->id);
+                    $user = User::find(Auth::id());
+                    $user->load('follows');
+                    $followed_user = false;
+                    foreach ($user->follows as $follow) {
+                        if($follow->id == $this->gallery->user->id) {
+                            $followed_user = true;
+                            break;
+                        }
+                    }
+                    if($followed_user) {
+                        $user = User::with(['publishes' => function ($query) {
+                            $query->where('visible', 'friend')->orWhere('visible', 'public');
+                        }])->find($this->gallery->user->id);
+                    } else {
+                        $user = User::with(['publishes' => function ($query) {
+                            $query->where('visible', 'public');
+                        }])->find($this->gallery->user->id);
+                    }
                 }
                 $this->recommends['user'] = collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->whereIn('publish_id', $user->publishes->pluck('id'))->get())->shuffle()->take(10);
                 $this->recommends['user'] = $this->recommends['user']->isEmpty() ? null : $this->recommends['user'];
@@ -124,17 +152,28 @@ class GalleryShow extends Component
             $final_galleries = $member_galleries->merge($public_galleries);
             $final_galleries = $final_galleries->shuffle()->take(10);
             $this->recommends['tags'] = $final_galleries;
+            $user_id_galleries_friend = [];
             $user_id_galleries_public = [];
             $user_ids = collect($galleries)->where('publish.publishable_type', "App\Models\User")->pluck('publish.publishable_id')->unique()->toArray();
             if(!in_array(Auth::id(), $user_ids)) {
-                foreach($user_ids as $user_id) {
-                    $user_id_galleries_public[] = $user_id;
+                $user = User::find(Auth::id());
+                $user->load('follows');
+                foreach ($user->follows as $follow) {
+                    foreach($user_ids as $user_id) {
+                        if($follow->id == $user_id) {
+                            $user_id_galleries_friend[] = $user_id;
+                        } else {
+                            $user_id_galleries_public[] = $user_id;
+                        }
+                    }
                 }
             }
             $user_galleries_self = collect($galleries)->where('publish.publishable_type', "App\Models\User")->where('publish.publishable_id', Auth::id());
+            $user_galleries_friend = collect($galleries)->where('publish.publishable_type', "App\Models\User")->whereIn('publish.publishable_id', $user_id_galleries_friend)->whereIn('publish.visible', ['friend', 'public']);
             $user_galleries_public = collect($galleries)->where('publish.publishable_type', "App\Models\User")->whereIn('publish.publishable_id', $user_id_galleries_public)->where('publish.visible', 'public');
             $final_galleries = collect([]);
             $final_galleries = $user_galleries_self->merge($user_galleries_public);
+            $final_galleries = $final_galleries->merge($user_galleries_friend);
             $final_galleries = $final_galleries->shuffle()->take(10);
             $this->recommends['tags'] = $this->recommends['tags']->merge($final_galleries);
             $this->recommends['tags'] = $this->recommends['tags']->shuffle()->take(10);
