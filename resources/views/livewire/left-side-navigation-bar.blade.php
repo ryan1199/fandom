@@ -5,6 +5,7 @@
             <a wire:navigate href="{{ route('login') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Login</a>
             <a wire:navigate href="{{ route('register') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Register</a>
             <a wire:navigate href="{{ route('fandom-list') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Fandom list</a>
+            <a wire:navigate href="{{ route('gallery') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Gallery</a>
         @endguest
         @auth
             <a wire:navigate href="{{ route('home') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Fandom</a>
@@ -137,6 +138,7 @@
             </div>
             <a wire:navigate href="{{ route('post-management') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Post Management</a>
             <a wire:navigate href="{{ route('gallery-management') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Gallery Management</a>
+            <a wire:navigate href="{{ route('gallery') }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Gallery</a>
             <form action="{{ route('logout') }}" method="post" draggable="false">
                 @csrf
                 <button type="submit" class="w-full h-fit p-2 text-left {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg" draggable="false">Logout</button>

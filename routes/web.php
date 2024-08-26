@@ -4,6 +4,7 @@ use App\Http\Controllers\LogoutController;
 use App\Livewire\Fandom;
 use App\Livewire\FandomDetails;
 use App\Livewire\ForgotPassword;
+use App\Livewire\Gallery;
 use App\Livewire\GalleryManagement;
 use App\Livewire\GalleryShow;
 use App\Livewire\Home;
@@ -42,7 +43,8 @@ Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-detai
 Route::get('/post-management', PostManagement::class)->middleware('auth')->name('post-management');
 Route::get('/post-show/{post:slug}', PostShow::class)->name('post.show');
 Route::get('/gallery-management', GalleryManagement::class)->middleware('auth')->name('gallery-management');
-Route::get('/gallery-show/{gallery}', GalleryShow::class)->name('gallery.show');
+Route::get('/gallery-show/{gallery:slug}', GalleryShow::class)->name('gallery.show');
+Route::get('/gallery', Gallery::class)->name('gallery');
 Route::view('test-email-forgot-password', 'forgot-password');
 Route::fallback(function () {
     return redirect()->route('home');

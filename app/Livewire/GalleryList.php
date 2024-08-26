@@ -6,6 +6,8 @@ use App\Models\Fandom;
 use App\Models\Gallery;
 use App\Models\Image;
 use App\Models\Publish;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class GalleryList extends Component
 {
@@ -39,28 +42,101 @@ class GalleryList extends Component
         $search = $query['search'];
         $sort_by = $query['sort_by'];
         $sort = $query['sort'];
-        $search_array = str_split($search);
-        $search = '';
-        foreach ($search_array as $s) {
-            $search = $search . $s . '%';
-        }
-        $search = '%' . $search;
+        $search = Str::squish($search);
+        $search = Str::replace(' ', '', $search);
+        $search = Str::of($search)->explode(',');
+        $tags = Arr::sort($search);
+        // $search_array = str_split($search);
+        // $search = '';
+        // foreach ($search_array as $s) {
+        //     $search = $search . $s . '%';
+        // }
+        // $search = '%' . $search;
         $sort_by = ($sort_by == 'View') ? 'view' : 'created_at';
         $sort = ($sort == 'ASC') ? 'ASC' : 'DESC';
 
         if ($this->from == 'gallery-management') {
-            $galleries = Gallery::with(['user', 'publish.publishable', 'image'])->where('user_id', Auth::id())->where('tags', 'like', $search)->get();
+            $galleries = Gallery::with(['user', 'publish.publishable', 'image'])->where('user_id', Auth::id())->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->get();
         }
         if ($this->from == 'fandom') {
             $fandom = Fandom::with(['publishes', 'members.user'])->where('id', $this->id)->first();
             $users = collect($fandom->members);
             $members['id'] = $users->pluck('user.id')->toArray();
             $publish_ids = Arr::pluck($fandom->publishes, 'id');
-            $galleries = Gallery::with(['user', 'publish.publishable', 'image'])->whereIn('publish_id', $publish_ids)->where('tags', 'like', $search)->get();
+            $galleries = Gallery::with(['user', 'publish.publishable', 'image'])->whereIn('publish_id', $publish_ids)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->get();
             if(in_array(Auth::id(), $members['id'])) {
                 $galleries = collect($galleries);
             } else {
                 $galleries = collect($galleries)->where('publish.visible', 'public');
+            }
+        }
+        if ($this->from == 'gallery') {
+            $galleries = Gallery::with(['user', 'publish.publishable', 'image'])->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->get();
+            if (Auth::check()) {
+                $fandom_galleries_member = [];
+                $fandom_galleries_public = [];
+                $fandom_ids = collect($galleries)->where('publish.publishable_type', "App\Models\Fandom")->pluck('publish.publishable_id')->unique();
+                $fandoms = Fandom::with('members.user')->whereIn('id', $fandom_ids)->get();
+                foreach($fandoms as $fandom) {
+                    $members['id'] = collect($fandom->members)->pluck('user.id')->toArray();
+                    if(in_array(Auth::id(), $members['id'])) {
+                        $fandom_galleries_member[] = $fandom->id;
+                    } else {
+                        $fandom_galleries_public[] = $fandom->id;
+                    }
+                }
+                $member_galleries = collect($galleries)->where('publish.publishable_type', "App\Models\Fandom")->whereIn('publish.publishable_id', $fandom_galleries_member);
+                $public_galleries = collect($galleries)->where('publish.publishable_type', "App\Models\Fandom")->whereIn('publish.publishable_id', $fandom_galleries_public)->where('publish.visible', 'public');
+                $final_galleries_fandoms = collect([]);
+                $final_galleries_fandoms = $member_galleries->merge($public_galleries);
+                $user_id_galleries_friend = collect([]);
+                $user_id_galleries_block = collect([]);
+                $user_id_galleries_public = collect([]);
+                $user_ids = collect($galleries)->where('publish.publishable_type', "App\Models\User")->pluck('publish.publishable_id')->unique()->toArray();
+                if(!in_array(Auth::id(), $user_ids)) {
+                    $user = User::find(Auth::id());
+                    $user->load('follows');
+                    $user->load('blocks');
+                    foreach ($user->blocks as $block) {
+                        $user_id_galleries_block->push($block->id);
+                    }
+                    foreach($user_ids as $user_id) {
+                        foreach ($user->follows as $follow) {
+                            if($follow->id == $user_id) {
+                                $user_id_galleries_friend->push($user_id);
+                            } else {
+                                $user_id_galleries_public->push($user_id);
+                            }
+                        }
+                        if ($user->follows->isEmpty()) {
+                            $user_id_galleries_public->push($user_id);
+                        }
+                    }
+                    $user_id_galleries_public = $user_id_galleries_public->diff($user_id_galleries_block);
+                    $user_id_galleries_public->toArray();
+                    $user_id_galleries_friend->toArray();
+                }
+                $user_galleries_self = collect($galleries)->where('publish.publishable_type', "App\Models\User")->where('publish.publishable_id', Auth::id());
+                $user_galleries_friend = collect($galleries)->where('publish.publishable_type', "App\Models\User")->whereIn('publish.publishable_id', $user_id_galleries_friend)->whereIn('publish.visible', ['friend', 'public']);
+                $user_galleries_public = collect($galleries)->where('publish.publishable_type', "App\Models\User")->whereIn('publish.publishable_id', $user_id_galleries_public)->where('publish.visible', 'public');
+                $final_galleries_users = collect([]);
+                $final_galleries_users = $user_galleries_self->merge($user_galleries_public);
+                $final_galleries_users = $final_galleries_users->merge($user_galleries_friend);
+                $galleries = $final_galleries_fandoms->merge($final_galleries_users);
+            } else {
+                $galleries = $galleries->where('publish.visible', 'public');
             }
         }
         if ($sort_by == 'view') {

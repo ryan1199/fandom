@@ -1,7 +1,7 @@
 <div class="w-full h-full {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
     @if ($from == 'gallery-management')
         <div class="w-full h-fit grid gap-2 grid-cols-2">
-            @foreach ($galleries as $gallery)
+            @forelse ($galleries as $gallery)
                 <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                     <div class="flex flex-col space-x-0 space-y-2">
                         <div class="w-full h-fit relative">
@@ -21,7 +21,7 @@
                             <p class="text-left"><span class="font-semibold">Uploaded</span> by {{ $gallery->user->username }} {{ $gallery->created_at->diffForHumans(['options' => null]) }}</p>
                             <p class="text-left">
                                 @if ($gallery->publish != null)
-                                    <span class="font-semibold">Published</span> on
+                                    <span class="font-semibold">Published:</span>
                                     @if (class_basename($gallery->publish->publishable_type) === 'User')
                                         {{ $gallery->publish->publishable->username }}
                                     @else
@@ -44,12 +44,18 @@
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                    <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                        No galleries found
+                    </div>
+                </div>
+            @endforelse
         </div>
     @endif
     @if ($from == 'fandom')
         <div class="w-full h-fit grid gap-2 grid-cols-3">
-            @foreach ($galleries as $gallery)
+            @forelse ($galleries as $gallery)
                 <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation">
                     <div class="flex flex-col space-x-0 space-y-2">
                         <a wire:navigate href="{{ route('gallery.show', $gallery) }}" draggable="false">
@@ -58,7 +64,58 @@
                         <p class="text-left {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation"><span class="font-semibold">Uploaded</span> by {{ $gallery->user->username }} {{ $gallery->created_at->diffForHumans(['options' => null]) }}</p>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                    <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                        No galleries found
+                    </div>
+                </div>
+            @endforelse
+        </div>
+    @endif
+    @if ($from == 'gallery')
+        <div class="w-full h-fit grid gap-2 grid-cols-5">
+            @forelse ($galleries as $gallery)
+                <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                    <div class="flex flex-col space-x-0 space-y-2">
+                        <div class="w-full h-fit">
+                            <a wire:navigate href="{{ route('gallery.show', $gallery) }}" draggable="false">
+                                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center rounded-lg" draggable="false">
+                            </a>
+                        </div>
+                        <div class="flex flex-col space-x-0 space-y-2">
+                            <p class="text-left">
+                                @if ($gallery->publish != null)
+                                    <span class="font-semibold">Published:</span>
+                                    @if (class_basename($gallery->publish->publishable_type) === 'User')
+                                        {{ $gallery->publish->publishable->username }}
+                                    @else
+                                        {{ $gallery->publish->publishable->name }}
+                                    @endif
+                                @else
+                                    <span class="font-semibold">Unpublished</span>
+                                @endif
+                            </p>
+                            <div class="w-fit h-fit pb-1 flex flex-row flex-wrap text-left">
+                                <span class="mr-1 mb-1 font-semibold">Tags: </span>
+                                @foreach (explode(',', $gallery->tags) as $tag)
+                                    @if ($loop->last)
+                                        <span class="mr-1 mb-1 text-wrap break-all">{{ $tag }}</span>
+                                    @else
+                                        <span class="mr-1 mb-1 text-wrap break-all">{{ $tag }},</span>
+                                    @endif
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                    <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                        No galleries found
+                    </div>
+                </div>
+            @endforelse
         </div>
     @endif
 </div>

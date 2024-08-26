@@ -247,7 +247,7 @@
                 <div class="w-full h-fit p-2 text-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
                     <div class="w-full h-fit max-h-[40vh] flex flex-col space-x-0 space-y-2 overflow-y-auto">
                         @if (Auth::id() == $user->id)
-                            <a wire:navigate href="{{ route('post') }}" class="w-fit h-fit mx-auto px-2 text-center {{ 'hover:text-' . $preferences['color_2'] . '-500' }} font-semibold select-none animation-button" draggable="false"><div>Write a post</div></a>
+                            <a wire:navigate href="{{ route('post-management') }}" class="w-fit h-fit mx-auto px-2 text-center {{ 'hover:text-' . $preferences['color_2'] . '-500' }} font-semibold select-none animation-button" draggable="false"><div>Write a post</div></a>
                             <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
                         @endif
                         @if (Auth::id() == $user->id)
@@ -295,7 +295,7 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                     @if (Auth::id() == $user->id)
                         <div class="w-full h-40 flex flex-row items-center justify-center">
-                            <a wire:navigate href="{{ route('gallery') }}" class="w-fit h-fit font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button" draggable="false">Upload an image</a>
+                            <a wire:navigate href="{{ route('gallery-management') }}" class="w-fit h-fit font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button" draggable="false">Upload an image</a>
                         </div>
                     @endif
                     @if (Auth::id() == $user->id)
