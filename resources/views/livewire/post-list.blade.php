@@ -1,5 +1,5 @@
 <div class="w-full h-full flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
-    @if ($from == 'post')
+    @if ($from == 'post-management')
         @foreach ($posts as $post)
             <div wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
                 <div class="flex flex-row justify-between items-center">
@@ -111,5 +111,34 @@
                 <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
             </a>
         @endforeach
+    @endif
+    @if ($from == 'post')
+        <div class="w-full h-fit grid gap-2 grid-cols-3">
+            @forelse ($posts as $post)
+                <a wire:navigate wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
+                    <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
+                    <div class="w-full h-fit max-h-20 {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} overflow-clip overflow-y-auto animation">
+                        <p>{{ $post->description }}</p>
+                    </div>
+                    <div class="w-fit h-fit max-h-20 pb-1 flex flex-row flex-wrap text-left {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} overflow-clip overflow-y-auto animation">
+                        <span class="mr-1 mb-1 font-semibold">Tags: </span>
+                        @foreach (explode(',', $post->tags) as $tag)
+                            @if ($loop->last)
+                                <span class="mr-1 mb-1 text-wrap break-all">{{ $tag }}</span>
+                            @else
+                                <span class="mr-1 mb-1 text-wrap break-all">{{ $tag }},</span>
+                            @endif
+                        @endforeach
+                    </div>
+                    <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
+                </a>
+            @empty
+                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                    <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                        No posts found
+                    </div>
+                </div>
+            @endforelse
+        </div>
     @endif
 </div>

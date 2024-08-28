@@ -29,17 +29,40 @@ class DiscussDetails extends Component
     }
     public function mount(Discuss $discuss, $preferences)
     {
-        $this->discuss = $discuss;
-        $this->loadLatestMessages();
-        $this->fandom = $discuss->fandom;
-        $members = collect($this->fandom->members);
+        $this->discuss = Discuss::with([
+            'fandom' => [
+                'members' => [
+                    'user' => [
+                        'cover',
+                        'avatar'
+                    ],
+                    'role'
+                ]
+            ],
+            'messages' => [
+                'user' => [
+                    'cover',
+                    'avatar'
+                ]
+            ]
+        ])->find($discuss->id);
+        // $this->discuss->load(['fandom', 'messages']);
+        $this->fandom = $this->discuss->fandom;
+        // $this->fandom->members->load(['role', 'user']);
+        $members = $this->fandom->members;
         $managers = $members->where('role.name', 'Manager');
         $this->managers = $managers->pluck('user.id')->toArray();
         $this->preferences = $preferences;
+        $this->loadLatestMessages();
     }
     public function loadLatestMessages()
     {
-        $this->messages = collect($this->discuss->messages)->reverse();
+        $this->messages = collect([]);
+        // $this->discuss->messages->load(['user.cover', 'user.avatar']);
+        $this->messages = $this->discuss->messages->reverse();
+        // dd($this->messages);
+        // $this->messages->load('user');
+        // $this->messages->user->load(['avatar', 'cover']);
     }
     public function deleteDiscuss()
     {

@@ -10,7 +10,8 @@ use Livewire\Component;
 
 class PostSearch extends Component
 {
-    public $search = '';
+    public $title = '';
+    public $tags = '';
     public $sort_by = 'Title';
     public $sort = 'ASC';
     #[Locked]
@@ -24,14 +25,16 @@ class PostSearch extends Component
     {
         return view('livewire.post-search');
     }
-    public function mount($from = null)
+    public function mount($preferences, $from = null)
     {
+        $this->preferences = $preferences;
         $this->from = $from;
+        $this->search();
     }
     #[On('search')]
     public function search()
     {
-        if ($this->from == 'user') {
+        if ($this->from == 'post-management') {
             $validated = Validator::make(
                 [
                     'sort_by' => $this->sort_by,
@@ -54,13 +57,14 @@ class PostSearch extends Component
                 ]
             )->validate();
             $query = [
-                'search' => $this->search,
+                'title' => $this->title,
+                'tags' => $this->tags,
                 'sort_by' => $this->sort_by,
                 'sort' => $this->sort,
                 'published' => $this->published
             ];
         }
-        if ($this->from == 'fandom') {
+        if ($this->from == 'fandom' || $this->from == 'post') {
             $validated = Validator::make(
                 [
                     'sort_by' => $this->sort_by,
@@ -79,7 +83,8 @@ class PostSearch extends Component
                 ]
             )->validate();
             $query = [
-                'search' => $this->search,
+                'title' => $this->title,
+                'tags' => $this->tags,
                 'sort_by' => $this->sort_by,
                 'sort' => $this->sort,
                 'published' => null

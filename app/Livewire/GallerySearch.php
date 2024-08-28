@@ -10,7 +10,7 @@ use Livewire\Component;
 
 class GallerySearch extends Component
 {
-    public $search = '';
+    public $tags = '';
     public $sort_by = 'View';
     public $sort = 'ASC';
     #[Locked]
@@ -48,7 +48,7 @@ class GallerySearch extends Component
             ]
         )->validate();
         $query = [
-            'search' => $this->search,
+            'tags' => $this->tags,
             'sort_by' => $this->sort_by,
             'sort' => $this->sort
         ];

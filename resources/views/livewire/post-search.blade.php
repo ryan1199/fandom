@@ -1,6 +1,9 @@
 <div class="w-full h-fit flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
-    <div class="w-full h-fit flex flex-col sm:flex-row lg:flex-col xl:flex-row space-x-0 space-y-2 sm:space-x-2 sm:space-y-0 lg:space-x-0 lg:space-y-2 xl:space-x-2 xl:space-y-0">
-        <input wire:model.blur="search" type="text" placeholder="Title" class="w-full h-14 form-input {{ 'placeholder:text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+    <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
+        <div class="w-full h-fit flex flex-row lg:flex-col space-x-2 space-y-0 lg:space-x-0 lg:space-y-2">
+            <input wire:model.blur="title" type="text" placeholder="Title" class="w-full h-14 form-input {{ 'placeholder:text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+            <input wire:model.blur="tags" type="text" placeholder="Tags" class="w-full h-14 form-input {{ 'placeholder:text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+        </div>
         <div class="w-full sm:w-fit lg:w-full xl:w-fit h-full flex flex-row space-x-2 space-y-0">
             <select wire:model.live="sort_by" class="w-full sm:w-fit lg:w-full xl:w-fit h-14 form-select {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
                 @foreach ($sort_by_available as $value)
@@ -20,13 +23,13 @@
                     @endif
                 @endforeach
             </select>
+            @if ($from == 'post-management')
+                <label for="Published" class="w-fit h-14 p-2 flex flex-row space-x-2 space-y-0 items-center {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                    <span>Published</span>
+                    <input wire:model.live="published" type="checkbox" id="Published" value="true" class="form-checkbox p-4 {{ 'bg-' . $preferences['color_2'] . '-50/10' }} {{ 'text-' . $preferences['color_2'] . '-900' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                </label>
+            @endif
         </div>
-        @if ($from == 'user')
-            <label for="Published" class="w-fit h-14 p-2 flex flex-row space-x-2 space-y-0 items-center {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
-                <span>Published</span>
-                <input wire:model.live="published" type="checkbox" id="Published" value="true" class="form-checkbox p-4 {{ 'bg-' . $preferences['color_2'] . '-50/10' }} {{ 'text-' . $preferences['color_2'] . '-900' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
-            </label>
-        @endif
     </div>
     @if ($errors->any())
         <div class="flex flex-col space-x-0 space-y-1 {{ 'text-[calc(theme(fontSize.sm)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.sm)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }}">

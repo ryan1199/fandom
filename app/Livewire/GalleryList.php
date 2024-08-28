@@ -39,7 +39,7 @@ class GalleryList extends Component
     #[On('search')]
     public function search($query)
     {
-        $search = $query['search'];
+        $search = $query['tags'];
         $sort_by = $query['sort_by'];
         $sort = $query['sort'];
         $search = Str::squish($search);
@@ -105,29 +105,32 @@ class GalleryList extends Component
                 $user_id_galleries_block = collect([]);
                 $user_id_galleries_public = collect([]);
                 $user_ids = collect($galleries)->where('publish.publishable_type', "App\Models\User")->pluck('publish.publishable_id')->unique()->toArray();
-                if(!in_array(Auth::id(), $user_ids)) {
-                    $user = User::find(Auth::id());
-                    $user->load('follows');
-                    $user->load('blocks');
-                    foreach ($user->blocks as $block) {
-                        $user_id_galleries_block->push($block->id);
-                    }
-                    foreach($user_ids as $user_id) {
-                        foreach ($user->follows as $follow) {
-                            if($follow->id == $user_id) {
-                                $user_id_galleries_friend->push($user_id);
-                            } else {
-                                $user_id_galleries_public->push($user_id);
-                            }
-                        }
-                        if ($user->follows->isEmpty()) {
+                $self_user_id_position = array_search(Auth::id(), $user_ids);
+                if ($self_user_id_position !== false) {
+                    unset($user_ids[$self_user_id_position]);
+                    $user_ids = array_values($user_ids);
+                }
+                $user = User::find(Auth::id());
+                $user->load('follows');
+                $user->load('blocks');
+                foreach ($user->blocks as $block) {
+                    $user_id_galleries_block->push($block->id);
+                }
+                foreach($user_ids as $user_id) {
+                    foreach ($user->follows as $follow) {
+                        if($follow->id == $user_id) {
+                            $user_id_galleries_friend->push($user_id);
+                        } else {
                             $user_id_galleries_public->push($user_id);
                         }
                     }
-                    $user_id_galleries_public = $user_id_galleries_public->diff($user_id_galleries_block);
-                    $user_id_galleries_public->toArray();
-                    $user_id_galleries_friend->toArray();
+                    if ($user->follows->isEmpty()) {
+                        $user_id_galleries_public->push($user_id);
+                    }
                 }
+                $user_id_galleries_public = $user_id_galleries_public->diff($user_id_galleries_block);
+                $user_id_galleries_public->toArray();
+                $user_id_galleries_friend->toArray();
                 $user_galleries_self = collect($galleries)->where('publish.publishable_type', "App\Models\User")->where('publish.publishable_id', Auth::id());
                 $user_galleries_friend = collect($galleries)->where('publish.publishable_type', "App\Models\User")->whereIn('publish.publishable_id', $user_id_galleries_friend)->whereIn('publish.visible', ['friend', 'public']);
                 $user_galleries_public = collect($galleries)->where('publish.publishable_type', "App\Models\User")->whereIn('publish.publishable_id', $user_id_galleries_public)->where('publish.visible', 'public');

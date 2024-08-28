@@ -32,6 +32,17 @@ class PostPolicy
                             case 'public':
                                 return true;
                                 break;
+                            case 'friend':
+                                $user->load('follows');
+                                $followed_user = false;
+                                foreach ($user->follows as $follow) {
+                                    if($follow->id == $post->publish->publishable_id) {
+                                        $followed_user = true;
+                                        break;
+                                    }
+                                }
+                                return $followed_user;
+                                break;
                             case 'self':
                                 return false;
                                 break;
@@ -42,6 +53,9 @@ class PostPolicy
                     switch($post->publish->visible) {
                         case 'public':
                             return true;
+                            break;
+                        case 'friend':
+                            return false;
                             break;
                         case 'self':
                             return false;

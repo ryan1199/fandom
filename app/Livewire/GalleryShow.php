@@ -25,6 +25,7 @@ class GalleryShow extends Component
         'fandom' => null,
         'tags' => null
     ];
+    public $totalViews;
     public $totalLikes;
     public $totalDislikes;
     public $totalComments;
@@ -57,6 +58,7 @@ class GalleryShow extends Component
     public function loadGallery(Gallery $gallery)
     {
         $this->gallery = Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable','comments','rates.user'])->find($gallery->id);
+        $this->totalViews = Number::abbreviate($gallery->view);
         $this->totalLikes = Number::abbreviate(collect($gallery->rates)->where('like', true)->count());
         $this->totalDislikes = Number::abbreviate(collect($gallery->rates)->where('dislike', true)->count());
         $this->totalComments = Number::abbreviate($gallery->comments->count());
@@ -68,14 +70,23 @@ class GalleryShow extends Component
                 if(Auth::id() == $this->gallery->user->id) {
                     // all visible
                     $user = User::with(['publishes'])->find($this->gallery->user->id);
+                    $this->recommends['user'] = collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->whereIn('publish_id', $user->publishes->pluck('id'))->get())->shuffle()->take(10);
                 } else {
                     // friend or public visibility
                     $user = User::find(Auth::id());
                     $user->load('follows');
+                    $user->load('blocks');
                     $followed_user = false;
+                    $blocked_user = false;
                     foreach ($user->follows as $follow) {
                         if($follow->id == $this->gallery->user->id) {
                             $followed_user = true;
+                            break;
+                        }
+                    }
+                    foreach ($user->blocks as $block) {
+                        if($block->id == $this->gallery->user->id) {
+                            $blocked_user = true;
                             break;
                         }
                     }
@@ -83,13 +94,16 @@ class GalleryShow extends Component
                         $user = User::with(['publishes' => function ($query) {
                             $query->where('visible', 'friend')->orWhere('visible', 'public');
                         }])->find($this->gallery->user->id);
+                        $this->recommends['user'] = collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->whereIn('publish_id', $user->publishes->pluck('id'))->get())->shuffle()->take(10);
+                    } if ($blocked_user) {
+                        $this->recommends['user'] = collect([]);
                     } else {
                         $user = User::with(['publishes' => function ($query) {
                             $query->where('visible', 'public');
                         }])->find($this->gallery->user->id);
+                        $this->recommends['user'] = collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->whereIn('publish_id', $user->publishes->pluck('id'))->get())->shuffle()->take(10);
                     }
                 }
-                $this->recommends['user'] = collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->whereIn('publish_id', $user->publishes->pluck('id'))->get())->shuffle()->take(10);
                 $this->recommends['user'] = $this->recommends['user']->isEmpty() ? null : $this->recommends['user'];
             }
             if(class_basename($this->gallery->publish->publishable_type) === 'Fandom') {
@@ -152,22 +166,36 @@ class GalleryShow extends Component
             $final_galleries = $member_galleries->merge($public_galleries);
             $final_galleries = $final_galleries->shuffle()->take(10);
             $this->recommends['tags'] = $final_galleries;
-            $user_id_galleries_friend = [];
-            $user_id_galleries_public = [];
+            $user_id_galleries_friend = collect([]);
+            $user_id_galleries_block = collect([]);
+            $user_id_galleries_public = collect([]);
             $user_ids = collect($galleries)->where('publish.publishable_type', "App\Models\User")->pluck('publish.publishable_id')->unique()->toArray();
-            if(!in_array(Auth::id(), $user_ids)) {
-                $user = User::find(Auth::id());
-                $user->load('follows');
+            $self_user_id_position = array_search(Auth::id(), $user_ids);
+            if ($self_user_id_position !== false) {
+                unset($user_ids[$self_user_id_position]);
+                $user_ids = array_values($user_ids);
+            }
+            $user = User::find(Auth::id());
+            $user->load('follows');
+            $user->load('blocks');
+            foreach ($user->blocks as $block) {
+                $user_id_galleries_block->push($block->id);
+            }
+            foreach($user_ids as $user_id) {
                 foreach ($user->follows as $follow) {
-                    foreach($user_ids as $user_id) {
-                        if($follow->id == $user_id) {
-                            $user_id_galleries_friend[] = $user_id;
-                        } else {
-                            $user_id_galleries_public[] = $user_id;
-                        }
+                    if($follow->id == $user_id) {
+                        $user_id_galleries_friend->push($user_id);
+                    } else {
+                        $user_id_galleries_public->push($user_id);
                     }
                 }
+                if ($user->follows->isEmpty()) {
+                    $user_id_galleries_public->push($user_id);
+                }
             }
+            $user_id_galleries_public = $user_id_galleries_public->diff($user_id_galleries_block);
+            $user_id_galleries_public->toArray();
+            $user_id_galleries_friend->toArray();
             $user_galleries_self = collect($galleries)->where('publish.publishable_type', "App\Models\User")->where('publish.publishable_id', Auth::id());
             $user_galleries_friend = collect($galleries)->where('publish.publishable_type', "App\Models\User")->whereIn('publish.publishable_id', $user_id_galleries_friend)->whereIn('publish.visible', ['friend', 'public']);
             $user_galleries_public = collect($galleries)->where('publish.publishable_type', "App\Models\User")->whereIn('publish.publishable_id', $user_id_galleries_public)->where('publish.visible', 'public');

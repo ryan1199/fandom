@@ -6,6 +6,7 @@ use App\Models\Fandom;
 use App\Models\Post;
 use App\Models\Publish;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -28,11 +29,12 @@ class PostList extends Component
         return view('livewire.post-list');
     }
     #[On('refresh_post_list')]
-    public function mount($from, $id = null)
+    public function mount($preferences, $from, $id = null)
     {
+        $this->preferences = $preferences;
         $this->from = $from;
         $this->id = $id;
-        if ($this->from == 'post') {
+        if ($this->from == 'post-management') {
             $this->loadPublishOn();
         }
         $this->dispatch('search')->to(PostSearch::class);
@@ -40,24 +42,37 @@ class PostList extends Component
     #[On('search')]
     public function search($query)
     {
-        $search = $query['search'];
+        $title = $query['title'];
+        $tags = $query['tags'];
         $sort_by = $query['sort_by'];
         $sort = $query['sort'];
         $published = $query['published'] == null ? false : $query['published'];
-        $search_array = str_split($search);
-        $search = '';
-        foreach ($search_array as $s) {
-            $search = $search . $s . '%';
+        $tags = Str::squish($tags);
+        $tags = Str::replace(' ', '', $tags);
+        $tags = Str::of($tags)->explode(',');
+        $tags = Arr::sort($tags);
+        $title_array = str_split($title);
+        $title = '';
+        foreach ($title_array as $s) {
+            $title = $title . $s . '%';
         }
-        $search = '%' . $search;
+        $title = '%' . $title;
         $sort_by = ($sort_by == 'Title') ? 'title' : 'created_at';
         $sort = ($sort == 'ASC') ? 'ASC' : 'DESC';
 
-        if ($this->from == 'post') {
+        if ($this->from == 'post-management') {
             if ($published == true) {
-                $posts = Post::with(['user', 'publish.publishable'])->where('user_id', Auth::id())->where('title', 'like', $search)->whereNot('publish_id', null)->get();
+                $posts = Post::with(['user', 'publish.publishable'])->where('user_id', Auth::id())->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
+                    foreach($tags as $tag) {
+                        $query->orWhere('tags', 'like', '%'.$tag.'%');
+                    }
+                })->whereNot('publish_id', null)->get();
             } else {
-                $posts = Post::with(['user', 'publish.publishable'])->where('user_id', Auth::id())->where('title', 'like', $search)->where('publish_id', null)->get();
+                $posts = Post::with(['user', 'publish.publishable'])->where('user_id', Auth::id())->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
+                    foreach($tags as $tag) {
+                        $query->orWhere('tags', 'like', '%'.$tag.'%');
+                    }
+                })->where('publish_id', null)->get();
             }
         }
         if ($this->from == 'fandom') {
@@ -65,11 +80,79 @@ class PostList extends Component
             $users = collect($fandom->members);
             $members['id'] = $users->pluck('user.id')->toArray();
             $publish_ids = Arr::pluck($fandom->publishes, 'id');
-            $posts = Post::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->where('title', 'like', $search)->get();
+            $posts = Post::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->get();
             if(in_array(Auth::id(), $members['id'])) {
                 $posts = collect($posts);
             } else {
                 $posts = collect($posts)->where('publish.visible', 'public');
+            }
+        }
+        if ($this->from == 'post') {
+            $posts = Post::with(['user', 'publish.publishable'])->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->whereNot('publish_id', null)->get();
+            if (Auth::check()) {
+                $fandom_posts_member = [];
+                $fandom_posts_public = [];
+                $fandom_ids = collect($posts)->where('publish.publishable_type', "App\Models\Fandom")->pluck('publish.publishable_id')->unique();
+                $fandoms = Fandom::with('members.user')->whereIn('id', $fandom_ids)->get();
+                foreach($fandoms as $fandom) {
+                    $members['id'] = collect($fandom->members)->pluck('user.id')->toArray();
+                    if(in_array(Auth::id(), $members['id'])) {
+                        $fandom_posts_member[] = $fandom->id;
+                    } else {
+                        $fandom_posts_public[] = $fandom->id;
+                    }
+                }
+                $member_posts = collect($posts)->where('publish.publishable_type', "App\Models\Fandom")->whereIn('publish.publishable_id', $fandom_posts_member);
+                $public_posts = collect($posts)->where('publish.publishable_type', "App\Models\Fandom")->whereIn('publish.publishable_id', $fandom_posts_public)->where('publish.visible', 'public');
+                $final_posts_fandoms = collect([]);
+                $final_posts_fandoms = $member_posts->merge($public_posts);
+                $user_id_posts_friend = collect([]);
+                $user_id_posts_block = collect([]);
+                $user_id_posts_public = collect([]);
+                $user_ids = collect($posts)->where('publish.publishable_type', "App\Models\User")->pluck('publish.publishable_id')->unique()->toArray();
+                $self_user_id_position = array_search(Auth::id(), $user_ids);
+                if ($self_user_id_position !== false) {
+                    unset($user_ids[$self_user_id_position]);
+                    $user_ids = array_values($user_ids);
+                }
+                $user = User::find(Auth::id());
+                $user->load('follows');
+                $user->load('blocks');
+                foreach ($user->blocks as $block) {
+                    $user_id_posts_block->push($block->id);
+                }
+                foreach($user_ids as $user_id) {
+                    foreach ($user->follows as $follow) {
+                        if($follow->id == $user_id) {
+                            $user_id_posts_friend->push($user_id);
+                        } else {
+                            $user_id_posts_public->push($user_id);
+                        }
+                    }
+                    if ($user->follows->isEmpty()) {
+                        $user_id_posts_public->push($user_id);
+                    }
+                }
+                $user_id_posts_public = $user_id_posts_public->diff($user_id_posts_block);
+                $user_id_posts_public->toArray();
+                $user_id_posts_friend->toArray();
+                $user_posts_self = collect($posts)->where('publish.publishable_type', "App\Models\User")->where('publish.publishable_id', Auth::id());
+                $user_posts_friend = collect($posts)->where('publish.publishable_type', "App\Models\User")->whereIn('publish.publishable_id', $user_id_posts_friend)->whereIn('publish.visible', ['friend', 'public']);
+                $user_posts_public = collect($posts)->where('publish.publishable_type', "App\Models\User")->whereIn('publish.publishable_id', $user_id_posts_public)->where('publish.visible', 'public');
+                $final_posts_users = collect([]);
+                $final_posts_users = $user_posts_self->merge($user_posts_public);
+                $final_posts_users = $final_posts_users->merge($user_posts_friend);
+                $posts = $final_posts_fandoms->merge($final_posts_users);
+            } else {
+                $posts = $posts->where('publish.visible', 'public');
             }
         }
         if ($sort_by == 'title') {

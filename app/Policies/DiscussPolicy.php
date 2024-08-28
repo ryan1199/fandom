@@ -30,7 +30,7 @@ class DiscussPolicy
      */
     public function create(User $user, Fandom $fandom): bool
     {
-        $fandom = Fandom::with(['members.role'])->find($fandom->id);
+        $fandom = Fandom::with(['members.role', 'members.user'])->find($fandom->id);
         $users = collect($fandom->members);
         $managers = $users->where('role.name', 'Manager');
         $managers_id = $managers->pluck('user.id')->toArray();
@@ -50,7 +50,7 @@ class DiscussPolicy
      */
     public function delete(User $user, Discuss $discuss, Fandom $fandom): bool
     {
-        $fandom = Fandom::with(['members.role'])->find($fandom->id);
+        $fandom = Fandom::with(['members.role', 'members.user'])->find($fandom->id);
         $users = collect($fandom->members);
         $managers = $users->where('role.name', 'Manager');
         $managers_id = $managers->pluck('user.id')->toArray();
@@ -75,7 +75,7 @@ class DiscussPolicy
 
     public function reset(User $user, Discuss $discuss, Fandom $fandom): bool
     {
-        $fandom = Fandom::with(['members.role'])->find($fandom->id);
+        $fandom = Fandom::with(['members.role', 'members.user'])->find($fandom->id);
         $users = collect($fandom->members);
         $managers = $users->where('role.name', 'Manager');
         $managers_id = $managers->pluck('user.id')->toArray();
@@ -86,14 +86,14 @@ class DiscussPolicy
     {
         switch($discuss->visible) {
             case 'manager':
-                $fandom = Fandom::with(['members.role'])->find($fandom->id);
+                $fandom = Fandom::with(['members.role', 'members.user'])->find($fandom->id);
                 $users = collect($fandom->members);
                 $managers = $users->where('role.name', 'Manager');
                 $managers_id = $managers->pluck('user.id')->toArray();
                 return in_array($user->id, $managers_id) && $discuss->fandom_id == $fandom->id;
                 break;
             case 'member':
-                $fandom = Fandom::with(['members.role'])->find($fandom->id);
+                $fandom = Fandom::with(['members.role', 'members.user'])->find($fandom->id);
                 $users = collect($fandom->members);
                 $managers = $users->where('role.name', 'Manager');
                 $managers_id = $managers->pluck('user.id')->toArray();

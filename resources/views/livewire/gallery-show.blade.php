@@ -17,7 +17,7 @@
                 </div>
                 <div class="w-fit h-fit p-2">
                     <span>Views: </span>
-                    <span>{{ $gallery->view }}</span>
+                    <span>{{ $totalViews }}</span>
                 </div>
                 <span>
                     @if (class_basename($gallery->publish->publishable_type) === 'User')
