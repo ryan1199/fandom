@@ -11,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class FandomUpdated implements ShouldBroadcast
+class UserJoined implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,7 +19,7 @@ class FandomUpdated implements ShouldBroadcast
      * Create a new event instance.
      */
     public function __construct(
-        public Fandom $fandom,
+        public Fandom $fandom
     ){}
 
     /**
@@ -30,9 +30,7 @@ class FandomUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('FandomProfile.' . $this->fandom->id),
-            new Channel('FandomProfile.' . $this->fandom->id),
-            new Channel('FandomList.' . $this->fandom->id),
+            new Channel('FandomMemberList.' . $this->fandom->id),
         ];
     }
 }

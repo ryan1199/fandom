@@ -45,9 +45,9 @@ class FandomSetting extends Component
         ])->validate();
         
         $fandom = Fandom::with(['cover.image'])->find($this->fandom->id);
-        Storage::delete('covers/' . $fandom->cover->image->url);
+        Storage::disk('public')->delete('covers/' . $fandom->cover->image->url);
 
-        $cover_name = 'fandom/' . $fandom->slug . "/cover-" . $fandom->slug . "." . $this->cover->extension();
+        $cover_name = 'fandom/' . $fandom->slug . "/" . $this->cover->hashName();
         $fandom->cover->image()->update([
             'url' => $cover_name
         ]);
@@ -68,9 +68,9 @@ class FandomSetting extends Component
         ])->validate();
         
         $fandom = Fandom::with(['avatar.image'])->find($this->fandom->id);
-        Storage::delete('avatars/' . $fandom->avatar->image->url);
+        Storage::disk('public')->delete('avatars/' . $fandom->avatar->image->url);
 
-        $avatar_name = 'fandom/' . $fandom->slug . "/avatar-" . $fandom->slug . "." . $this->avatar->extension();
+        $avatar_name = 'fandom/' . $fandom->slug . "/" . $this->avatar->hashName();
         $fandom->avatar->image()->update([
             'url' => $avatar_name
         ]);

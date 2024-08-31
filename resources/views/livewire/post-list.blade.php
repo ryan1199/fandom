@@ -1,12 +1,25 @@
-<div class="w-full h-full flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
+<div class="w-full h-full flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} select-none">
     @if ($from == 'post-management')
         @foreach ($posts as $post)
-            <div wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2">
-                <div class="flex flex-row justify-between items-center">
-                    <div class="{{ 'hover:text-' . $preferences['color_2'] . '-500' }} animation-button">
-                        <h1><a wire:navigate href="{{ route('post.show', $post) }}" class="font-semibold cursor-pointer" draggable="false">{{ $post->title }}</a></h1>
+            <div wire:key="{{ 'post-' . $post->id . '-from-' . $from . '-page' }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-950' }} backdrop-blur-xl {{ 'text-' . $preferences['color_2'] . '-100' }} rounded-lg">
+                @livewire(PostCard::class, ['post' => $post->id, 'preferences' => $preferences], key('post-' . $post->id . '-from-' . $from . '-page-' . now()))
+                <div class="flex flex-row justify-between items-start">
+                    <div class="flex flex-col space-x-0 space-y-2">
+                        <p class="text-left"><span class="font-semibold">Created</span> by {{ $post->user->username }} {{ $post->created_at->diffForHumans(['options' => null]) }}</p>
+                        <p class="text-left">
+                            @if ($post->publish != null)
+                                <span class="font-semibold">Published</span> on
+                                @if (class_basename($post->publish->publishable_type) === 'User')
+                                    {{ $post->publish->publishable->username }}
+                                @else
+                                    {{ $post->publish->publishable->name }}
+                                @endif
+                            @else
+                                <span class="font-semibold">Unpublished</span>
+                            @endif
+                        </p>
                     </div>
-                    <div class="flex flex-row space-x-2 space-y-0">
+                    <div class="flex flex-row space-x-2 space-y-0 items-center">
                         <svg wire:click="editPost({{ $post->id }})" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">
                             <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
                         </svg>
@@ -15,29 +28,14 @@
                         </svg>
                     </div>
                 </div>
-                <div class="flex flex-col space-x-0 space-y-2">
-                    <p class="text-left"><span class="font-semibold">Created</span> by {{ $post->user->username }} {{ $post->created_at->diffForHumans(['options' => null]) }}</p>
-                    <p class="text-left">
-                        @if ($post->publish != null)
-                            <span class="font-semibold">Published</span> on
-                            @if (class_basename($post->publish->publishable_type) === 'User')
-                                {{ $post->publish->publishable->username }}
-                            @else
-                                {{ $post->publish->publishable->name }}
-                            @endif
-                        @else
-                            <span class="font-semibold">Unpublished</span>
-                        @endif
-                    </p>
-                </div>
                 <div class="flex flex-col space-x-0 space-y-1 select-none">
                     @if ($post->publish_id == null)
                         <div x-data="{ {{ 'open_publish_on_for_post_' . $post->id }}: false }" class="flex flex-col space-x-0 space-y-1">
                             <div x-on:click="{{ 'open_publish_on_for_post_' . $post->id }} = ! {{ 'open_publish_on_for_post_' . $post->id }}" class="w-fit h-fit mx-auto p-2 text-center font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">Publish On</div>
-                            <div x-cloak x-show="{{ 'open_publish_on_for_post_' . $post->id }}" class="flex flex-col space-x-0 space-y-1 rounded-lg">
+                            <div x-cloak x-show="{{ 'open_publish_on_for_post_' . $post->id }}" class="flex flex-col space-x-0 space-y-2 rounded-lg">
                                 @foreach ($publish_on as $array)
                                     @if ($array['from'] == 'user')
-                                        <div wire:key="{{ 'post-list-from-' . $from . '-publish-on-user-' . $array['data']->id }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                                        <div wire:key="{{ 'post-list-from-' . $from . '-publish-on-user-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} backdrop-blur-xl {{ 'text-' . $preferences['color_2'] . '-900' }} rounded-lg">
                                             <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                                                 <div class="{{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                                     <h1 class="bg-clip-text line-clamp-2 text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">{{ $array['data']->username }}</h1>
@@ -66,7 +64,7 @@
                                             </div>
                                         </div>
                                     @else
-                                        <div wire:key="{{ 'post-list-from-' . $from . 'publish-on-fandom-' . $array['data']->id }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                                        <div wire:key="{{ 'post-list-from-' . $from . 'publish-on-fandom-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} backdrop-blur-xl {{ 'text-' . $preferences['color_2'] . '-900' }} rounded-lg">
                                             <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                                                 <div class="{{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                                     <h1 class="bg-clip-text line-clamp-2 text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">{{ $array['data']->name }}</h1>
@@ -106,34 +104,15 @@
     @endif
     @if ($from == 'fandom')
         @foreach ($posts as $post)
-            <a wire:navigate wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
-                <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
-                <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
-            </a>
+            @livewire(PostCard::class, ['post' => $post->id, 'preferences' => $preferences], key('post-' . $post->id . '-from-' . $from . '-page'))
         @endforeach
     @endif
     @if ($from == 'post')
         <div class="w-full h-fit grid gap-2 grid-cols-3">
             @forelse ($posts as $post)
-                <a wire:navigate wire:key="{{ 'post-list-from-' . $from . '-post-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
-                    <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
-                    <div class="w-full h-fit max-h-20 {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} overflow-clip overflow-y-auto animation">
-                        <p>{{ $post->description }}</p>
-                    </div>
-                    <div class="w-fit h-fit max-h-20 pb-1 flex flex-row flex-wrap text-left {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} overflow-clip overflow-y-auto animation">
-                        <span class="mr-1 mb-1 font-semibold">Tags: </span>
-                        @foreach (explode(',', $post->tags) as $tag)
-                            @if ($loop->last)
-                                <span class="mr-1 mb-1 text-wrap break-all">{{ $tag }}</span>
-                            @else
-                                <span class="mr-1 mb-1 text-wrap break-all">{{ $tag }},</span>
-                            @endif
-                        @endforeach
-                    </div>
-                    <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
-                </a>
+                @livewire(PostCard::class, ['post' => $post->id, 'preferences' => $preferences], key('post-' . $post->id . '-from-' . $from . '-page'))
             @empty
-                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                <div class="w-screen max-w-full h-full py-12 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                     <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                         No posts found
                     </div>

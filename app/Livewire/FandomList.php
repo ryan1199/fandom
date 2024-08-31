@@ -23,7 +23,7 @@ class FandomList extends Component
     }
     public function mount(Fandom $fandom, $preferences)
     {
-        $this->loadfandom($fandom);
+        $this->loadfandom($fandom->id);
         $this->preferences = $preferences;
         $this->getTotalMembers();
         $this->getTotalGalleries();
@@ -45,7 +45,7 @@ class FandomList extends Component
         $fandom_publish_ids = $this->fandom->publishes->pluck('id')->toArray();
         $this->totalPosts = Number::abbreviate(Post::whereIn('publish_id', $fandom_publish_ids)->count());
     }
-    public function loadfandom(Fandom $fandom)
+    public function loadfandom($id)
     {
         $this->fandom = Fandom::with([
             'avatar' => [
@@ -66,12 +66,11 @@ class FandomList extends Component
                 ],
                 'role'
             ],
-        ])->find($fandom->id);
+        ])->find($id);
     }
     public function loadUpdatedFandom($event)
     {
-        $fandom = Fandom::find($event['fandom']['id']);
-        $this->loadfandom($fandom);
+        $this->loadfandom($event['fandom']['id']);
     }
     public function getListeners()
     {

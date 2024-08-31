@@ -39,6 +39,7 @@ class GalleryList extends Component
     #[On('search')]
     public function search($query)
     {
+        $this->galleries = collect([]);
         $search = $query['tags'];
         $sort_by = $query['sort_by'];
         $sort = $query['sort'];
@@ -46,12 +47,6 @@ class GalleryList extends Component
         $search = Str::replace(' ', '', $search);
         $search = Str::of($search)->explode(',');
         $tags = Arr::sort($search);
-        // $search_array = str_split($search);
-        // $search = '';
-        // foreach ($search_array as $s) {
-        //     $search = $search . $s . '%';
-        // }
-        // $search = '%' . $search;
         $sort_by = ($sort_by == 'View') ? 'view' : 'created_at';
         $sort = ($sort == 'ASC') ? 'ASC' : 'DESC';
 

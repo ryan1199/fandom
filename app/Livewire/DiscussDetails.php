@@ -100,6 +100,8 @@ class DiscussDetails extends Component
         return [
             "echo-private:DiscussDetails.{$this->discuss->id},NewDiscussionMessage" => 'newMessage',
             "echo-private:DiscussDetails.{$this->discuss->id},ResetDiscussion" => 'loadLatestMessages',
+            "echo-private:FandomProfile.{$this->fandom->id},FandomUpdated" => 'loadUpdatedFandom',
+            "echo:FandomProfile.{$this->fandom->id},FandomUpdated" => 'loadUpdatedFandom',
         ];
     }
     public function newMessage($event)
@@ -112,5 +114,9 @@ class DiscussDetails extends Component
         if($discuss_id == $this->discuss->id) {
             $this->openDiscuss = ! $this->openDiscuss;
         }
+    }
+    public function loadUpdatedFandom($event)
+    {
+        $this->fandom = Fandom::find($event['fandom']['id']);
     }
 }

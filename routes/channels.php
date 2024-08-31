@@ -59,6 +59,12 @@ Broadcast::channel('FandomListLeftSideNavigationBar.{id}', function ($id) {
 Broadcast::channel('FandomDetails.{id}', function ($id) {
     return Fandom::find($id) != null;
 });
+Broadcast::channel('FandomProfile.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
+Broadcast::channel('FandomMemberList.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
 Broadcast::channel('FandomList.{id}', function ($id) {
     return Fandom::find($id) != null;
 });

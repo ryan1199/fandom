@@ -66,13 +66,13 @@ class PostList extends Component
                     foreach($tags as $tag) {
                         $query->orWhere('tags', 'like', '%'.$tag.'%');
                     }
-                })->whereNot('publish_id', null)->get();
+                })->whereNot('publish_id', null)->orderBy($sort_by, $sort)->get();
             } else {
                 $posts = Post::with(['user', 'publish.publishable'])->where('user_id', Auth::id())->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
                     foreach($tags as $tag) {
                         $query->orWhere('tags', 'like', '%'.$tag.'%');
                     }
-                })->where('publish_id', null)->get();
+                })->where('publish_id', null)->orderBy($sort_by, $sort)->get();
             }
         }
         if ($this->from == 'fandom') {
@@ -84,7 +84,7 @@ class PostList extends Component
                 foreach($tags as $tag) {
                     $query->orWhere('tags', 'like', '%'.$tag.'%');
                 }
-            })->get();
+            })->orderBy($sort_by, $sort)->get();
             if(in_array(Auth::id(), $members['id'])) {
                 $posts = collect($posts);
             } else {
@@ -96,7 +96,7 @@ class PostList extends Component
                 foreach($tags as $tag) {
                     $query->orWhere('tags', 'like', '%'.$tag.'%');
                 }
-            })->whereNot('publish_id', null)->get();
+            })->whereNot('publish_id', null)->orderBy($sort_by, $sort)->get();
             if (Auth::check()) {
                 $fandom_posts_member = [];
                 $fandom_posts_public = [];
@@ -155,23 +155,24 @@ class PostList extends Component
                 $posts = $posts->where('publish.visible', 'public');
             }
         }
-        if ($sort_by == 'title') {
-            if ($sort == 'ASC') {
-                $posts = $posts->sortBy('title');
-            }
-            if ($sort == 'DESC') {
-                $posts = $posts->sortByDesc('title');
-            }
-        }
-        if ($sort_by == 'created_at') {
-            if ($sort == 'ASC') {
-                $posts = $posts->sortBy('publish.created_at');
-            }
-            if ($sort == 'DESC') {
-                $posts = $posts->sortByDesc('publish.created_at');
-            }
-        }
-        $this->posts = $posts->values()->all();
+        // if ($sort_by == 'title') {
+        //     if ($sort == 'ASC') {
+        //         $posts = $posts->sortBy('title');
+        //     }
+        //     if ($sort == 'DESC') {
+        //         $posts = $posts->sortByDesc('title');
+        //     }
+        // }
+        // if ($sort_by == 'created_at') {
+        //     if ($sort == 'ASC') {
+        //         $posts = $posts->sortBy('publish.created_at');
+        //     }
+        //     if ($sort == 'DESC') {
+        //         $posts = $posts->sortByDesc('publish.created_at');
+        //     }
+        // }
+        // $this->posts = $posts->values()->all();
+        $this->posts = $posts;
     }
     public function editPost(Post $post)
     {
