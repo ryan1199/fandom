@@ -47,6 +47,18 @@ Broadcast::channel('BlockUnblockButton.{user1}.{user2}', function (User $user, $
 Broadcast::channel('User.{id}', function ($id) {
     return User::find($id) != null;
 });
+Broadcast::channel('UsersGallerySearch.{id}', function ($id) {
+    return User::find($id) != null;
+});
+Broadcast::channel('UsersGalleryList.{id}', function ($id) {
+    return User::find($id) != null;
+});
+Broadcast::channel('UsersPostSearch.{id}', function ($id) {
+    return User::find($id) != null;
+});
+Broadcast::channel('UsersPostList.{id}', function ($id) {
+    return User::find($id) != null;
+});
 Broadcast::channel('Chat.{user}', function ($user) {
     return User::find($user) != null;
 });
@@ -66,6 +78,18 @@ Broadcast::channel('FandomMemberList.{id}', function ($id) {
     return Fandom::find($id) != null;
 });
 Broadcast::channel('FandomList.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
+Broadcast::channel('FandomsGallerySearch.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
+Broadcast::channel('FandomsGalleryList.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
+Broadcast::channel('FandomsPostSearch.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
+Broadcast::channel('FandomsPostList.{id}', function ($id) {
     return Fandom::find($id) != null;
 });
 Broadcast::channel('Comment.{id}', function ($id) {

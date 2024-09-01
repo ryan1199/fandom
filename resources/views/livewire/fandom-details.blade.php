@@ -29,27 +29,7 @@
                                   Recent Posts
                                 </span>
                             </div>
-                            <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
-                                @if (in_array(Auth::id(), $members))
-                                    @forelse ($posts['member'] as $post)
-                                        <a wire:key="{{ 'fandom-' . $fandom->id . '-post-member-' . $loop->index }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
-                                            <h1 class="font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation">{{ $post->title }}</h1>
-                                            <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
-                                        </a>
-                                    @empty
-                                        <p class="text-nowrap">No posts have been published</p>
-                                    @endforelse
-                                @else
-                                    @forelse ($posts['public'] as $post)
-                                        <a wire:key="{{ 'fandom-' . $fandom->id . '-post-public-' . $loop->index }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
-                                            <h1 class="font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation">{{ $post->title }}</h1>
-                                            <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
-                                        </a>
-                                    @empty
-                                        <p class="text-nowrap">No posts have been published</p>
-                                    @endforelse
-                                @endif
-                            </div>
+                            @livewire(FandomsPostList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences, 'static' => true], key('static-post-list'))
                         </div>
                         {{-- gallery --}}
                         <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
@@ -58,35 +38,7 @@
                                   New In Gallery
                                 </span>
                             </div>
-                            <div class="w-full h-fit grid gap-2 grid-cols-3">
-                                @if (in_array(Auth::id(), $members))
-                                    @forelse ($galleries['member'] as $gallery)
-                                        <div wire:key="{{ 'fandom-' . $fandom->id . '-gallery-member-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
-                                            <div class="flex flex-col space-x-0 space-y-2">
-                                                <a href="{{ route('gallery.show', $gallery) }}" draggable="false">
-                                                    <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center rounded-lg" draggable="false">
-                                                </a>
-                                                <p class="text-left {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation"><span class="font-semibold">Uploaded</span> by {{ $gallery->user->username }} {{ $gallery->created_at->diffForHumans(['options' => null]) }}</p>
-                                            </div>
-                                        </div>
-                                    @empty
-                                        <p class="text-nowrap">No images have been published</p>
-                                    @endforelse
-                                @else
-                                    @forelse ($galleries['public'] as $gallery)
-                                        <div wire:key="{{ 'fandom-' . $fandom->id . '-gallery-public' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
-                                            <div class="flex flex-col space-x-0 space-y-2">
-                                                <a href="{{ route('gallery.show', $gallery) }}" draggable="false">
-                                                    <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center rounded-lg" draggable="false">
-                                                </a>
-                                                <p class="text-left {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation"><span class="font-semibold">Uploaded</span> by {{ $gallery->user->username }} {{ $gallery->created_at->diffForHumans(['options' => null]) }}</p>
-                                            </div>
-                                        </div>
-                                    @empty
-                                        <p class="text-nowrap">No images have been published</p>
-                                    @endforelse
-                                @endif
-                            </div>
+                            @livewire(FandomsGalleryList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences, 'static' => true], key('static-gallery-list'))
                         </div>
                         {{-- votes --}}
                         <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
@@ -140,8 +92,8 @@
                                     @endif
                                 @endauth
                             </div>
-                            @livewire(PostSearch::class, ['preferences' => $preferences, 'from' => 'fandom'], key('post-search-for-fandom-', $fandom->id))
-                            @livewire(PostList::class, ['preferences' => $preferences, 'from' => 'fandom', 'id' => $fandom->id], key('post-list-for-fandom-', $fandom->id))
+                            @livewire(FandomsPostSearch::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('post-search-for-dynamic-post-list'))
+                            @livewire(FandomsPostList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences, 'static' => false], key('dynamic-post-list'))
                         </div>
                     </div>
                     <div x-transition x-cloak x-show="tab == 'gallery'" class="w-full h-fit">
@@ -162,8 +114,8 @@
                                     @endif
                                 @endauth
                             </div>
-                            @livewire(GallerySearch::class, ['preferences' => $preferences], key('gallery-search-for-fandom-', $fandom->id))
-                            @livewire(GalleryList::class, ['preferences' => $preferences, 'from' => 'fandom', 'id' => $fandom->id], key('gallery-list-for-fandom-', $fandom->id))
+                            @livewire(FandomsGallerySearch::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('gallery-search-for-dynamic-gallery-list'))
+                            @livewire(FandomsGalleryList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences, 'static' => false], key('dynamic-gallery-list'))
                         </div>
                     </div>
                     <div x-transition x-cloak x-show="tab == 'user'" class="w-full h-fit">
@@ -178,7 +130,7 @@
                     </div>
                     @if (in_array(Auth::id(), $managers))
                         <div x-transition x-cloak x-show="tab == 'setting'" class="w-full h-fit flex flex-col space-x-0 space-y-2">
-                            @livewire(FandomSetting::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('fandom-setting-for-fandom-', $fandom->id))
+                            @livewire(FandomSetting::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('fandom-setting-for-fandom-' . $fandom->id))
                         </div>
                     @endif
                 </div>
@@ -200,7 +152,7 @@
             </div>
             @if (in_array(Auth::id(), $managers))
                 <div x-cloak x-show="open_discuss_create_component" class="w-full h-fit">
-                    @livewire(DiscussCreate::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('discuss-create-for-fandom-', $fandom->id))
+                    @livewire(DiscussCreate::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('discuss-create-for-fandom-' . $fandom->id))
                 </div>
             @endif
             @if ($discusses->isNotEmpty())

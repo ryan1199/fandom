@@ -1,6 +1,6 @@
 <div class="w-full h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} select-none overflow-clip">
     <div class="w-full h-screen max-h-[100vh] p-2 flex flex-row space-x-2 space-y-0 overflow-clip">
-        <div class="w-full max-w-md h-fit max-h-[calc(100vh-1rem)] p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg overflow-y-auto">
+        <div class="w-full max-w-xl h-fit max-h-[calc(100vh-1rem)] p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg overflow-y-auto">
             <div class="w-full h-fit flex flex-col space-x-0 space-y-2 break-inside-avoid-column">
                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
@@ -239,82 +239,43 @@
                 </div>
             </div>
             <div class="w-full h-fit flex flex-col space-x-0 space-y-2 break-inside-avoid-column">
-                <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                    <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
-                      Posts
-                    </span>
-                </div>
-                <div class="w-full h-fit p-2 text-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
-                    <div class="w-full h-fit max-h-[40vh] flex flex-col space-x-0 space-y-2 overflow-y-auto">
-                        @if (Auth::id() == $user->id)
-                            <a wire:navigate href="{{ route('post-management') }}" class="w-fit h-fit mx-auto px-2 text-center {{ 'hover:text-' . $preferences['color_2'] . '-500' }} font-semibold select-none animation-button" draggable="false"><div>Write a post</div></a>
-                            <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
-                        @endif
-                        @if (Auth::id() == $user->id)
-                            @forelse ($posts['self'] as $post)
-                                <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-self-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
-                                    <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
-                                    <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
-                                </a>
-                            @empty
-                                <div>You don't have any posts yet</div>
-                            @endforelse
-                        @else
-                            @if (in_array(Auth::id(), $friendlist_id))
-                                @forelse ($posts['friend'] as $post)
-                                    </div>
-                                    <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-friend-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
-                                        <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
-                                        <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
-                                    </a>
-                                @empty
-                                    <div>{{ $user->username }} doesn't have any posts to read</div>
-                                @endforelse
-                            @else
-                                @forelse ($posts['public'] as $post)
-                                    <a wire:navigate wire:key="{{ 'user-' . $user->id . '-post-public-' . $post->id }}" href="{{ route('post.show', $post) }}" class="w-full h-fit p-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation" draggable="false">
-                                        <h1 class="w-fit text-left font-semibold {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">{{ $post->title }}</h1>
-                                        <p class="text-right {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation">Published {{ $post->publish->created_at->diffForHumans(['options' => null]) }}</p>
-                                    </a>
-                                @empty
-                                    <div>{{ $user->username }} doesn't have any posts to read</div>
-                                @endforelse
-                            @endif
-                        @endif
+                <div class="w-full h-fit flex flex-row space-x-2 space-y-0 justify-between items-center">
+                    <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+                          Posts
+                        </span>
                     </div>
+                    @if (Auth::id() == $user->id)
+                        <a wire:navigate href="{{ route('post-management') }}" draggable="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">
+                                <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                            </svg>
+                        </a>
+                    @endif
                 </div>
+                @livewire(UsersPostSearch::class, ['user' => $user->username, 'preferences' => $preferences], key('post-search-for-post-list'))
+                @livewire(UsersPostList::class, ['user' => $user->username, 'preferences' => $preferences, 'static' => false], key('post-list'))
             </div>
         </div>
         <div class="w-full h-fit max-h-[calc(100vh-1rem)] p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg break-inside-avoid-column overflow-clip">
-            <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
-                  Images
-                </span>
+            <div class="w-full h-fit flex flex-row space-x-2 space-y-0 justify-between items-center">
+                <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                    <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+                      Images
+                    </span>
+                </div>
+                @if (Auth::id() == $user->id)
+                    <a wire:navigate href="{{ route('gallery-management') }}" draggable="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8 {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">
+                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                        </svg>
+                    </a>
+                @endif
             </div>
             <div class="w-full h-fit max-h-full p-2 text-center {{ 'bg-' . $preferences['color_2'] . '-50' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg overflow-y-auto">
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
-                    @if (Auth::id() == $user->id)
-                        <div class="w-full h-40 flex flex-row items-center justify-center">
-                            <a wire:navigate href="{{ route('gallery-management') }}" class="w-fit h-fit font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button" draggable="false">Upload an image</a>
-                        </div>
-                    @endif
-                    @if (Auth::id() == $user->id)
-                        @forelse ($galleries['self'] as $gallery)
-                            <a wire:navigate wire:key="{{ 'user-' . $user->id . '-gallery-self-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
-                                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" draggable="false">
-                            </a>
-                        @empty
-                            <div class="w-full h-40 flex flex-row items-center justify-center">You don't have any images yet</div>
-                        @endforelse
-                    @else
-                        @forelse ($galleries['public'] as $gallery)
-                            <a wire:navigate wire:key="{{ 'user-' . $user->id . '-gallery-public-' . $gallery->id }}" href="{{ route('gallery.show', $gallery) }}" draggable="false">
-                                <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" draggable="false">
-                            </a>
-                        @empty
-                            <div class="w-full h-40 flex flex-row items-center justify-center">{{ $user->username }} doesn't have any images to show</div>
-                        @endforelse
-                    @endif
+                <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
+                    @livewire(UsersGallerySearch::class, ['user' => $user->username, 'preferences' => $preferences], key('gallery-search-for-gallery-list'))
+                    @livewire(UsersGalleryList::class, ['user' => $user->username, 'preferences' => $preferences, 'static' => false], key('gallery-list'))
                 </div>
             </div>
         </div>

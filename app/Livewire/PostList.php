@@ -2,6 +2,10 @@
 
 namespace App\Livewire;
 
+use App\Events\FandomsPostPublished;
+use App\Events\FandomsPostUnpublished;
+use App\Events\UsersPostPublished;
+use App\Events\UsersPostUnpublished;
 use App\Models\Fandom;
 use App\Models\Post;
 use App\Models\Publish;
@@ -185,11 +189,23 @@ class PostList extends Component
         $post_id = $post->id;
         $result = false;
         if ($post->publish_id != null) {
-            DB::transaction(function () use ($post, &$result) {
-                Publish::where('id', $post->publish_id)->delete();
-                Post::where('id', $post->id)->delete();
-                $result = true;
-            });
+            if (class_basename($post->publish->publishable_type) === 'User') {
+                $user = User::find($post->publish->publishable_id);
+                DB::transaction(function () use ($post, &$result) {
+                    Publish::where('id', $post->publish_id)->delete();
+                    Post::where('id', $post->id)->delete();
+                    $result = true;
+                });
+                UsersPostUnpublished::dispatch($user);
+            } else {
+                $fandom = Fandom::find($post->publish->publishable_id);
+                DB::transaction(function () use ($post, &$result) {
+                    Publish::where('id', $post->publish_id)->delete();
+                    Post::where('id', $post->id)->delete();
+                    $result = true;
+                });
+                FandomsPostUnpublished::dispatch($fandom);
+            }
         } else {
             Post::where('id', $post->id)->delete();
             $result = true;
@@ -222,7 +238,7 @@ class PostList extends Component
         if (!in_array($visible, $available_visible, true)) {
             $visible = 'public';
         }
-        if ($from == 'user') {
+        if ($from == 'post-management') {
             if ($user->id == $id) {
                 DB::transaction(function () use ($visible, $user, $post) {
                     $publish = new Publish(['visible' => $visible]);
@@ -230,6 +246,7 @@ class PostList extends Component
                     Post::where('id', $post->id)->update(['publish_id' => $publish->id]);
                 });
                 $this->dispatch('alert', 'success', 'Success, the selected post is published on user ' . $user->username)->to(Alert::class);
+                UsersPostPublished::dispatch($user);
             }
         }
         if ($from == 'fandom') {
@@ -241,6 +258,7 @@ class PostList extends Component
                     Post::where('id', $post->id)->update(['publish_id' => $publish->id]);
                 });
                 $this->dispatch('alert', 'success', 'Success, the selected post is published on fandom ' . $fandom->name)->to(Alert::class);
+                FandomsPostPublished::dispatch($fandom);
             }
         }
         $this->dispatch('search')->to(PostSearch::class);
@@ -249,13 +267,27 @@ class PostList extends Component
     {
         $this->authorize('owner', $post);
         if ($post->publish_id != null) {
-            DB::transaction(function () use ($post) {
-                $publish_id = $post->publish_id;
-                $post->update([
-                    'publish_id' => null
-                ]);
-                Publish::where('id', $publish_id)->delete();
-            });
+            if (class_basename($post->publish->publishable_type) === 'User') {
+                $user = User::find($post->publish->publishable_id);
+                DB::transaction(function () use ($post) {
+                    $publish_id = $post->publish_id;
+                    $post->update([
+                        'publish_id' => null
+                    ]);
+                    Publish::where('id', $publish_id)->delete();
+                });
+                UsersPostUnpublished::dispatch($user);
+            } else {
+                $fandom = Fandom::find($post->publish->publishable_id);
+                DB::transaction(function () use ($post) {
+                    $publish_id = $post->publish_id;
+                    $post->update([
+                        'publish_id' => null
+                    ]);
+                    Publish::where('id', $publish_id)->delete();
+                });
+                FandomsPostUnpublished::dispatch($fandom);
+            }
             $this->dispatch('alert', 'success', 'Success, the selected post is unpublished')->to(Alert::class);
         } else {
             $this->dispatch('alert', 'error', 'Failed, the selected post is not published')->to(Alert::class);
@@ -291,7 +323,7 @@ class PostList extends Component
             ];
         }
         $this->publish_on[] = [
-            'from' => 'user',
+            'from' => 'post-management',
             'data' => $user
         ];
     }

@@ -17,8 +17,6 @@ class FandomDetails extends Component
     public $fandom;
     public $managers = [];
     public $members = [];
-    public $posts;
-    public $galleries;
     public $discusses;
     public $preferences = [];
     public $tab = 'home';
@@ -44,18 +42,10 @@ class FandomDetails extends Component
     }
     public function loadFandomDetails($name)
     {
-        $fandom = Fandom::with(['publishes', 'discusses' => function($query) {
+        $fandom = Fandom::with(['discusses' => function($query) {
             $query->where('visible', '=', 'public');
         }])->where('name', $name)->first();
         $this->fandom = $fandom;
-
-        $posts = Post::with(['user', 'publish'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get();
-        $this->posts['public'] = collect($posts)->where('publish.visible', 'public')->sortByDesc('publish.created_at')->take(5);
-        $this->posts['member'] = collect($posts)->sortByDesc('publish.created_at')->take(5);
-
-        $galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get();
-        $this->galleries['public'] = collect($galleries)->where('publish.visible', 'public')->sortByDesc('created_at')->take(5);
-        $this->galleries['member'] = collect($galleries)->sortByDesc('created_at')->take(5);
 
         $this->discusses = $fandom->discusses;
 
@@ -79,19 +69,5 @@ class FandomDetails extends Component
             $query->where('visible', '=', 'public');
         }])->where('name', $name)->first();
         $this->discusses = $fandom->discusses;
-    }
-    public function loadPosts($event)
-    {
-        $fandom = Fandom::find($event['fandom']['id']);
-        $posts = Post::with(['user', 'publish'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get();
-        $this->posts['public'] = collect($posts)->where('publish.visible', 'public')->sortByDesc('publish.created_at')->take(5);
-        $this->posts['member'] = collect($posts)->sortByDesc('publish.created_at')->take(5);
-    }
-    public function loadGalleries($event)
-    {
-        $fandom = Fandom::find($event['fandom']['id']);
-        $galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $fandom->publishes->pluck('id'))->get();
-        $this->galleries['public'] = collect($galleries)->where('publish.visible', 'public')->sortByDesc('created_at')->take(5);
-        $this->galleries['member'] = collect($galleries)->sortByDesc('created_at')->take(5);
     }
 }

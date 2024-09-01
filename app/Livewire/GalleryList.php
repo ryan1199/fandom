@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Events\FandomsGalleryUnpublished;
+use App\Events\UsersGalleryUnpublished;
 use App\Models\Fandom;
 use App\Models\Gallery;
 use App\Models\Image;
@@ -39,7 +41,7 @@ class GalleryList extends Component
     #[On('search')]
     public function search($query)
     {
-        $this->galleries = collect([]);
+        // $this->galleries = collect([]);
         $search = $query['tags'];
         $sort_by = $query['sort_by'];
         $sort = $query['sort'];
@@ -165,12 +167,25 @@ class GalleryList extends Component
         $id = $gallery->id;
         $image = $gallery->image;
         $result = false;
-        DB::transaction(function () use ($gallery, $image, &$result) {
-            Publish::where('id', $gallery->publish_id)->delete();
-            Gallery::where('id', $gallery->id)->delete();
-            Image::where('id', $image->id)->delete();
-            $result = true;
-        });
+        if (class_basename($gallery->publish->publishable_type) === 'User') {
+            $user = User::find($gallery->publish->publishable_id);
+            DB::transaction(function () use ($gallery, $image, &$result) {
+                Publish::where('id', $gallery->publish_id)->delete();
+                Gallery::where('id', $gallery->id)->delete();
+                Image::where('id', $image->id)->delete();
+                $result = true;
+            });
+            UsersGalleryUnpublished::dispatch($user);
+        } else {
+            $fandom = Fandom::find($gallery->publish->publishable_id);
+            DB::transaction(function () use ($gallery, $image, &$result) {
+                Publish::where('id', $gallery->publish_id)->delete();
+                Gallery::where('id', $gallery->id)->delete();
+                Image::where('id', $image->id)->delete();
+                $result = true;
+            });
+            FandomsGalleryUnpublished::dispatch($fandom);
+        }
         if($result) {
             Storage::delete('galleries/' . $image->url);
             $i = 0;

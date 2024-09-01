@@ -34,7 +34,7 @@
                             <div x-on:click="{{ 'open_publish_on_for_post_' . $post->id }} = ! {{ 'open_publish_on_for_post_' . $post->id }}" class="w-fit h-fit mx-auto p-2 text-center font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">Publish On</div>
                             <div x-cloak x-show="{{ 'open_publish_on_for_post_' . $post->id }}" class="flex flex-col space-x-0 space-y-2 rounded-lg">
                                 @foreach ($publish_on as $array)
-                                    @if ($array['from'] == 'user')
+                                    @if ($array['from'] == 'post-management')
                                         <div wire:key="{{ 'post-list-from-' . $from . '-publish-on-user-' . $array['data']->id }}" class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50' }} backdrop-blur-xl {{ 'text-' . $preferences['color_2'] . '-900' }} rounded-lg">
                                             <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
                                                 <div class="{{ 'text-[calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.lg)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">

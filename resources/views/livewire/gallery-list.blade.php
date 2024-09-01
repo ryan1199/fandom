@@ -45,14 +45,6 @@
         <div class="w-full h-fit grid gap-2 grid-cols-2">
             @forelse ($galleries as $gallery)
                 @livewire(GalleryCard::class, ['gallery' => $gallery->id, 'preferences' => $preferences], key('gallery-' . $gallery->id . '-from-' . $from . '-page'))
-                {{-- <div wire:key="{{ 'gallery-list-from-' . $from . '-gallery-' . $gallery->id }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 justify-between border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg cursor-pointer animation">
-                    <div class="flex flex-col space-x-0 space-y-2">
-                        <a wire:navigate href="{{ route('gallery.show', $gallery) }}" draggable="false">
-                            <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full h-40 object-cover object-center rounded-lg" draggable="false">
-                        </a>
-                        <p class="text-left {{ 'group-hover:text-' . $preferences['color_2'] . '-500' }} animation"><span class="font-semibold">Uploaded</span> by {{ $gallery->user->username }} {{ $gallery->created_at->diffForHumans(['options' => null]) }}</p>
-                    </div>
-                </div> --}}
             @empty
                 <div class="w-screen max-w-full h-full py-12 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                     <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">

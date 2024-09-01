@@ -67,13 +67,16 @@ class User extends Component
             'profile', 'avatar.image', 'cover.image', 'members.fandom', 'members.role', 'publishes', 'chats.messages.user', 'chats.users', 'follows', 'blocks'
         ])->where('username', $username)->first();
         $this->state = true;
-        $galleries = collect(Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $this->user->publishes->pluck('id'))->get());
-        $posts = collect(Post::with(['user', 'publish'])->whereIn('publish_id', $this->user->publishes->pluck('id'))->get());
+
+        $galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $this->user->publishes->pluck('id'))->get();
+        $posts = Post::with(['user', 'publish'])->whereIn('publish_id', $this->user->publishes->pluck('id'))->get();
         $this->galleries['self'] = $galleries;
-        $this->galleries['public'] = collect($galleries)->where('publish.visible', 'public');
+        $this->galleries['friend'] = $galleries->whereIn('publish.visible', ['friend', 'public']);
+        $this->galleries['public'] = $galleries->where('publish.visible', 'public');
         $this->posts['self'] = $posts;
-        $this->posts['friend'] = collect($posts)->whereIn('publish.visible', ['friend', 'public']);
-        $this->posts['public'] = collect($posts)->where('publish.visible', 'public');
+        $this->posts['friend'] = $posts->whereIn('publish.visible', ['friend', 'public']);
+        $this->posts['public'] = $posts->where('publish.visible', 'public');
+
         $this->chats = $this->user->chats;
         $this->followed_users = $this->user->follows;
         $this->blocked_users = $this->user->blocks;
@@ -103,6 +106,22 @@ class User extends Component
     {
         $this->followers = Number::abbreviate(Follow::where('other_user_id', $this->user->id)->get()->count());
         $this->following = Number::abbreviate(Follow::where('self_user_id', $this->user->id)->get()->count());
+    }
+    public function loadPosts($event)
+    {
+        $user = ModelsUser::find($event['user']['id']);
+        $posts = Post::with(['user', 'publish'])->whereIn('publish_id', $user->publishes->pluck('id'))->get();
+        $this->posts['self'] = $posts;
+        $this->posts['friend'] = $posts->whereIn('publish.visible', ['friend', 'public']);
+        $this->posts['public'] = $posts->where('publish.visible', 'public');
+    }
+    public function loadGalleries($event)
+    {
+        $user = ModelsUser::find($event['user']['id']);
+        $galleries = Gallery::with(['user', 'publish', 'image'])->whereIn('publish_id', $user->publishes->pluck('id'))->get();
+        $this->galleries['self'] = $galleries;
+        $this->galleries['friend'] = $galleries->whereIn('publish.visible', ['friend', 'public']);
+        $this->galleries['public'] = $galleries->where('publish.visible', 'public');
     }
     public function chatTo()
     {
@@ -142,6 +161,10 @@ class User extends Component
             "echo-private:User.{$this->user->id},UserUnfollowed" => 'loadFollowersAndFollowing',
             "echo-private:User.{$this->user->id},UserBlocked" => 'loadFollowersAndFollowing',
             "echo-private:User.{$this->user->id},UserProfileUpdated" => 'loadProfile',
+            "echo-private:User.{$this->user->id},UsersPostPublished" => 'loadPosts',
+            "echo-private:User.{$this->user->id},UsersPostUnpublished" => 'loadPosts',
+            "echo-private:User.{$this->user->id},UsersGalleryPublished" => 'loadGalleries',
+            "echo-private:User.{$this->user->id},UsersGalleryUnpublished" => 'loadGalleries',
         ];
     }
     public function updatedState($value)

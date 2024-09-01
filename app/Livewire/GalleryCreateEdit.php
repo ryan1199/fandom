@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Events\FandomsGalleryPublished;
+use App\Events\UsersGalleryPublished;
 use App\Models\Fandom;
 use App\Models\Gallery;
 use App\Models\Image;
@@ -222,6 +224,7 @@ class GalleryCreateEdit extends Component
                     $image = new Image(['url' => $data['image_name']]);
                     $gallery->image()->save($image);
                 });
+                UsersGalleryPublished::dispatch($user);
             }
         }
         if ($data['publish_on']['from'] == 'fandom') {
@@ -239,6 +242,7 @@ class GalleryCreateEdit extends Component
                     $image = new Image(['url' => $data['image_name']]);
                     $gallery->image()->save($image);
                 });
+                FandomsGalleryPublished::dispatch($fandom);
             }
         }
         $this->dispatch('alert', 'success', 'Success, the new image is stored')->to(Alert::class);
@@ -270,6 +274,7 @@ class GalleryCreateEdit extends Component
                     ]);
                     Publish::where('id', $publish_id)->delete();
                 });
+                UsersGalleryPublished::dispatch($user);
             }
         }
         if ($data['publish_on']['from'] == 'fandom') {
@@ -285,6 +290,7 @@ class GalleryCreateEdit extends Component
                     ]);
                     Publish::where('id', $publish_id)->delete();
                 });
+                FandomsGalleryPublished::dispatch($fandom);
             }
         }
         $this->dispatch('alert', 'success', 'Success, the selected image is updated')->to(Alert::class);
