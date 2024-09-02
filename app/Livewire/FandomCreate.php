@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Events\FandomCreated;
+use App\Events\UserJoined;
 use App\Models\Fandom;
 use App\Models\Image;
 use App\Models\Role;
@@ -68,6 +69,7 @@ class FandomCreate extends Component
             $this->reset(['avatar','cover','name','description']);
             $this->dispatch('alert','success','New fandom created')->to(Alert::class);
             FandomCreated::dispatch($fandom);
+            UserJoined::dispatch($fandom, Auth::user());
         } else {
             $this->dispatch('alert', 'error', 'Error, fandom not created');
         }

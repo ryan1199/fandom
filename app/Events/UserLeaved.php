@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Models\Fandom;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -20,6 +21,7 @@ class UserLeaved implements ShouldBroadcast
      */
     public function __construct(
         public Fandom $fandom,
+        public User $user,
     ){}
 
     /**
@@ -31,6 +33,8 @@ class UserLeaved implements ShouldBroadcast
     {
         return [
             new Channel('FandomMemberList.' . $this->fandom->id),
+            new PrivateChannel('UsersFandomList.' . $this->user->id),
+            // user fandom list in left side navigation bar
         ];
     }
 }

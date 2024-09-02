@@ -34,8 +34,8 @@ class UserFollowed implements ShouldBroadcast
             new PrivateChannel('Follow.' . $this->user1->id),
             new PrivateChannel('Block.' . $this->user1->id),
             new PrivateChannel('BlockUnblockButton.' . $this->user1->id . '.' . $this->user2->id),
-            new PrivateChannel('User.' . $this->user1->id),
-            new PrivateChannel('User.' . $this->user2->id),
+            new PrivateChannel('UsersFollowedFollowing.' . $this->user1->id),
+            new PrivateChannel('UsersFollowedFollowing.' . $this->user2->id),
         ];
     }
 }

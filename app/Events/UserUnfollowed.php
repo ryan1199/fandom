@@ -33,8 +33,8 @@ class UserUnfollowed implements ShouldBroadcast
         return [
             new PrivateChannel('Follow.' . $this->user1->id),
             new PrivateChannel('FollowUnfollowButton.' . $this->user1->id . '.' . $this->user2->id),
-            new PrivateChannel('User.' . $this->user1->id),
-            new PrivateChannel('User.' . $this->user2->id),
+            new PrivateChannel('UsersFollowedFollowing.' . $this->user1->id),
+            new PrivateChannel('UsersFollowedFollowing.' . $this->user2->id),
         ];
     }
 }

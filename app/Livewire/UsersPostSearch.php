@@ -71,6 +71,7 @@ class UsersPostSearch extends Component
         return [
             "echo-private:UsersPostSearch.{$this->user->id},UsersPostPublished" => 'search',
             "echo-private:UsersPostSearch.{$this->user->id},UsersPostUnpublished" => 'search',
+            "echo-private:UsersPostSearch.{$this->user->id},UserProfileUpdated" => 'search',
         ];
     }
 }

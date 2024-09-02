@@ -5,7 +5,7 @@
         <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
         <div class="flex flex-row flex-wrap">
             @forelse ($managers as $manager)
-                <a wire:key="{{ 'fandom-' . $fandom->id . '-user-manager-' . rand() }}" href="{{ route('user', $manager->user) }}" class="w-fit m-1 p-2 flex flex-row space-x-2 space-y-0 justify-start items-center {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" title="{{ $manager->user->username }}" draggable="false">
+                <a wire:key="{{ 'fandom-' . $fandom->id . '-user-manager-' . rand() }}" wire:navigate href="{{ route('user', $manager->user) }}" class="w-fit m-1 p-2 flex flex-row space-x-2 space-y-0 justify-start items-center {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" title="{{ $manager->user->username }}" draggable="false">
                     @if ($manager->user->avatar != null)
                         <img src="{{ asset('storage/avatars/' . $manager->user->avatar->image->url) }}" alt="{{ $manager->user->username }}" class="w-10 h-10 object-cover object-center rounded-full" draggable="false">
                     @else
@@ -26,7 +26,7 @@
         <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
         <div class="flex flex-row flex-wrap">
             @forelse ($members as $member)
-                <a wire:key="{{ 'fandom-' . $fandom->id . '-user-member-' . rand() }}" href="{{ route('user', $member->user) }}" class="w-fit m-1 p-2 flex flex-row space-x-2 space-y-0 justify-start items-center {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" title="{{ $member->user->username }}" draggable="false">
+                <a wire:key="{{ 'fandom-' . $fandom->id . '-user-member-' . rand() }}" wire:navigate href="{{ route('user', $member->user) }}" class="w-fit m-1 p-2 flex flex-row space-x-2 space-y-0 justify-start items-center {{ 'bg-' . $preferences['color_2'] . '-100' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} group {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" title="{{ $member->user->username }}" draggable="false">
                     @if ($member->user->avatar != null)
                         <img src="{{ asset('storage/avatars/' . $member->user->avatar->image->url) }}" alt="{{ $member->user->username }}" class="w-10 h-10 object-cover object-center rounded-full" draggable="false">
                     @else

@@ -30,7 +30,8 @@ class UserProfileUpdated implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('User.' . $this->user->id),
+            new PrivateChannel('UsersProfile.' . $this->user->id),
+            new PrivateChannel('UsersPostSearch.' . $this->user->id),
         ];
     }
 }

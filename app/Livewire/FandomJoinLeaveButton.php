@@ -38,7 +38,7 @@ class FandomJoinLeaveButton extends Component
                 'role_id' => $role->id
             ]);
             $this->members[] = $this->user->id;
-            UserJoined::dispatch($this->fandom);
+            UserJoined::dispatch($this->fandom, $this->user);
             $this->dispatch('alert', 'success', 'Done, now you are part of this fandom')->to(Alert::class);
         }
     }
@@ -53,7 +53,7 @@ class FandomJoinLeaveButton extends Component
                 }
             }
             $this->members = $members;
-            UserLeaved::dispatch($this->fandom);
+            UserLeaved::dispatch($this->fandom, $this->user);
             $this->dispatch('alert', 'success', 'Done, now you are no longer part of this fandom, hope you find a new one');
         } else {
             $this->dispatch('alert', 'error', 'Failed, you are not part of this fandom');

@@ -59,6 +59,15 @@ Broadcast::channel('UsersPostSearch.{id}', function ($id) {
 Broadcast::channel('UsersPostList.{id}', function ($id) {
     return User::find($id) != null;
 });
+Broadcast::channel('UsersProfile.{id}', function ($id) {
+    return User::find($id) != null;
+});
+Broadcast::channel('UsersFandomList.{id}', function ($id) {
+    return User::find($id) != null;
+});
+Broadcast::channel('UsersFollowedFollowing.{id}', function ($id) {
+    return User::find($id) != null;
+});
 Broadcast::channel('Chat.{user}', function ($user) {
     return User::find($user) != null;
 });
