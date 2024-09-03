@@ -11,9 +11,12 @@ use Livewire\Component;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class FandomsGalleryList extends Component
 {
+    use WithPagination, WithoutUrlPagination;
     #[Locked]
     public $fandom;
     public $preferences = [];
@@ -37,15 +40,22 @@ class FandomsGalleryList extends Component
         $users = $this->fandom->members;
         $members['id'] = $users->pluck('user.id')->toArray();
         $publish_ids = Arr::pluck($this->fandom->publishes, 'id');
-        $galleries = Gallery::with(['user', 'publish.publishable', 'image'])->whereIn('publish_id', $publish_ids)->where(function (Builder $query) use($tags) {
-            foreach($tags as $tag) {
-                $query->orWhere('tags', 'like', '%'.$tag.'%');
-            }
-        })->orderBy($sort_by, $sort)->limit($limit)->get();
         if(in_array(Auth::id(), $members['id'])) {
-            $galleries = $galleries;
+            $galleries = Gallery::whereHas('publish', function ($query) {
+                $query->whereIn('visible', ['member', 'public']);
+            })->whereIn('publish_id', $publish_ids)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->orderBy($sort_by, $sort)->simplePaginate($limit, pageName: 'galleries-page');
         } else {
-            $galleries = $galleries->where('publish.visible', 'public');
+            $galleries = Gallery::whereHas('publish', function ($query) {
+                $query->whereIn('visible', ['public']);
+            })->whereIn('publish_id', $publish_ids)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->orderBy($sort_by, $sort)->simplePaginate($limit, pageName: 'galleries-page');
         }
         return view('livewire.fandoms-gallery-list', [
             'galleries' => $galleries,
@@ -66,11 +76,13 @@ class FandomsGalleryList extends Component
     {
         if (!$this->static) {
             $this->query = $query;
+            $this->resetPage('galleries-page');
         }
     }
     public function refreshGallery()
     {
         $this->query = $this->query;
+        $this->resetPage('galleries-page');
     }
     public function getListeners()
     {

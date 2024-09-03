@@ -11,9 +11,12 @@ use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class FandomsPostList extends Component
 {
+    use WithPagination, WithoutUrlPagination;
     #[Locked]
     public $fandom;
     public $preferences = [];
@@ -53,15 +56,22 @@ class FandomsPostList extends Component
         $users = $this->fandom->members;
         $members['id'] = $users->pluck('user.id')->toArray();
         $publish_ids = Arr::pluck($this->fandom->publishes, 'id');
-        $posts = Post::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
-            foreach($tags as $tag) {
-                $query->orWhere('tags', 'like', '%'.$tag.'%');
-            }
-        })->orderBy($sort_by, $sort)->limit($limit)->get();
         if(in_array(Auth::id(), $members['id'])) {
-            $posts = $posts;
+            $posts = Post::whereHas('publish', function ($query) {
+                $query->whereIn('visible', ['member', 'public']);
+            })->whereIn('publish_id', $publish_ids)->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->orderBy($sort_by, $sort)->simplePaginate($limit, pageName: 'posts-page');
         } else {
-            $posts = $posts->where('publish.visible', 'public');
+            $posts = Post::whereHas('publish', function ($query) {
+                $query->whereIn('visible', ['public']);
+            })->whereIn('publish_id', $publish_ids)->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->orderBy($sort_by, $sort)->simplePaginate($limit, pageName: 'posts-page');
         }
         return view('livewire.fandoms-post-list', [
             'posts' => $posts,
@@ -74,7 +84,7 @@ class FandomsPostList extends Component
         $this->preferences = $preferences;
         $this->query['title'] = '';
         $this->query['tags'] = '';
-        $this->query['sort_by'] = 'Title';
+        $this->query['sort_by'] = 'Created';
         $this->query['sort'] = 'DESC';
         $this->query['limit'] = 5;
     }
@@ -83,11 +93,13 @@ class FandomsPostList extends Component
     {
         if (!$this->static) {
             $this->query = $query;
+            $this->resetPage('posts-page');
         }
     }
     public function refreshPost()
     {
         $this->query = $this->query;
+        $this->resetPage('posts-page');
     }
     public function getListeners()
     {

@@ -8,4 +8,7 @@
             </div>
         </div>
     @endforelse
+    @if ($posts->hasPages())
+        <div>{{ $posts->links('vendor.livewire.simple-tailwind' ,['preferences' => $preferences]) }}</div>
+    @endif
 </div>

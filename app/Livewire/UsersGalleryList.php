@@ -11,9 +11,12 @@ use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class UsersGalleryList extends Component
 {
+    use WithPagination, WithoutUrlPagination;
     #[Locked]
     public $user;
     public $preferences = [];
@@ -34,17 +37,30 @@ class UsersGalleryList extends Component
 
         $followed = Auth::user()->follows->contains($this->user->id);
         $publish_ids = Arr::pluck($this->user->publishes, 'id');
-        $galleries = Gallery::with(['user', 'publish.publishable', 'image'])->whereIn('publish_id', $publish_ids)->where(function (Builder $query) use($tags) {
-            foreach($tags as $tag) {
-                $query->orWhere('tags', 'like', '%'.$tag.'%');
-            }
-        })->orderBy($sort_by, $sort)->limit($limit)->get();
         if (Auth::id() == $this->user->id) {
-            $galleries = $galleries;
+            $galleries = Gallery::whereHas('publish', function ($query) {
+                $query->whereIn('visible', ['self', 'friend', 'public']);
+            })->whereIn('publish_id', $publish_ids)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->orderBy($sort_by, $sort)->simplePaginate($limit, pageName: 'galleries-page');
         } elseif ($followed) {
-            $galleries = $galleries->whereIn('publish.visible', ['friend', 'public']);
+            $galleries = Gallery::whereHas('publish', function ($query) {
+                $query->whereIn('visible', ['friend', 'public']);
+            })->whereIn('publish_id', $publish_ids)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->orderBy($sort_by, $sort)->simplePaginate($limit, pageName: 'galleries-page');
         } else {
-            $galleries = $galleries->where('publish.visible', 'public');
+            $galleries = Gallery::whereHas('publish', function ($query) {
+                $query->whereIn('visible', ['public']);
+            })->whereIn('publish_id', $publish_ids)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->orderBy($sort_by, $sort)->simplePaginate($limit, pageName: 'galleries-page');
         }
         return view('livewire.users-gallery-list', [
             'galleries' => $galleries,
@@ -63,10 +79,12 @@ class UsersGalleryList extends Component
     public function search($query)
     {
         $this->query = $query;
+        $this->resetPage('galleries-page');
     }
     public function refreshGallery()
     {
         $this->query = $this->query;
+        $this->resetPage('galleries-page');
     }
     public function getListeners()
     {

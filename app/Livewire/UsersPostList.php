@@ -11,9 +11,12 @@ use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 use Illuminate\Support\Str;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class UsersPostList extends Component
 {
+    use WithPagination, WithoutUrlPagination;
     #[Locked]
     public $user;
     public $preferences = [];
@@ -50,17 +53,30 @@ class UsersPostList extends Component
 
         $followed = Auth::user()->follows->contains($this->user->id);
         $publish_ids = Arr::pluck($this->user->publishes, 'id');
-        $posts = Post::with(['user', 'publish.publishable'])->whereIn('publish_id', $publish_ids)->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
-            foreach($tags as $tag) {
-                $query->orWhere('tags', 'like', '%'.$tag.'%');
-            }
-        })->orderBy($sort_by, $sort)->limit($limit)->get();
         if (Auth::id() == $this->user->id) {
-            $posts = $posts;
+            $posts = Post::whereHas('publish', function ($query) {
+                $query->whereIn('visible', ['self', 'friend', 'public']);
+            })->whereIn('publish_id', $publish_ids)->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->orderBy($sort_by, $sort)->simplePaginate($limit, pageName: 'posts-page');
         } elseif ($followed) {
-            $posts = $posts->whereIn('publish.visible', ['friend', 'public']);
+            $posts = Post::whereHas('publish', function ($query) {
+                $query->whereIn('visible', ['friend', 'public']);
+            })->whereIn('publish_id', $publish_ids)->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->orderBy($sort_by, $sort)->simplePaginate($limit, pageName: 'posts-page');
         } else {
-            $posts = $posts->where('publish.visible', 'public');
+            $posts = Post::whereHas('publish', function ($query) {
+                $query->whereIn('visible', ['public']);
+            })->whereIn('publish_id', $publish_ids)->where('title', 'like', $title)->where(function (Builder $query) use($tags) {
+                foreach($tags as $tag) {
+                    $query->orWhere('tags', 'like', '%'.$tag.'%');
+                }
+            })->orderBy($sort_by, $sort)->simplePaginate($limit, pageName: 'posts-page');
         }
         return view('livewire.users-post-list', [
             'posts' => $posts,
@@ -80,10 +96,12 @@ class UsersPostList extends Component
     public function search($query)
     {
         $this->query = $query;
+        $this->resetPage('posts-page');
     }
     public function refreshPost()
     {
         $this->query = $this->query;
+        $this->resetPage('posts-page');
     }
     public function getListeners()
     {
