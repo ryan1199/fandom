@@ -12,8 +12,8 @@
                         <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
                     </svg>
                 </div>
-                @livewire(PostSearch::class, ['preferences' => $preferences, 'from' => 'post-management'], key('post-search-for-user'))
-                @livewire(PostList::class, ['preferences' => $preferences, 'from' => 'post-management'], key('post-list-for-user'))
+                @livewire(PostManagementsPostSearch::class, ['preferences' => $preferences], key('post-search-for-user'))
+                @livewire(PostManagementsPostList::class, ['preferences' => $preferences], key('post-list-for-user'))
             </div>
         </div>
         <div class="w-full h-fit max-h-[25vh] lg:max-h-[calc(100vh-1rem)] p-2 pb-0 lg:pb-2 pr-2 lg:pr-1 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg overflow-y-auto">

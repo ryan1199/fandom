@@ -31,7 +31,7 @@ class UserProfileUpdated implements ShouldBroadcast
     {
         return [
             new PrivateChannel('UsersProfile.' . $this->user->id),
-            new PrivateChannel('UsersPostSearch.' . $this->user->id),
+            new Channel('UsersPostCard.' . $this->user->id),
         ];
     }
 }

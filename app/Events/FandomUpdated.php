@@ -33,6 +33,7 @@ class FandomUpdated implements ShouldBroadcast
             new PrivateChannel('FandomProfile.' . $this->fandom->id),
             new Channel('FandomProfile.' . $this->fandom->id),
             new Channel('FandomList.' . $this->fandom->id),
+            new Channel('FandomsPostCard.' . $this->fandom->id),
         ];
     }
 }

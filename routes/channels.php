@@ -59,6 +59,9 @@ Broadcast::channel('UsersPostSearch.{id}', function ($id) {
 Broadcast::channel('UsersPostList.{id}', function ($id) {
     return User::find($id) != null;
 });
+Broadcast::channel('UsersPostCard.{id}', function ($id) {
+    return User::find($id) != null;
+});
 Broadcast::channel('UsersProfile.{id}', function ($id) {
     return User::find($id) != null;
 });
@@ -99,6 +102,9 @@ Broadcast::channel('FandomsPostSearch.{id}', function ($id) {
     return Fandom::find($id) != null;
 });
 Broadcast::channel('FandomsPostList.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
+Broadcast::channel('FandomsPostCard.{id}', function ($id) {
     return Fandom::find($id) != null;
 });
 Broadcast::channel('Comment.{id}', function ($id) {

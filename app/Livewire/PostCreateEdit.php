@@ -214,7 +214,7 @@ class PostCreateEdit extends Component
             'view' => 0,
         ]);
         $this->dispatch('alert', 'success', 'Success, the new post is stored')->to(Alert::class);
-        $this->dispatch('search')->to(PostSearch::class);
+        $this->dispatch('search')->to(PostManagementsPostSearch::class);
     }
     protected function updatePost(Post $post, array $data)
     {
@@ -229,6 +229,6 @@ class PostCreateEdit extends Component
             'view' => $post->view,
         ]);
         $this->dispatch('alert', 'success', 'Success, the selected post is updated')->to(Alert::class);
-        $this->dispatch('search')->to(PostSearch::class);
+        $this->dispatch('search')->to(PostManagementsPostSearch::class);
     }
 }

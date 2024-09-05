@@ -94,3 +94,5 @@ Route::fallback(function () {
 // broadcast for joined fandom (user page) (done)
 // user friendlist (done)
 // fandom gallery delete broadcast error (done)
+// post management (post list, post card)
+// post (post list, post card)

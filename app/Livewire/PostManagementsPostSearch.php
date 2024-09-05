@@ -8,7 +8,7 @@ use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class PostSearch extends Component
+class PostManagementsPostSearch extends Component
 {
     public $title = '';
     public $tags = '';
@@ -19,10 +19,11 @@ class PostSearch extends Component
     public $sort_by_available = ['Title', 'View', 'Created'];
     #[Locked]
     public $sort_available = ['ASC', 'DESC'];
+    public $published = false;
     public $preferences = [];
     public function render()
     {
-        return view('livewire.post-search');
+        return view('livewire.post-managements-post-search');
     }
     public function mount($preferences)
     {
@@ -36,19 +37,23 @@ class PostSearch extends Component
             [
                 'sort_by' => $this->sort_by,
                 'sort' => $this->sort,
+                'published' => $this->published,
                 'limit' => $this->limit
             ],
             [
                 'sort_by' => Rule::in($this->sort_by_available),
                 'sort' => Rule::in($this->sort_available),
+                'published' => 'boolean',
                 'limit' => ['between:1,10']
             ],
             [
-                'in' => 'Please choose one from the available for the :attribute value'
+                'in' => 'Please choose one from the available for the :attribute value',
+                'boolean' => 'Please checked or unchecked the :attribute'
             ],
             [
                 'sort_by' => 'Sort By',
                 'sort' => 'Sort',
+                'published' => 'Published',
                 'limit' => 'Limit',
             ]
         )->validate();
@@ -57,9 +62,10 @@ class PostSearch extends Component
             'tags' => $this->tags,
             'sort_by' => $this->sort_by,
             'sort' => $this->sort,
+            'published' => $this->published,
             'limit' => $this->limit
         ];
-        $this->dispatch('search', $query)->to(PostList::class);
+        $this->dispatch('search', $query)->to(PostManagementsPostList::class);
     }
     public function updated($property)
     {

@@ -23,6 +23,10 @@
                     @endif
                 @endforeach
             </select>
+            <label for="Published" class="w-fit h-14 p-2 flex flex-row space-x-2 space-y-0 items-center {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+                <span>Published</span>
+                <input wire:model.live="published" type="checkbox" id="Published" value="true" class="form-checkbox p-4 {{ 'bg-' . $preferences['color_2'] . '-50/10' }} {{ 'text-' . $preferences['color_2'] . '-900' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation">
+            </label>
             <input wire:model.live="limit" type="number" class="w-full h-14 form-input {{ 'placeholder:text-' . $preferences['color_2'] . '-900' }} {{ 'bg-' . $preferences['color_2'] . '-50/10' }} border {{ 'border-' . $preferences['color_2'] . '-200' }} {{ 'hover:border-' . $preferences['color_2'] . '-500' }} {{ 'accent-' . $preferences['color_2'] . '-500' }} {{ 'caret-' . $preferences['color_2'] . '-500' }} {{ 'focus:border-' . $preferences['color_2'] . '-500' }} rounded-lg animation" min="1" max="10" title="Limit">
         </div>
     </div>
