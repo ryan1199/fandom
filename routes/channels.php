@@ -71,6 +71,9 @@ Broadcast::channel('UsersFandomList.{id}', function ($id) {
 Broadcast::channel('UsersFollowedFollowing.{id}', function ($id) {
     return User::find($id) != null;
 });
+Broadcast::channel('UsersFandomCard.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
 Broadcast::channel('Chat.{user}', function ($user) {
     return User::find($user) != null;
 });

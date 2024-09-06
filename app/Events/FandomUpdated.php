@@ -34,6 +34,7 @@ class FandomUpdated implements ShouldBroadcast
             new Channel('FandomProfile.' . $this->fandom->id),
             new Channel('FandomList.' . $this->fandom->id),
             new Channel('FandomsPostCard.' . $this->fandom->id),
+            new Channel('UsersFandomCard.' . $this->fandom->id),
         ];
     }
 }
