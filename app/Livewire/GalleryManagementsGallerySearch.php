@@ -8,7 +8,7 @@ use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class GallerySearch extends Component
+class GalleryManagementsGallerySearch extends Component
 {
     public $tags = '';
     public $sort_by = 'View';
@@ -21,7 +21,7 @@ class GallerySearch extends Component
     public $preferences = [];
     public function render()
     {
-        return view('livewire.gallery-search');
+        return view('livewire.gallery-managements-gallery-search');
     }
     public function mount($preferences)
     {
@@ -43,7 +43,8 @@ class GallerySearch extends Component
                 'limit' => ['between:1,10']
             ],
             [
-                'in' => 'Please choose one from the available for the :attribute value'
+                'in' => 'Please choose one from the available for the :attribute value',
+                'boolean' => 'Please checked or unchecked the :attribute'
             ],
             [
                 'sort_by' => 'Sort By',
@@ -57,7 +58,7 @@ class GallerySearch extends Component
             'sort' => $this->sort,
             'limit' => $this->limit
         ];
-        $this->dispatch('search', $query)->to(GalleryList::class);
+        $this->dispatch('search', $query)->to(GalleryManagementsGalleryList::class);
     }
     public function updated($property)
     {

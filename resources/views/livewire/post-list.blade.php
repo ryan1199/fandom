@@ -2,10 +2,8 @@
     <div class="w-full h-fit grid gap-2 grid-cols-3">
         @forelse ($posts as $post)
             @if (class_basename($post->publish->publishable_type) === 'User')
-                {{-- UsersPostCard::class --}}
                 @livewire(UsersPostCard::class, ['post' => $post->id, 'user' => $post->publish->publishable->username, 'preferences' => $preferences], key('post-' . $post->id . '-from-post-page-' . rand()))
             @else
-                {{-- FandomsPostCard::class --}}
                 @livewire(FandomsPostCard::class, ['post' => $post->id, 'fandom' => $post->publish->publishable->slug, 'preferences' => $preferences], key('post-' . $post->id . '-from-post-page-' . rand()))
             @endif
         @empty

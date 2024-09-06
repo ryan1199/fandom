@@ -84,7 +84,7 @@ class GalleryCreateEdit extends Component
     public function createGallery()
     {
         $this->resetExcept(['preferences']);
-        $this->mount();
+        $this->mount($this->preferences);
         $this->mode = 'create';
     }
     #[On('edit_gallery')]
@@ -246,7 +246,7 @@ class GalleryCreateEdit extends Component
             }
         }
         $this->dispatch('alert', 'success', 'Success, the new image is stored')->to(Alert::class);
-        $this->dispatch('search')->to(GallerySearch::class);
+        $this->dispatch('search')->to(GalleryManagementsGallerySearch::class);
     }
     protected function updateGallery(Gallery $gallery, array $data)
     {
@@ -294,7 +294,7 @@ class GalleryCreateEdit extends Component
             }
         }
         $this->dispatch('alert', 'success', 'Success, the selected image is updated')->to(Alert::class);
-        $this->dispatch('search')->to(GallerySearch::class);
+        $this->dispatch('search')->to(GalleryManagementsGallerySearch::class);
     }
     public function setUploadLocation($from, $id, $name, $visible)
     {
