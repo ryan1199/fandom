@@ -99,3 +99,4 @@ Route::fallback(function () {
 // vote feature (not yet)
 // navigasi pindahkan (not yet)
 // fix home component (not yet)
+// fix post show and gallery show (not yet)

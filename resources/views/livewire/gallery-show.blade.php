@@ -1,7 +1,7 @@
 <div class="w-full h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} select-none overflow-clip">
-    <div class="w-full h-fit max-h-[100vh] px-4 sm:px-0 py-8 flex flex-col space-x-0 space-y-8 items-center overflow-y-auto">
-        <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit self-center flex flex-col 2xl:flex-row space-x-0 space-y-8 2xl:space-x-8 2xl:space-y-0">
-            <div class="w-full h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+    <div class="w-full h-fit max-h-[100vh] p-2 flex flex-col space-x-0 space-y-8 items-center overflow-y-auto">
+        <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto mt-14 flex flex-col 2xl:flex-row space-x-0 space-y-8 2xl:space-x-8 2xl:space-y-0">
+            <div class="w-fit h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full max-w-3xl mx-auto 2xl:mx-0 object-cover rounded-lg" draggable="false">
             </div>
             <div class="w-full 2xl:w-fit h-fit p-2 flex flex-col space-x-0 space-y-2 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">

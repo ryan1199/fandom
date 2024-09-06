@@ -1,5 +1,5 @@
-<div class="w-full max-w-[calc(100vw-24rem)] h-full max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} overflow-y-auto">
-    <div class="w-full h-full p-2 flex flex-col justify-stretch md:justify-center items-center">
+<div class="w-full h-full max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} overflow-y-auto">
+    <div class="w-full container h-full mx-auto p-2 flex flex-col justify-stretch md:justify-center items-center">
         <div class="w-full max-w-md h-fit p-2 flex flex-col space-x-0 space-y-2 shadow-lg {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
             <div class="w-fit {{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                 <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
@@ -71,12 +71,12 @@
                             </svg>
                         </div>
                     </label>
-                    <button type="submit" class="w-fit h-fit p-2 self-end font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg select-none animation-button hover:-translate-x-1">Register</button>
+                    <button type="submit" class="w-fit h-fit p-2 self-end font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} select-none animation-button hover:-translate-x-1">Register</button>
                 </div>
             </form>
             <div class="w-full h-fit flex flex-col md:flex-row space-x-0 space-y-2 md:space-x-2 md:space-y-0 justify-between items-center select-none">
-                <a wire:navigate.hover href="{{ route('forgot-password') }}" class="block text-nowrap w-fit h-fit p-2 self-end font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg select-none animation-button hover:translate-x-2" draggable="false">Reset Password</a>
-                <a wire:navigate.hover href="{{ route('verification.send') }}" class="block text-nowrap w-fit h-fit p-2 self-end font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} {{ 'bg-' . $preferences['color_2'] . '-50' }} rounded-lg select-none animation-button hover:-translate-x-3" draggable="false">Resend Email Verification</a>
+                <a wire:navigate.hover href="{{ route('forgot-password') }}" class="block text-nowrap w-fit h-fit p-2 self-end font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} select-none animation-button hover:translate-x-2" draggable="false">Reset Password</a>
+                <a wire:navigate.hover href="{{ route('verification.send') }}" class="block text-nowrap w-fit h-fit p-2 self-end font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} select-none animation-button hover:-translate-x-3" draggable="false">Resend Email Verification</a>
             </div>
         </div>
     </div>
