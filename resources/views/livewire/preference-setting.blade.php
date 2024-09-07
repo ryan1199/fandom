@@ -65,7 +65,7 @@
             </div>
             <div class="w-full h-fit flex flex-row space-x-2 space-y-0 justify-between items-center">
                 <div wire:click="resetPreference" wire:confirm="Are you sure you want to reset your preference settings?" class="w-fit h-fit p-2 font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} select-none cursor-pointer animation-button">Reset</div>
-                <button type="submit" class="w-fit h-fit p-2 self-end font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} select-none animation-button">Update</button>
+                <button type="submit" class="w-fit h-fit p-2 self-end font-semibold {{ 'hover:text-' . $preferences['color_2'] . '-500' }} select-none animation-button cursor-pointer">Update</button>
             </div>
         </div>
     </form>

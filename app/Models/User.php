@@ -105,4 +105,12 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(User::class, 'block', 'self_user_id', 'other_user_id')->using(Block::class)->withTimestamps();
     }
+    public function requests(): HasMany
+    {
+        return $this->hasMany(Request::class);
+    }
+    public function votes(): HasMany
+    {
+        return $this->hasMany(Vote::class);
+    }
 }

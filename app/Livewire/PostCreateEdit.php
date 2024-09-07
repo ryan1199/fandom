@@ -111,10 +111,10 @@ class PostCreateEdit extends Component
                 'max' => 'The :attribute max length is :max characters'
             ],
             [
-                'title' => 'post title',
-                'description' => 'post description',
-                'tags' => 'post tags',
-                'raw_body' => 'post content'
+                'title' => 'Post title',
+                'description' => 'Post description',
+                'tags' => 'Post tags',
+                'raw_body' => 'Post content'
             ]
         )->validate();
         $this->toMarkdown();

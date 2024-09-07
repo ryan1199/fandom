@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Request;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,10 +13,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('follow', function (Blueprint $table) {
+        Schema::create('votes', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class, 'self_user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignIdFor(User::class, 'other_user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Request::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->boolean('agree');
+            $table->boolean('disagree');
             $table->timestamps();
         });
     }
@@ -25,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('follow');
+        Schema::dropIfExists('votes');
     }
 };

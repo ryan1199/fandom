@@ -6,7 +6,7 @@
                 {{-- header --}}
                 @livewire(FandomProfile::class, ['fandom' => $fandom, 'preferences' => $preferences])
                 {{-- nav --}}
-                <div class="">
+                <div>
                     <div class="w-full h-fit {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg select-none">
                         <div class="w-fit max-w-full flex flex-row text-nowrap overflow-x-auto overflow-y-clip">
                             <div :class="tab == 'home' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'home'" class="p-4 font-semibold cursor-pointer">Home</div>
@@ -41,36 +41,34 @@
                             @livewire(FandomsGalleryList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences, 'static' => true], key('static-gallery-list'))
                         </div>
                         {{-- votes --}}
-                        <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                        <div
+                            @auth
+                                @if (in_array(Auth::id(), $members))
+                                    x-data="{ openFandomsRequestForm: false }"
+                                @endif
+                            @endauth
+                            class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                             <div class="flex flex-row justify-between items-center">
                                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
-                                      Votes
+                                      Requests
                                     </span>
                                 </div>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
-                                </svg>
+                                @auth
+                                    @if (in_array(Auth::id(), $members))
+                                        <svg x-on:click="openFandomsRequestForm = ! openFandomsRequestForm" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">
+                                            <path fill-rule="evenodd" d="M12 3.75a.75.75 0 0 1 .75.75v6.75h6.75a.75.75 0 0 1 0 1.5h-6.75v6.75a.75.75 0 0 1-1.5 0v-6.75H4.5a.75.75 0 0 1 0-1.5h6.75V4.5a.75.75 0 0 1 .75-.75Z" clip-rule="evenodd" />
+                                        </svg>
+                                    @endif
+                                @endauth
                             </div>
                             <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
-                                {{-- 2 tabs: on progress and complete --}}
-                                @for ($i = 0; $i < 5; $i++) 
-                                    <div class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
-                                        <div>Created by name</div>
-                                        <div>{{ $i+1 }}. Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                                            Doloremque
-                                            aperiam beatae harum saepe! Dolorem quos hic ducimus ullam quibusdam,
-                                            dolorum reiciendis, excepturi tempore error labore dicta. Sapiente
-                                            reiciendis ad in.
-                                        </div>
-                                        <div class="flex flex-row justify-between">
-                                            <div>No</div>
-                                            <div>Yes</div>
-                                            {{-- bar percentage between yes and no --}}
-                                        </div>
-                                        <div>You vote yes</div>
+                                @if (in_array(Auth::id(), $members))
+                                    <div x-cloak x-show="openFandomsRequestForm">
+                                        @livewire(FandomsRequestForm::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('fandoms-request-form-for-fandom-' . $fandom->id))
                                     </div>
-                                @endfor
+                                @endif
+                                @livewire(FandomsRequestList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('fandoms-request-list-for-fandom-' . $fandom->id))
                             </div>
                         </div>
                     </div>
