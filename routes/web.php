@@ -98,5 +98,5 @@ Route::fallback(function () {
 // gallery (gallery list, gallery card) (done)
 // navigasi pindahkan (done)
 // vote feature (done)
-// fix home component (not yet)
+// fix home component (done)
 // fix post show and gallery show (not yet)

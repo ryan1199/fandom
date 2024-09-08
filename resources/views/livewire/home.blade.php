@@ -36,146 +36,53 @@
             </div>
         </div>
         <div class="flex flex-col space-x-0 space-y-8">
-            <div class="flex flex-col space-x-0 space-y-2">
+            <div class="w-full h-fit p-4 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
                     Fandom
                     </span>
                 </div>
-                <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                    {{-- with paginate --}}
-                    @forelse ($fandoms as $fandom)
-                        @livewire(FandomList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('public-fandom-' . $fandom->id))
-                    @empty
-                        <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
-                            <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                                No fandoms found
-                            </div>
-                        </div>
-                    @endforelse
-                </div>
+                @livewire(FandomList::class, ['preferences' => $preferences], key('public-fandom-list-' . rand()))
             </div>
-            <div class="flex flex-col space-x-0 space-y-2">
+            <div class="w-full h-fit p-4 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
                     Gallery
                     </span>
                 </div>
-                <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                    {{-- with paginate --}}
-                    @forelse ($galleries as $gallery)
-                        @livewire(GalleryListHome::class, ['gallery' => $gallery->id, 'preferences' => $preferences], key('public-gallery-' . $gallery->id))
-                    @empty
-                        <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
-                            <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                                No galleries found
-                            </div>
-                        </div>
-                    @endforelse
-                </div>
+                @livewire(GalleryListHome::class, ['preferences' => $preferences], key('public-gallery-list-' . rand()))
             </div>
-            <div class="flex flex-col space-x-0 space-y-2">
+            <div class="w-full h-fit p-4 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
                     Post
                     </span>
                 </div>
-                <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                    {{-- with paginate --}}
-                    @forelse ($posts as $post)
-                        @livewire(PostListHome::class, ['post' => $post->id, 'preferences' => $preferences], key('public-post-' . $post->id))
-                    @empty
-                        <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
-                            <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                                No posts found
-                            </div>
-                        </div>
-                    @endforelse
-                </div>
+                @livewire(PostListHome::class, ['preferences' => $preferences], key('public-post-list-' . rand()))
             </div>
             @auth
-                @if ($userFollowedUsers->isNotEmpty())
-                    <div class="flex flex-col space-x-0 space-y-2">
-                        <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                            <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
-                            Updates from your friends
-                            </span>
-                        </div>
-                        @if ($userFollowedUsers['gallery']->isNotEmpty())
-                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                                {{-- with paginate --}}
-                                @foreach ($userFollowedUsers['gallery'] as $userFollowedUserGallery)
-                                    @livewire(GalleryListHome::class, ['gallery' => $userFollowedUserGallery->id, 'preferences' => $preferences], key('user-' . Auth::id() . '-followed-user-gallery-' . $userFollowedUserGallery->id))
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
-                                    <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                                        No galleries found
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                        @if ($userFollowedUsers['post']->isNotEmpty())
-                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                                {{-- with paginate --}}
-                                @foreach ($userFollowedUsers['post'] as $userFollowedUserPost)
-                                    @livewire(PostListHome::class, ['post' => $userFollowedUserPost->id, 'preferences' => $preferences], key('user-' . Auth::id() . '-followed-user-post-' . $userFollowedUserPost->id))
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
-                                    <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                                        No posts found
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
+                <div class="w-full h-fit p-4 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                    <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+                        Updates from your friends
+                        </span>
                     </div>
-                @endif
-                @if ($userFandoms->isNotEmpty())
-                    <div class="flex flex-col space-x-0 space-y-2">
-                        <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                            <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
-                            Updates from your fandoms
-                            </span>
-                        </div>
-                        @if ($userFandoms['gallery']->isNotEmpty())
-                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                                {{-- with paginate --}}
-                                @foreach ($userFandoms['gallery'] as $userFandomrGallery)
-                                    @livewire(GalleryListHome::class, ['gallery' => $userFandomrGallery->id, 'preferences' => $preferences], key('user-' . Auth::id() . '-joined-fandom-gallery-' . $userFandomrGallery->id))
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
-                                <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                                    No galleries found
-                                </div>
-                            </div>
-                        </div>
-                        @endif
-                        @if ($userFandoms['post']->isNotEmpty())
-                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                                {{-- with paginate --}}
-                                @foreach ($userFandoms['post'] as $userFandomrPost)
-                                    @livewire(PostListHome::class, ['post' => $userFandomrPost->id, 'preferences' => $preferences], key('user-' . Auth::id() . '-joined-fandom-post-' . $userFandomrPost->id))
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="w-full max-w-full h-fit grid grid-cols-3 gap-2">
-                                <div class="w-screen max-w-full h-screen max-h-40 p-4 flex flex-row items-center justify-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
-                                    <div class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} text-center {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
-                                        No posts found
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
+                    <div class="w-full h-fit flex flex-col space-x-0 space-y-4">
+                        @livewire(UserFollowsGalleryListHome::class, ['preferences' => $preferences], key('user-follows-gallery-list-' . rand()))
+                        @livewire(UserFollowsPostListHome::class, ['preferences' => $preferences], key('user-follows-post-list-' . rand()))
                     </div>
-                @endif
+                </div>
+                <div class="w-full h-fit p-4 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                    <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+                        Updates from your fandoms
+                        </span>
+                    </div>
+                    <div class="w-full h-fit flex flex-col space-x-0 space-y-4">
+                        @livewire(UserFandomsGalleryListHome::class, ['preferences' => $preferences], key('user-fandoms-gallery-list-' . rand()))
+                        @livewire(UserFandomsPostListHome::class, ['preferences' => $preferences], key('user-fandoms-post-list-' . rand()))
+                    </div>
+                </div>
             @endauth
         </div>
     </div>

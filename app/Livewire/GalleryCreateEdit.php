@@ -270,7 +270,8 @@ class GalleryCreateEdit extends Component
                     $publish = $user->publishes()->save($publish);
                     Gallery::where('id', $gallery->id)->update([
                         'tags' => $data['tags'],
-                        'publish_id' => $publish->id
+                        'publish_id' => $publish->id,
+                        'created_at' => $publish->created_at,
                     ]);
                     Publish::where('id', $publish_id)->delete();
                 });
@@ -286,7 +287,8 @@ class GalleryCreateEdit extends Component
                     $publish = $fandom->publishes()->save($publish);
                     Gallery::where('id', $gallery->id)->update([
                         'tags' => $data['tags'],
-                        'publish_id' => $publish->id
+                        'publish_id' => $publish->id,
+                        'created_at' => $publish->created_at,
                     ]);
                     Publish::where('id', $publish_id)->delete();
                 });

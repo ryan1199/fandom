@@ -149,7 +149,10 @@ class PostManagementsPostList extends Component
                 DB::transaction(function () use ($visible, $user, $post) {
                     $publish = new Publish(['visible' => $visible]);
                     $publish = $user->publishes()->save($publish);
-                    Post::where('id', $post->id)->update(['publish_id' => $publish->id]);
+                    Post::where('id', $post->id)->update([
+                        'publish_id' => $publish->id,
+                        'created_at' => $publish->created_at
+                    ]);
                 });
                 $this->dispatch('alert', 'success', 'Success, the selected post is published on user ' . $user->username)->to(Alert::class);
                 UsersPostPublished::dispatch($user);
@@ -165,7 +168,10 @@ class PostManagementsPostList extends Component
                 DB::transaction(function () use ($visible, $fandom, $post) {
                     $publish = new Publish(['visible' => $visible]);
                     $publish = $fandom->publishes()->save($publish);
-                    Post::where('id', $post->id)->update(['publish_id' => $publish->id]);
+                    Post::where('id', $post->id)->update([
+                        'publish_id' => $publish->id,
+                        'created_at' => $publish->created_at
+                    ]);
                 });
                 $this->dispatch('alert', 'success', 'Success, the selected post is published on fandom ' . $fandom->name)->to(Alert::class);
                 FandomsPostPublished::dispatch($fandom);

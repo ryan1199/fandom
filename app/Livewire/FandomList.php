@@ -8,74 +8,23 @@ use App\Models\Post;
 use Illuminate\Support\Number;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class FandomList extends Component
 {
-    #[Locked]
-    public $fandom;
-    public $totalMembers;
-    public $totalGalleries;
-    public $totalPosts;
+    use WithPagination, WithoutUrlPagination;
     public $preferences = [];
     public function render()
     {
-        return view('livewire.fandom-list');
+        $fandoms = Fandom::latest()->simplePaginate(6, pageName: 'fandoms-page');
+        return view('livewire.fandom-list', [
+            'fandoms' => $fandoms,
+        ]);
     }
-    public function mount(Fandom $fandom, $preferences)
+    public function mount($preferences)
     {
-        $this->loadfandom($fandom->id);
         $this->preferences = $preferences;
-        $this->getTotalMembers();
-        $this->getTotalGalleries();
-        $this->getTotalPosts();
     }
-    public function getTotalMembers()
-    {
-        $this->totalMembers = Number::abbreviate(count($this->fandom->members));
-    }
-    public function getTotalGalleries()
-    {
-        $this->fandom->load('publishes');
-        $fandom_publish_ids = $this->fandom->publishes->pluck('id')->toArray();
-        $this->totalGalleries = Number::abbreviate(Gallery::whereIn('publish_id', $fandom_publish_ids)->count());
-    }
-    public function getTotalPosts()
-    {
-        $this->fandom->load('publishes');
-        $fandom_publish_ids = $this->fandom->publishes->pluck('id')->toArray();
-        $this->totalPosts = Number::abbreviate(Post::whereIn('publish_id', $fandom_publish_ids)->count());
-    }
-    public function loadfandom($id)
-    {
-        $this->fandom = Fandom::with([
-            'avatar' => [
-                'image'
-            ],
-            'cover' => [
-                'image'
-            ],
-            'members' => [
-                'user' => [
-                    'profile',
-                    'cover' => [
-                        'image'
-                    ],
-                    'avatar' => [
-                        'image'
-                    ],
-                ],
-                'role'
-            ],
-        ])->find($id);
-    }
-    public function loadUpdatedFandom($event)
-    {
-        $this->loadfandom($event['fandom']['id']);
-    }
-    public function getListeners()
-    {
-        return [
-            "echo:FandomList.{$this->fandom->id},FandomUpdated" => 'loadUpdatedFandom',
-        ];
-    }
+    // broadcast fandom created
 }
