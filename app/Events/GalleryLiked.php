@@ -11,7 +11,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewGalleryComment implements ShouldBroadcast
+class GalleryLiked implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -30,7 +30,6 @@ class NewGalleryComment implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('Comment.' . $this->gallery->id),
             new PrivateChannel('GalleryShow.' . $this->gallery->id),
             new Channel('GalleryShow.' . $this->gallery->id),
         ];

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\GalleryLiked;
 use App\Models\Fandom;
 use App\Models\Gallery;
 use App\Models\Rate;
@@ -58,6 +59,14 @@ class GalleryShow extends Component
     public function loadGallery(Gallery $gallery)
     {
         $this->gallery = Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable','comments','rates.user'])->find($gallery->id);
+        $this->totalViews = Number::abbreviate($gallery->view);
+        $this->totalLikes = Number::abbreviate(collect($gallery->rates)->where('like', true)->count());
+        $this->totalDislikes = Number::abbreviate(collect($gallery->rates)->where('dislike', true)->count());
+        $this->totalComments = Number::abbreviate($gallery->comments->count());
+    }
+    public function loadUpdatedGallery($event)
+    {
+        $gallery = Gallery::find($event['gallery']['id']);
         $this->totalViews = Number::abbreviate($gallery->view);
         $this->totalLikes = Number::abbreviate(collect($gallery->rates)->where('like', true)->count());
         $this->totalDislikes = Number::abbreviate(collect($gallery->rates)->where('dislike', true)->count());
@@ -270,7 +279,7 @@ class GalleryShow extends Component
                 $this->dispatch('alert','error', 'Error, you already liked this gallery');
             }
         }
-        $this->loadGallery($this->gallery);
+        GalleryLiked::dispatch($this->gallery);
     }
     #[On('dislike_gallery')]
     public function dislikeGallery()
@@ -298,6 +307,15 @@ class GalleryShow extends Component
                 $this->dispatch('alert','error', 'Error, you already disliked this gallery');
             }
         }
-        $this->loadGallery($this->gallery);
+        GalleryLiked::dispatch($this->gallery);
+    }
+    public function getListeners()
+    {
+        return [
+            "echo-private:GalleryShow.{$this->gallery->id},NewGalleryComment" => 'loadUpdatedGallery',
+            "echo:GalleryShow.{$this->gallery->id},NewGalleryComment" => 'loadUpdatedGallery',
+            "echo-private:GalleryShow.{$this->gallery->id},GalleryLiked" => 'loadUpdatedGallery',
+            "echo:GalleryShow.{$this->gallery->id},GalleryLiked" => 'loadUpdatedGallery',
+        ];
     }
 }

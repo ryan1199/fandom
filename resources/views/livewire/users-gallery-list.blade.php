@@ -1,5 +1,5 @@
 <div class="w-full h-fit flex flex-col space-x-0 space-y-2">
-    <div class="w-full h-fit grid gap-2 grid-cols-2">
+    <div class="w-full h-fit grid gap-2 grid-cols-1 2xl:grid-cols-2">
         @forelse ($galleries as $gallery)
             @livewire(UsersGalleryCard::class, ['gallery' => $gallery->id, 'user' => $gallery->publish->publishable->username, 'preferences' => $preferences], key('gallery-' . $gallery->id . '-' . rand()))
         @empty

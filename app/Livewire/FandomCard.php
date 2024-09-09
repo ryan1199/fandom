@@ -17,10 +17,10 @@ class FandomCard extends Component
         $cover = $this->fandom->cover->image->url;
         $name = $this->fandom->name;
         $description = $this->fandom->description;
-        $totalMembers = Number::abbreviate(count($this->fandom->members), 2);
+        $totalMembers = Number::abbreviate(count($this->fandom->members));
         $fandom_publish_ids = $this->fandom->publishes->pluck('id')->toArray();
-        $totalGalleries = Number::abbreviate(Gallery::whereIn('publish_id', $fandom_publish_ids)->count(), 2);
-        $totalPosts = Number::abbreviate(Post::whereIn('publish_id', $fandom_publish_ids)->count(), 2);
+        $totalGalleries = Number::abbreviate(Gallery::whereIn('publish_id', $fandom_publish_ids)->count());
+        $totalPosts = Number::abbreviate(Post::whereIn('publish_id', $fandom_publish_ids)->count());
         return view('livewire.fandom-card', [
             'cover' => $cover,
             'name' => $name,

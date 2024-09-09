@@ -1,5 +1,5 @@
 <div class="w-full h-fit flex flex-col space-x-0 space-y-4">
-    <div class="w-full max-w-full h-fit grid grid-cols-3 gap-4">
+    <div class="w-full max-w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse ($galleries as $gallery)
             @if (class_basename($gallery->publish->publishable_type) === 'User')
                 @livewire(UsersGalleryCard::class, ['gallery' => $gallery->id, 'user' => $gallery->publish->publishable->username, 'preferences' => $preferences], key('public-gallery-card-for-gallery-' . $gallery->id . '-' . rand()))

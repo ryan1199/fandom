@@ -1,5 +1,5 @@
 <div class="w-full h-full flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} select-none">
-    <div class="w-full h-fit grid gap-2 grid-cols-3">
+    <div class="w-full h-fit grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         @forelse ($posts as $post)
             @if (class_basename($post->publish->publishable_type) === 'User')
                 @livewire(UsersPostCard::class, ['post' => $post->id, 'user' => $post->publish->publishable->username, 'preferences' => $preferences], key('post-' . $post->id . '-from-post-page-' . rand()))

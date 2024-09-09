@@ -1,5 +1,5 @@
 <div class="w-full h-full flex flex-col space-x-0 space-y-2 {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
-    <div class="w-full h-fit grid gap-2 grid-cols-3">
+    <div class="w-full h-fit grid gap-2 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         @forelse ($galleries as $gallery)
             @if (class_basename($gallery->publish->publishable_type) === 'User')
                 @livewire(UsersGalleryCard::class, ['gallery' => $gallery->id, 'user' => $gallery->publish->publishable->username, 'preferences' => $preferences], key('gallery-' . $gallery->id . '-from-gallery-page-' . rand()))

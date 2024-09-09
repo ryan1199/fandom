@@ -31,6 +31,8 @@ class NewPostComment implements ShouldBroadcast
     {
         return [
             new PrivateChannel('Comment.' . $this->post->id),
+            new PrivateChannel('PostShow.' . $this->post->id),
+            new Channel('PostShow.' . $this->post->id),
         ];
     }
 }

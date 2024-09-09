@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Events\PostLiked;
 use App\Models\Post;
 use App\Models\Rate;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Number;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -15,8 +17,10 @@ class PostShow extends Component
     public $preferences = [];
     #[Locked]
     public $post;
-    // totalComments
-    // totalViews
+    public $totalViews;
+    public $totalLikes;
+    public $totalDislikes;
+    public $totalComments;
     public function render()
     {
         return view('livewire.post-show')->title($this->post->title);
@@ -44,6 +48,18 @@ class PostShow extends Component
     public function loadPost(Post $post)
     {
         $this->post = Post::with(['user.profile','user.avatar.image','user.cover.image','publish.publishable','comments','rates.user'])->find($post->id);
+        $this->totalViews = Number::abbreviate($post->view);
+        $this->totalLikes = Number::abbreviate(collect($post->rates)->where('like', true)->count());
+        $this->totalDislikes = Number::abbreviate(collect($post->rates)->where('dislike', true)->count());
+        $this->totalComments = Number::abbreviate($post->comments->count());
+    }
+    public function loadUpdatedPost($event)
+    {
+        $post = Post::find($event['post']['id']);
+        $this->totalViews = Number::abbreviate($post->view);
+        $this->totalLikes = Number::abbreviate(collect($post->rates)->where('like', true)->count());
+        $this->totalDislikes = Number::abbreviate(collect($post->rates)->where('dislike', true)->count());
+        $this->totalComments = Number::abbreviate($post->comments->count());
     }
     #[On('like_post')]
     public function likePost()
@@ -71,7 +87,7 @@ class PostShow extends Component
                 $this->dispatch('alert','error', 'Error, you already liked this post');
             }
         }
-        $this->loadPost($this->post);
+        PostLiked::dispatch($this->post);
     }
     #[On('dislike_post')]
     public function dislikePost()
@@ -99,6 +115,15 @@ class PostShow extends Component
                 $this->dispatch('alert','error', 'Error, you already disliked this post');
             }
         }
-        $this->loadPost($this->post);
+        PostLiked::dispatch($this->post);
+    }
+    public function getListeners()
+    {
+        return [
+            "echo-private:PostShow.{$this->post->id},NewPostComment" => 'loadUpdatedPost',
+            "echo:PostShow.{$this->post->id},NewPostComment" => 'loadUpdatedPost',
+            "echo-private:PostShow.{$this->post->id},PostLiked" => 'loadUpdatedPost',
+            "echo:PostShow.{$this->post->id},PostLiked" => 'loadUpdatedPost',
+        ];
     }
 }

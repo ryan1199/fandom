@@ -120,3 +120,9 @@ Broadcast::channel('FandomsRequestCard.{id}', function ($id) {
 Broadcast::channel('Comment.{id}', function ($id) {
     return Post::find($id) != null || Gallery::find($id) != null;
 });
+Broadcast::channel('GalleryShow.{id}', function ($id) {
+    return Gallery::find($id) != null;
+});
+Broadcast::channel('PostShow.{id}', function ($id) {
+    return Post::find($id) != null;
+});

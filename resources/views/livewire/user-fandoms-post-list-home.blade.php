@@ -1,5 +1,5 @@
 <div class="w-full h-fit flex flex-col space-x-0 space-y-4">
-    <div class="w-full max-w-full h-fit grid grid-cols-3 gap-4">
+    <div class="w-full max-w-full h-fit grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse ($posts as $post)
             @livewire(FandomsPostCard::class, ['post' => $post->id, 'fandom' => $post->publish->publishable->slug, 'preferences' => $preferences], key('user-fandoms-post-card-for-post-' . $post->id . '-' . rand()))
         @empty
