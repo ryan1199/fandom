@@ -14,6 +14,7 @@ use App\Livewire\Post;
 use App\Livewire\PostManagement;
 use App\Livewire\PostShow;
 use App\Livewire\Register;
+use App\Livewire\TestComponent;
 use App\Livewire\User;
 use App\Livewire\Verification;
 use Illuminate\Http\Request;
@@ -51,6 +52,7 @@ Route::view('test-email-forgot-password', 'forgot-password');
 Route::fallback(function () {
     return redirect()->route('home');
 });
+Route::get('/test', TestComponent::class)->name('test');
 // jangan ngoper model bindng untuk crud ke komponen lain karena tidak aman (done)
 // load discusses into the right side navigation bar (done)
 // benerin semua wire:key (done)
@@ -100,4 +102,6 @@ Route::fallback(function () {
 // vote feature (done)
 // fix home component (done)
 // fix post show and gallery show (done)
-// update user page layout (not yet)
+// update user page layout (done)
+// add logs for fandom details (not yet)
+// add feature to promote member to manager (not yet)

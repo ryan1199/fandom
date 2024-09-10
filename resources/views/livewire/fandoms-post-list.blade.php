@@ -1,4 +1,4 @@
-<div class="w-full h-fit grid gap-2 grid-cols-1">
+<div class="w-full h-fit grid gap-4 grid-cols-1">
     @forelse ($posts as $post)
         @livewire(FandomsPostCard::class, ['post' => $post->id, 'fandom' => $post->publish->publishable->slug, 'preferences' => $preferences], key('post-' . $post->id . '-' . rand()))
     @empty

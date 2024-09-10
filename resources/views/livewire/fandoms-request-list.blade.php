@@ -1,11 +1,11 @@
-<div x-data="{ tab: 'open' } " class="w-full h-fit flex flex-col space-x-0 space-y-2">
-    <div class="w-full h-fit flex flex-row space-x-2 space-y-0 items-center">
+<div x-data="{ tab: 'open' } " class="w-full h-fit flex flex-col space-x-0 space-y-4">
+    <div class="w-full h-fit flex flex-row space-x-4 space-y-0 items-center">
         <div x-on:click="tab = 'open'" :class="tab == 'open' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" class="w-full h-fit p-4 font-semibold text-center {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg cursor-pointer">Open</div>
         <div x-on:click="tab = 'close'" :class="tab == 'close' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" class="w-full h-fit p-4 font-semibold text-center {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg cursor-pointer">Close</div>
     </div>
     {{-- 2 tabs: on progress and complete --}}
     <div>
-        <div x-cloak x-show="tab == 'open'" class="w-full h-fit flex flex-col space-x-0 space-y-2">
+        <div x-cloak x-show="tab == 'open'" class="w-full h-fit flex flex-col space-x-0 space-y-4">
             @forelse ($open_requests as $request)
                 @livewire(FandomsRequestCard::class, ['request' => $request->id, 'preferences' => $preferences], key('fandoms-request-card-for-request-' . $request->id . '-' . rand()))
             @empty
@@ -16,7 +16,7 @@
                 </div>
             @endforelse
         </div>
-        <div x-cloak x-show="tab == 'close'" class="w-full h-fit flex flex-col space-x-0 space-y-2">
+        <div x-cloak x-show="tab == 'close'" class="w-full h-fit flex flex-col space-x-0 space-y-4">
             @forelse ($close_requests as $request)
                 @livewire(FandomsRequestCard::class, ['request' => $request->id, 'preferences' => $preferences], key('fandoms-request-card-for-request-' . $request->id . '-' . rand()))
             @empty

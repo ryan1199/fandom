@@ -1,5 +1,5 @@
 <div class="w-full h-full {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
-    <div class="w-full h-fit grid gap-2 grid-cols-1">
+    <div class="w-full h-fit grid gap-4 grid-cols-1">
         @forelse ($galleries as $gallery)
             @if (class_basename($gallery->publish->publishable_type) === 'User')
                 <div wire:key="{{ 'gallery-management-for-gallery-' . $gallery->id . '-' . rand() }}" class="w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-950' }} backdrop-blur-xl {{ 'text-' . $preferences['color_2'] . '-100' }} rounded-lg">

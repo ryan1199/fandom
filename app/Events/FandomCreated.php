@@ -31,6 +31,7 @@ class FandomCreated implements ShouldBroadcast
     {
         return [
             new Channel('Fandom', $this->fandom->id),
+            new Channel('FandomSearch'),
         ];
     }
 }

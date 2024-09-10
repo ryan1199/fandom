@@ -1,10 +1,10 @@
 <div class="w-full h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} select-none overflow-clip">
     <div class="w-full h-fit max-h-[100vh] pb-14 p-2 flex flex-col space-x-0 space-y-8 items-center overflow-y-auto">
         <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto mt-14 flex flex-col 2xl:flex-row space-x-0 space-y-8 2xl:space-x-8 2xl:space-y-0">
-            <div class="w-full max-w-3xl h-fit p-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+            <div class="w-full max-w-3xl h-fit p-4 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <img src="{{ asset('storage/galleries/'.$gallery->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery->image->url) }}" class="w-full max-w-3xl mx-auto 2xl:mx-0 object-cover rounded-lg" draggable="false">
             </div>
-            <div class="w-full 2xl:w-fit h-fit p-2 flex flex-col space-x-0 space-y-2 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+            <div class="w-full 2xl:w-fit h-fit p-4 flex flex-col space-x-0 space-y-4 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <div class="w-fit h-fit p-2 pb-1 flex flex-row flex-wrap">
                     <span class="mr-1 mb-1">Tags: </span>
                     @foreach (explode(',', $gallery->tags) as $tag)
@@ -140,13 +140,13 @@
         </div>
         {{-- recommend --}}
         @if ($recommends['tags'] != null)
-            <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto p-2 flex flex-col space-x-0 space-y-2 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+            <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto p-4 flex flex-col space-x-0 space-y-4 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <div class="w-fit h-fit {{ 'text-[calc(theme(fontSize.2xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.2xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                     <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
                         Recommended similar pictures by tags
                     </span>
                 </div>
-                <div class="grid grid-cols-3 md:grid-cols-5 gap-2">
+                <div class="grid grid-cols-3 md:grid-cols-5 gap-4">
                     @foreach ($recommends['tags'] as $gallery_1)
                         <a wire:navigate href="{{ route('gallery.show', $gallery_1) }}" draggable="false">
                             <img src="{{ asset('storage/galleries/'.$gallery_1->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery_1->image->url) }}"
@@ -158,13 +158,13 @@
         @endif
         @if (class_basename($gallery->publish->publishable_type) === 'User')
             @if ($recommends['user'] != null)
-                <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto p-2 flex flex-col space-x-0 space-y-2 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto p-4 flex flex-col space-x-0 space-y-4 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                     <div class="w-fit h-fit {{ 'text-[calc(theme(fontSize.2xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.2xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                         <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
                             Recommended pictures from user <a wire:navigate href="{{ route('user', $gallery->publish->publishable) }}" draggable="false">{{ $gallery->publish->publishable->username }}</a>
                         </span>
                     </div>
-                    <div class="grid grid-cols-3 md:grid-cols-5 gap-2">
+                    <div class="grid grid-cols-3 md:grid-cols-5 gap-4">
                         @foreach ($recommends['user'] as $gallery_2)
                             <a wire:navigate href="{{ route('gallery.show', $gallery_2) }}" draggable="false">
                                 <img src="{{ asset('storage/galleries/'.$gallery_2->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery_2->image->url) }}"
@@ -177,13 +177,13 @@
         @endif
         @if (class_basename($gallery->publish->publishable_type) === 'Fandom')
             @if ($recommends['fandom'] != null)
-                <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto p-2 flex flex-col space-x-0 space-y-2 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto p-4 flex flex-col space-x-0 space-y-4 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                     <div class="w-fit h-fit {{ 'text-[calc(theme(fontSize.2xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.2xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                         <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
                             Recommended pictures from fandom <a wire:navigate href="{{ route('fandom-details', $gallery->publish->publishable) }}" draggable="false">{{ $gallery->publish->publishable->name }}</a>
                         </span>
                     </div>
-                    <div class="grid grid-cols-3 md:grid-cols-5 gap-2">
+                    <div class="grid grid-cols-3 md:grid-cols-5 gap-4">
                         @foreach ($recommends['fandom'] as $gallery_3)
                             <a wire:navigate href="{{ route('gallery.show', $gallery_3) }}" draggable="false">
                                 <img src="{{ asset('storage/galleries/'.$gallery_3->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery_3->image->url) }}"
@@ -194,13 +194,13 @@
                 </div>
             @endif
             @if ($recommends['user'] != null)
-                <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto p-2 flex flex-col space-x-0 space-y-2 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto p-4 flex flex-col space-x-0 space-y-4 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                     <div class="w-fit h-fit {{ 'text-[calc(theme(fontSize.2xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.2xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                         <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
                             Recommended pictures from user <a wire:navigate href="{{ route('user', $gallery->user) }}" draggable="false">{{ $gallery->user->username }}</a>
                         </span>
                     </div>
-                    <div class="grid grid-cols-3 md:grid-cols-5 gap-2">
+                    <div class="grid grid-cols-3 md:grid-cols-5 gap-4">
                         @foreach ($recommends['user'] as $gallery_4)
                             <a wire:navigate href="{{ route('gallery.show', $gallery_4) }}" draggable="false">
                                 <img src="{{ asset('storage/galleries/'.$gallery_4->image->url) }}" alt="{{ asset('storage/galleries/'.$gallery_4->image->url) }}"

@@ -27,6 +27,9 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('Fandom', function () {
     return true;
 });
+Broadcast::channel('FandomSearch', function () {
+    return true;
+});
 Broadcast::channel('DiscussDetails.{id}', function ($id) {
     return Discuss::find($id) != null;
 });

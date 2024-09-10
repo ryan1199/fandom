@@ -24,7 +24,19 @@ class Home extends Component
     public function mount()
     {
         if (Auth::check()) {
-            $this->preferences = session()->get('preference-' . Auth::user()->username);
+            if (session()->has('preference-' . Auth::user()->username)) {
+                $this->preferences = session()->get('preference-' . Auth::user()->username);
+            } else {
+                $this->preferences = [
+                    'color_1' => 'pink',
+                    'color_2' => 'rose',
+                    'color_3' => 'red',
+                    'font_size' => 16,
+                    'selected_font_family' => 'mono',
+                    'dark_mode' => false,
+                ];
+                session()->put('preference-' . Auth::user()->username, $this->preferences);
+            }
         } else {
             $this->preferences = [
                 'color_1' => 'pink',

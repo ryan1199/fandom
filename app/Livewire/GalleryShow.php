@@ -39,7 +39,19 @@ class GalleryShow extends Component
     {
         $this->authorize('view', $gallery);
         if (Auth::check()) {
-            $this->preferences = session()->get('preference-' . Auth::user()->username);
+            if (session()->has('preference-' . Auth::user()->username)) {
+                $this->preferences = session()->get('preference-' . Auth::user()->username);
+            } else {
+                $this->preferences = [
+                    'color_1' => 'pink',
+                    'color_2' => 'rose',
+                    'color_3' => 'red',
+                    'font_size' => 16,
+                    'selected_font_family' => 'mono',
+                    'dark_mode' => false,
+                ];
+                session()->put('preference-' . Auth::user()->username, $this->preferences);
+            }
             Gallery::where('id', $gallery->id)->update([
                 'view' => $gallery->view+1
             ]);

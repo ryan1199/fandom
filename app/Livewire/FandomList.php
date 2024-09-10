@@ -17,7 +17,7 @@ class FandomList extends Component
     public $preferences = [];
     public function render()
     {
-        $fandoms = Fandom::latest()->simplePaginate(6, pageName: 'fandoms-page');
+        $fandoms = Fandom::inRandomOrder()->simplePaginate(6, pageName: 'fandoms-page');
         return view('livewire.fandom-list', [
             'fandoms' => $fandoms,
         ]);
@@ -26,5 +26,4 @@ class FandomList extends Component
     {
         $this->preferences = $preferences;
     }
-    // broadcast fandom created
 }
