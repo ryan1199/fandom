@@ -120,6 +120,9 @@ Broadcast::channel('FandomsRequestList.{id}', function ($id) {
 Broadcast::channel('FandomsRequestCard.{id}', function ($id) {
     return Request::find($id) != null;
 });
+Broadcast::channel('FandomsRequestForm.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
 Broadcast::channel('Comment.{id}', function ($id) {
     return Post::find($id) != null || Gallery::find($id) != null;
 });
@@ -128,4 +131,7 @@ Broadcast::channel('GalleryShow.{id}', function ($id) {
 });
 Broadcast::channel('PostShow.{id}', function ($id) {
     return Post::find($id) != null;
+});
+Broadcast::channel('LeftSideNavigationBar.{id}', function ($id) {
+    return User::find($id) != null;
 });

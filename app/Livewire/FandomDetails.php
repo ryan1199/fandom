@@ -20,6 +20,7 @@ class FandomDetails extends Component
     public $discusses;
     public $preferences = [];
     public $tab = 'home';
+    public $openFandomsRequestForm = false;
     public function mount(Fandom $fandom)
     {
         $this->loadFandomDetails($fandom->name);

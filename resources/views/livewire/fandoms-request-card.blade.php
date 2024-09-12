@@ -33,5 +33,12 @@
                 <div class="font-semibold">You vote no</div>
             @endif
         @endif
+        @if ($request->result != null)
+            @if ($request->result)
+                <div class="text-lg font-semibold">Request result: accepted</div>
+            @else
+            <div class="text-lg font-semibold">Request result: rejected</div>
+            @endif
+        @endif
     @endauth
 </div>

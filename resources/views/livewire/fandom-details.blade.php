@@ -45,7 +45,7 @@
                         <div
                             @auth
                                 @if (in_array(Auth::id(), $members))
-                                    x-data="{ openFandomsRequestForm: false }"
+                                    x-data="{ openFandomsRequestForm: @entangle('openFandomsRequestForm') }"
                                 @endif
                             @endauth
                             class="w-full h-fit p-4 flex flex-col space-x-0 space-y-4 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">

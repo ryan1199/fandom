@@ -4,11 +4,16 @@ namespace App\Livewire;
 
 use App\Events\RequestClosed;
 use App\Events\RequestVoted;
+use App\Events\UserJoined;
+use App\Models\Fandom;
 use App\Models\Request;
+use App\Models\Role;
+use App\Models\User;
 use App\Models\Vote;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Illuminate\Support\Str;
 
 class FandomsRequestCard extends Component
 {
@@ -72,6 +77,43 @@ class FandomsRequestCard extends Component
     public function checkRequeststatus()
     {
         if ($this->request->votes->count() == $this->fandom->members->count()) {
+            $voted_yes = $this->request->votes()->where('agree', true)->count();
+            $voted_no = $this->request->votes()->where('disagree', true)->count();
+            if ($voted_yes > $voted_no) {
+                $this->request->update(['result' => true]);
+            } elseif ($voted_yes < $voted_no) {
+                $this->request->update(['result' => false]);
+            } else {
+                $result = [true, false];
+                $this->request->update(['result' => $result[rand(0, 1)]]);
+            }
+            if ($this->request->command != null) {
+                $request_command = Str::of($this->request->command)->explode(' ');
+                $command = $request_command[0];
+                $user = $request_command[1];
+                $user = User::where('username', $user)->first();
+                if ($user != null) {
+                    if ($user->members->contains('fandom.id', $this->request->fandom_id)) {
+                        if ($command == 'promote') {
+                            $role = Role::where('name', 'Manager')->first();
+                            $user->members()->updateOrCreate(['fandom_id' => $this->request->fandom_id], ['role_id' => $role->id]);
+                            $fandom = Fandom::find($this->request->fandom_id);
+                            UserJoined::dispatch($fandom, $user);
+                        } elseif ($command == 'demote') {
+                            $role = Role::where('name', 'Member')->first();
+                            $user->members()->updateOrCreate(['fandom_id' => $this->request->fandom_id], ['role_id' => $role->id]);
+                            $fandom = Fandom::find($this->request->fandom_id);
+                            UserJoined::dispatch($fandom, $user);
+                        } else {
+                            // banned
+                        }
+                    } else {
+                        $this->dispatch('alert', 'error', 'Error, ' . $user->username . ' is not a member of this fandom');
+                    }
+                } else {
+                    $this->dispatch('alert', 'error', 'Error, ' . $request_command[1] . ' not found');
+                }
+            }
             $this->request->update(['status' => 'close']);
             RequestClosed::dispatch($this->fandom);
         }

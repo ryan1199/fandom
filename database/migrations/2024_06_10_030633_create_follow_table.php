@@ -14,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('follow', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class, 'self_user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignIdFor(User::class, 'other_user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'self_user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(User::class, 'other_user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }

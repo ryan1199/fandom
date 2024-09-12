@@ -34,7 +34,8 @@ class FandomMemberList extends Component
     }
     public function loadMember($event)
     {
-        $fandom = Fandom::find($event['fandom']['id']);$users = $fandom->members;
+        $fandom = Fandom::find($event['fandom']['id']);
+        $users = $fandom->members;
         $managers = $users->where('role.name', 'Manager');
         $members = $users->where('role.name', 'Member');
         $this->managers = $managers;

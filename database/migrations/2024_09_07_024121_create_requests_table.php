@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignIdFor(Fandom::class)->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->string('title');
             $table->longText('description');
+            $table->longText('command')->nullable();
+            $table->boolean('result')->nullable();
             $table->string('status')->default('open');
             $table->timestamps();
         });

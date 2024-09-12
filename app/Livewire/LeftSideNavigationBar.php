@@ -91,4 +91,21 @@ class LeftSideNavigationBar extends Component
             ])->find(Auth::id());
         }
     }
+    public function getListeners()
+    {
+        return [
+            "echo-private:LeftSideNavigationBar.{$this->user->id},UserJoined" => 'loadFandoms',
+            "echo-private:LeftSideNavigationBar.{$this->user->id},UserLeaved" => 'loadFandoms',
+        ];
+    }
+    public function loadFandoms($event)
+    {
+        if(Auth::check()) {
+            $this->user = User::with([
+                'members' => [
+                    'fandom',
+                ],
+            ])->find($event['user']['id']);
+        }
+    }
 }

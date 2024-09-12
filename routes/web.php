@@ -105,3 +105,5 @@ Route::get('/test', TestComponent::class)->name('test');
 // update user page layout (done)
 // add logs for fandom details (not yet)
 // add feature to promote member to manager (not yet)
+// add votes feature to update anything the related to fandom (not yet)
+// create temporary member, temporary avatar, temporary cover, temporary publish, temporary discuss (not yet)

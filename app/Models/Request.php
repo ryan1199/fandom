@@ -11,7 +11,7 @@ class Request extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'user_id', 'fandom_id', 'title', 'description', 'status'
+        'user_id', 'fandom_id', 'title', 'description', 'command', 'result', 'status'
     ];
     public function user(): BelongsTo
     {
