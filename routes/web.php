@@ -14,7 +14,6 @@ use App\Livewire\Post;
 use App\Livewire\PostManagement;
 use App\Livewire\PostShow;
 use App\Livewire\Register;
-use App\Livewire\TestComponent;
 use App\Livewire\User;
 use App\Livewire\Verification;
 use Illuminate\Http\Request;
@@ -41,18 +40,17 @@ Route::get('/verification/{ticket}', Verification::class)->middleware(['throttle
 Route::post('/logout', LogoutController::class)->middleware(['throttle:logout', 'auth'])->name('logout');
 Route::get('/user/{user}', User::class)->middleware('auth')->name('user');
 Route::get('/fandom-list', Fandom::class)->name('fandom-list');
-Route::get('/fandom-details/{fandom}', FandomDetails::class)->name('fandom-details');
+Route::get('/fandom-details/{fandom}', FandomDetails::class)->middleware('user_not_banned')->name('fandom-details');
 Route::get('/post-management', PostManagement::class)->middleware('auth')->name('post-management');
-Route::get('/post-show/{post:slug}', PostShow::class)->name('post.show');
+Route::get('/post-show/{post:slug}', PostShow::class)->middleware('user_not_banned')->name('post.show');
 Route::get('/post', Post::class)->name('post');
 Route::get('/gallery-management', GalleryManagement::class)->middleware('auth')->name('gallery-management');
-Route::get('/gallery-show/{gallery:slug}', GalleryShow::class)->name('gallery.show');
+Route::get('/gallery-show/{gallery:slug}', GalleryShow::class)->middleware('user_not_banned')->name('gallery.show');
 Route::get('/gallery', Gallery::class)->name('gallery');
 Route::view('test-email-forgot-password', 'forgot-password');
 Route::fallback(function () {
     return redirect()->route('home');
 });
-Route::get('/test', TestComponent::class)->name('test');
 // jangan ngoper model bindng untuk crud ke komponen lain karena tidak aman (done)
 // load discusses into the right side navigation bar (done)
 // benerin semua wire:key (done)
@@ -105,6 +103,6 @@ Route::get('/test', TestComponent::class)->name('test');
 // update user page layout (done)
 // add feature to promote member to manager (done)
 // add feature to demote manager to member (done)
-// add logs for fandom details (not yet)
 // add banned user for fandom (done)
-// banned user cannot see fandom (not yet)
+// banned user cannot see fandom (done)
+// add logs for fandom details (not yet)
