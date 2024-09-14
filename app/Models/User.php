@@ -113,4 +113,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Vote::class);
     }
+    public function bans(): HasMany
+    {
+        return $this->hasMany(Ban::class);
+    }
 }

@@ -4,13 +4,19 @@ namespace App\Livewire;
 
 use App\Events\RequestClosed;
 use App\Events\RequestVoted;
+use App\Events\UserBanned;
 use App\Events\UserJoined;
+use App\Events\UserUnbanned;
+use App\Models\Ban;
 use App\Models\Fandom;
+use App\Models\Member;
+use App\Models\Publish;
 use App\Models\Request;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Vote;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 use Illuminate\Support\Str;
@@ -87,35 +93,144 @@ class FandomsRequestCard extends Component
                 $result = [true, false];
                 $this->request->update(['result' => $result[rand(0, 1)]]);
             }
-            if ($this->request->command != null) {
-                $request_command = Str::of($this->request->command)->explode(' ');
-                $command = $request_command[0];
-                $user = $request_command[1];
-                $user = User::where('username', $user)->first();
-                if ($user != null) {
-                    if ($user->members->contains('fandom.id', $this->request->fandom_id)) {
+            if (! $this->request->result) {
+                $this->request->update(['status' => 'close']);
+                RequestClosed::dispatch($this->fandom);
+            }
+            if ($this->request->result) {
+                if ($this->request->command == null) {
+                    $this->request->update(['status' => 'close']);
+                    RequestClosed::dispatch($this->fandom);
+                }
+                if ($this->request->command != null) {
+                    $request_command = Str::of($this->request->command)->explode(' ');
+                    $command = $request_command[0];
+                    $user = $request_command[1];
+                    $user = User::where('username', $user)->first();
+                    $fandom_members = $this->fandom->members;
+                    $managers = $fandom_members->where('role.name', 'Manager');
+                    $members = $fandom_members->where('role.name', 'Member');
+                    if ($user != null) {
                         if ($command == 'promote') {
-                            $role = Role::where('name', 'Manager')->first();
-                            $user->members()->updateOrCreate(['fandom_id' => $this->request->fandom_id], ['role_id' => $role->id]);
+                            if (in_array($user->id, $members->pluck('user.id')->toArray())) {
+                                $role = Role::where('name', 'Manager')->first();
+                                $fandom = Fandom::find($this->request->fandom_id);
+                                $result = false;
+                                DB::transaction(function () use ($role, $user, &$result) {
+                                    $user->members()->updateOrCreate(['fandom_id' => $this->request->fandom_id], ['role_id' => $role->id]);
+                                    $result = true;
+                                }, 10);
+                                if ($result) {
+                                    $this->request->update(['status' => 'close']);
+                                    $this->dispatch('alert', 'success', 'Done, ' . $user->username . ' has been promoted to manager');
+                                    UserJoined::dispatch($fandom, $user);
+                                    RequestClosed::dispatch($this->fandom);
+                                } else {
+                                    $this->request->update([
+                                        'result' => null,
+                                        'status' => 'open',
+                                    ]);
+                                    $this->dispatch('alert', 'error', 'Error, failed to get the result, try it again later');
+                                    RequestClosed::dispatch($this->fandom);
+                                }
+                            } else {
+                                $this->dispatch('alert', 'error', 'Error, the user is not a member');
+                            }
+                        }
+                        if ($command == 'demote') {
+                            if (in_array($user->id, $managers->pluck('user.id')->toArray())) {
+                                $role = Role::where('name', 'Member')->first();
+                                $fandom = Fandom::find($this->request->fandom_id);
+                                $result = false;
+                                DB::transaction(function () use ($role, $user, &$resul) {
+                                    $user->members()->updateOrCreate(['fandom_id' => $this->request->fandom_id], ['role_id' => $role->id]);
+                                    $resul = true;
+                                }, 10);
+                                if ($result) {
+                                    $this->request->update(['status' => 'close']);
+                                    $this->dispatch('alert', 'success', 'Done, ' . $user->username . ' has been demoted to member');
+                                    UserJoined::dispatch($fandom, $user);
+                                    RequestClosed::dispatch($this->fandom);
+                                } else {
+                                    $this->request->update([
+                                        'result' => null,
+                                        'status' => 'open',
+                                    ]);
+                                    $this->dispatch('alert', 'error', 'Error, failed to get the result, try it again later');
+                                    RequestClosed::dispatch($this->fandom);
+                                }
+                            } else {
+                                $this->dispatch('alert', 'error', 'Error, the user is not a manager');
+                            }
+                        }
+                        if ($command == 'ban') {
+                            $posts = $user->posts;
+                            $galleries = $user->galleries;
                             $fandom = Fandom::find($this->request->fandom_id);
-                            UserJoined::dispatch($fandom, $user);
-                        } elseif ($command == 'demote') {
-                            $role = Role::where('name', 'Member')->first();
-                            $user->members()->updateOrCreate(['fandom_id' => $this->request->fandom_id], ['role_id' => $role->id]);
+                            $result = false;
+                            $ban = DB::transaction(function () use ($posts, $galleries, $fandom, $user, &$result) {
+                                foreach ($posts as $post) {
+                                    if ($post->publis_id != null) {
+                                        Publish::where('id', $post->publis_id)->update([
+                                            'publishable_type' => 'App\Models\User',
+                                            'publishable_id' => $user->id,
+                                            'visible' => 'self'
+                                        ]);
+                                    }
+                                }
+                                foreach ($galleries as $gallery) {
+                                    Publish::where('id', $gallery->publis_id)->update([
+                                        'publishable_type' => 'App\Models\User',
+                                        'publishable_id' => $user->id,
+                                        'visible' => 'self'
+                                    ]);
+                                }
+                                Member::where('user_id', $user->id)->where('fandom_id', $fandom->id)->delete();
+                                $result = true;
+                                return $fandom->bans()->create([
+                                    'user_id' => $user->id,
+                                ]);
+                            }, 10);
+                            if ($result) {
+                                $this->request->update(['status' => 'close']);
+                                $this->dispatch('alert', 'success', 'Done, ' . $user->username . ' has been banned from ' . $fandom->name);
+                                UserBanned::dispatch($this->fandom);
+                                RequestClosed::dispatch($this->fandom);
+                            } else {
+                                $this->request->update([
+                                    'result' => null,
+                                    'status' => 'open',
+                                ]);
+                                $this->dispatch('alert', 'error', 'Error, failed to get the result, try it again later');
+                                RequestClosed::dispatch($this->fandom);
+                            }
+                        }
+                        if ($command == 'unban') {
                             $fandom = Fandom::find($this->request->fandom_id);
-                            UserJoined::dispatch($fandom, $user);
-                        } else {
-                            // banned
+                            $result = false;
+                            DB::transaction(function () use ($fandom, $user, &$result) {
+                                Ban::where('user_id', $user->id)->where('fandom_id', $fandom->id)->delete();
+                                $result = true;
+                            }, 10);
+                            if ($result) {
+                                $this->request->update(['status' => 'close']);
+                                $this->dispatch('alert', 'success', 'Done, ' . $user->username . ' has been unbanned from ' . $fandom->name);
+                                UserUnbanned::dispatch($this->fandom);
+                                RequestClosed::dispatch($this->fandom);
+                            } else {
+                                $this->request->update([
+                                    'result' => null,
+                                    'status' => 'open',
+                                ]);
+                                $this->dispatch('alert', 'error', 'Error, failed to get the result, try it again later');
+                                RequestClosed::dispatch($this->fandom);
+                            }
                         }
                     } else {
-                        $this->dispatch('alert', 'error', 'Error, ' . $user->username . ' is not a member of this fandom');
+                        $this->dispatch('alert', 'error', 'Error, ' . $request_command[1] . ' not found');
                     }
-                } else {
-                    $this->dispatch('alert', 'error', 'Error, ' . $request_command[1] . ' not found');
                 }
             }
-            $this->request->update(['status' => 'close']);
-            RequestClosed::dispatch($this->fandom);
         }
     }
     public function getListeners()

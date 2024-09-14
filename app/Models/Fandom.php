@@ -43,4 +43,8 @@ class Fandom extends Model
     {
         return $this->hasMany(Request::class);
     }
+    public function bans(): HasMany
+    {
+        return $this->hasMany(Ban::class);
+    }
 }

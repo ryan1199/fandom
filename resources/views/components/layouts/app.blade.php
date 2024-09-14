@@ -38,12 +38,19 @@
                     @guest
                         class="w-screen h-screen flex flex-row overflow-clip relative bg-rose-50/70 backdrop-blur-3xl"
                     @endguest>
-                    @livewire(LeftSideNavigationBar::class)
+                    @guest
+                        @livewire(PublicLeftSideNavigationBar::class)
+                    @endguest
+                    @auth
+                        @livewire(LeftSideNavigationBar::class)
+                    @endauth
                     @livewire(Alert::class)
                     <div class="w-full h-screen">
                         {{ $slot }}
                     </div>
-                    @livewire(RightSideNavigationBar::class)
+                    @auth
+                        @livewire(RightSideNavigationBar::class)
+                    @endauth
                 </div>
             </div>
         </div>

@@ -10,6 +10,7 @@ class FandomMemberList extends Component
     public $fandom;
     public $managers;
     public $members;
+    public $bans;
     public $preferences= [];
     public function render()
     {
@@ -23,6 +24,7 @@ class FandomMemberList extends Component
         $members = $users->where('role.name', 'Member');
         $this->managers = $managers;
         $this->members = $members;
+        $this->bans = $fandom->bans;
         $this->preferences = $preferences;
     }
     public function getListeners()
@@ -30,6 +32,8 @@ class FandomMemberList extends Component
         return [
             "echo:FandomMemberList.{$this->fandom->id},UserJoined" => 'loadMember',
             "echo:FandomMemberList.{$this->fandom->id},UserLeaved" => 'loadMember',
+            "echo:FandomMemberList.{$this->fandom->id},UserBanned" => 'loadBan',
+            "echo:FandomMemberList.{$this->fandom->id},UserUnbanned" => 'loadBan',
         ];
     }
     public function loadMember($event)
@@ -40,5 +44,10 @@ class FandomMemberList extends Component
         $members = $users->where('role.name', 'Member');
         $this->managers = $managers;
         $this->members = $members;
+    }
+    public function loadBan($event)
+    {
+        $fandom = Fandom::find($event['fandom']['id']);
+        $this->bans = $fandom->bans;
     }
 }

@@ -12,7 +12,7 @@ class RightSideNavigationBar extends Component
 {
     public $open_component = false;
     #[Locked]
-    public $user = null;
+    public $user;
     public $preferences = [];
     public function render()
     {
@@ -26,57 +26,22 @@ class RightSideNavigationBar extends Component
             if (session()->has('preference-' . Auth::user()->username)) {
                 $this->preferences = session()->get('preference-' . Auth::user()->username);
             } else {
-                $this->preferences = session()->get('preference-global');
+                $this->preferences = [
+                    'color_1' => 'pink',
+                    'color_2' => 'rose',
+                    'color_3' => 'red',
+                    'font_size' => 16,
+                    'selected_font_family' => 'mono',
+                    'dark_mode' => false,
+                ];
                 session()->put('preference-' . Auth::user()->username, $this->preferences);
             }
-        } else {
-            $this->preferences = [
-                'color_1' => 'pink',
-                'color_2' => 'rose',
-                'color_3' => 'red',
-                'font_size' => 16,
-                'selected_font_family' => 'mono',
-                'dark_mode' => false,
-            ];
-            session()->put('preference-global', $this->preferences);
         }
     }
     #[On('refresh')]
     public function load()
     {
         if(Auth::check()) {
-            // $this->user = User::with([
-            //     'profile',
-            //     'cover' => [
-            //         'image',
-            //     ],
-            //     'avatar' => [
-            //         'image',
-            //     ],
-            //     'members' => [
-            //         'fandom' => [
-            //             'discusses' => [
-            //                 'messages' => [
-            //                     'user' => [
-            //                         'cover' => [
-            //                             'image'
-            //                         ],
-            //                         'avatar' => [
-            //                             'image'
-            //                         ]
-            //                     ]
-            //                 ]
-            //             ]
-            //         ],
-            //         'role',
-            //     ],
-            //     'chats' => [
-            //         'messages' => [
-            //             'user',
-            //         ],
-            //         'users'
-            //     ],
-            // ])->find(Auth::id());
             $this->user = User::find(Auth::id());
         }
     }

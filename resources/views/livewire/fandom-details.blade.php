@@ -12,7 +12,7 @@
                             <div :class="tab == 'home' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'home'" class="p-4 font-semibold cursor-pointer">Home</div>
                             <div :class="tab == 'post' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'post'" class="p-4 font-semibold cursor-pointer">Post</div>
                             <div :class="tab == 'gallery' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'gallery'" class="p-4 font-semibold cursor-pointer">Galery</div>
-                            <div :class="tab == 'user' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'user'" class="p-4 font-semibold cursor-pointer">User</div>
+                            <div :class="tab == 'member' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'member'" class="p-4 font-semibold cursor-pointer">Member</div>
                             @if (in_array(Auth::id(), $managers))
                                 <div :class="tab == 'setting' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'setting'" class="p-4 font-semibold cursor-pointer">Setting</div>
                                 {{-- logs --}}
@@ -117,11 +117,11 @@
                             @livewire(FandomsGalleryList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences, 'static' => false], key('dynamic-gallery-list'))
                         </div>
                     </div>
-                    <div x-transition x-cloak x-show="tab == 'user'" class="w-full h-fit">
+                    <div x-transition x-cloak x-show="tab == 'member'" class="w-full h-fit">
                         <div class="w-full h-fit p-4 flex flex-col space-x-0 space-y-4 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                             <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                 <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
-                                  User
+                                  Member
                                 </span>
                             </div>
                             @livewire(FandomMemberList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences])

@@ -63,7 +63,7 @@ class Register extends Component
             ]);
         });
         if ($user != null) {
-            Mail::to($user->email)->send(new VerificationRequest($user));
+            Mail::to($user->email)->queue(new VerificationRequest($user));
             return redirect()->route('home')->with('success', 'Done, now you need to verify your email address, check your email address');
         }
     }

@@ -34,7 +34,7 @@
                         <div class="@if ($user != null && $user->username == $manager->user->username) font-semibold @endif">{{ $manager->user->username }}</div>
                         <div class="w-fit h-fit flex flex-row space-x-1 space-y-0 items-center">
                             @foreach ($command_list_for_manager as $command_for_manager)
-                                <div wire:key="{{ $command_for_manager . '-' . $manager->user->username }}" wire:click="selectCommandForUser('{{ $manager->user->username }}', '{{ $command_for_manager }}')" class="w-fit h-fit p-1 @if ($command != null && $command == $command_for_manager) font-semibold @endif border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer">{{ $command_for_manager }}</div>
+                                <div wire:key="{{ $command_for_manager . '-' . $manager->user->username }}" wire:click="selectCommandForUser('{{ $manager->user->username }}', '{{ $command_for_manager }}')" class="w-fit h-fit p-1 @if ($user != null && $user->username == $manager->user->username && $command != null && $command == $command_for_manager) font-semibold @endif border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer">{{ $command_for_manager }}</div>
                             @endforeach
                         </div>
                     </div>
@@ -44,8 +44,24 @@
                         <div class="@if ($user != null && $user->username == $member->user->username) font-semibold @endif">{{ $member->user->username }}</div>
                         <div class="w-fit h-fit flex flex-row space-x-1 space-y-0 items-center">
                             @foreach ($command_list_for_member as $command_for_member)
-                                <div wire:key="{{ $command_for_member . '-' . $member->user->username }}" wire:click="selectCommandForUser('{{ $member->user->username }}', '{{ $command_for_member }}')" class="w-fit h-fit p-1 @if ($command != null && $command == $command_for_member) font-semibold @endif border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer">{{ $command_for_member }}</div>
+                                <div wire:key="{{ $command_for_member . '-' . $member->user->username }}" wire:click="selectCommandForUser('{{ $member->user->username }}', '{{ $command_for_member }}')" class="w-fit h-fit p-1 @if ($user != null && $user->username == $member->user->username && $command != null && $command == $command_for_member) font-semibold @endif border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer">{{ $command_for_member }}</div>
                             @endforeach
+                        </div>
+                    </div>
+                @endforeach
+                @foreach ($banned_users as $banned_user)
+                    <div wire:key="{{ $banned_user->user->username }}" class="w-full h-fit p-2 flex flex-row space-x-2 space-y-0 justify-between items-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                        <div class="@if ($user != null && $user->username == $banned_user->user->username) font-semibold @endif">{{ $banned_user->user->username }}</div>
+                        <div class="w-fit h-fit flex flex-row space-x-1 space-y-0 items-center">
+                            <div wire:click="selectCommandForUser('{{ $banned_user->user->username }}', 'unban')" class="w-fit h-fit p-1 @if ($user != null && $user->username == $banned_user->user->username && $command != null && $command == 'unban') font-semibold @endif border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer">unban</div>
+                        </div>
+                    </div>
+                @endforeach
+                @foreach ($unbanned_users as $unbanned_user)
+                    <div wire:key="{{ $unbanned_user->username }}" class="w-full h-fit p-2 flex flex-row space-x-2 space-y-0 justify-between items-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
+                        <div class="@if ($user != null && $user->username == $unbanned_user->username) font-semibold @endif">{{ $unbanned_user->username }}</div>
+                        <div class="w-fit h-fit flex flex-row space-x-1 space-y-0 items-center">
+                            <div wire:click="selectCommandForUser('{{ $unbanned_user->username }}', 'ban')" class="w-fit h-fit p-1 @if ($user != null && $user->username == $unbanned_user->username && $command != null && $command == 'ban') font-semibold @endif border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer">ban</div>
                         </div>
                     </div>
                 @endforeach
