@@ -25,8 +25,9 @@ class EnsureUserIsNotBanned
                 $isUserIsBanned = Ban::where('user_id', $user->id)->where('fandom_id', $fandom->id)->first();
                 if ($isUserIsBanned != null) {
                     return redirect()->route('home')->with('error', 'You are banned from ' . $fandom->name);
+                } else {
+                    return $next($request);
                 }
-                return $next($request);
             }
             if ($request->route('post')) {
                 $post = $request->route('post');
@@ -37,6 +38,8 @@ class EnsureUserIsNotBanned
                         $isUserIsBanned = Ban::where('user_id', $user->id)->where('fandom_id', $fandom->id)->first();
                         if ($isUserIsBanned != null) {
                             return redirect()->route('home')->with('error', 'You are banned from ' . $fandom->name);
+                        } else {
+                            return $next($request);
                         }
                     } else {
                         return $next($request);
@@ -53,6 +56,8 @@ class EnsureUserIsNotBanned
                     $isUserIsBanned = Ban::where('user_id', $user->id)->where('fandom_id', $fandom->id)->first();
                     if ($isUserIsBanned != null) {
                         return redirect()->route('home')->with('error', 'You are banned from ' . $fandom->name);
+                    } else {
+                        return $next($request);
                     }
                 } else {
                     return $next($request);
