@@ -2,12 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Events\NewUserLog;
 use App\Models\Fandom;
 use App\Models\Gallery;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -203,32 +205,63 @@ class PostCreateEdit extends Component
     protected function storePost(array $data)
     {
         $user = User::find(Auth::id());
-        $user->posts()->create([
-            'publish_id' => null,
-            'title' => $data['title'],
-            'slug' => $data['slug'],
-            'description' => $data['description'],
-            'body' => $data['body'],
-            'raw_body' => $data['raw_body'],
-            'tags' => $data['tags'],
-            'view' => 0,
-        ]);
-        $this->dispatch('alert', 'success', 'Success, the new post is stored')->to(Alert::class);
-        $this->dispatch('search')->to(PostManagementsPostSearch::class);
+        $result = false;
+        DB::transaction(function () use ($user, &$result, $data) {
+            $user->posts()->create([
+                'publish_id' => null,
+                'title' => $data['title'],
+                'slug' => $data['slug'],
+                'description' => $data['description'],
+                'body' => $data['body'],
+                'raw_body' => $data['raw_body'],
+                'tags' => $data['tags'],
+                'view' => 0,
+            ]);
+            $user->logs()->create([
+                'message' => 'You create a post with title: '. $data['title']
+            ]);
+            $result = true;
+        });
+        if ($result) {
+            NewUserLog::dispatch($user);
+            $this->dispatch('alert', 'success', 'Success, the new post is stored')->to(Alert::class);
+            $this->dispatch('search')->to(PostManagementsPostSearch::class);
+        } else {
+            $this->dispatch('alert', 'error', 'Failed to save the post, try again later')->to(Alert::class);
+        }
     }
     protected function updatePost(Post $post, array $data)
     {
         $this->authorize('update', $post);
-        $post->update([
-            'publish_id' => $post->publish_id,
-            'title' => $data['title'],
-            'description' => $data['description'],
-            'body' => $data['body'],
-            'raw_body' => $data['raw_body'],
-            'tags' => $data['tags'],
-            'view' => $post->view,
-        ]);
-        $this->dispatch('alert', 'success', 'Success, the selected post is updated')->to(Alert::class);
-        $this->dispatch('search')->to(PostManagementsPostSearch::class);
+        $user = User::find(Auth::id());
+        $result = false;
+        DB::transaction(function () use ($user, &$result, $post, $data) {
+            $post->update([
+                'publish_id' => $post->publish_id,
+                'title' => $data['title'],
+                'description' => $data['description'],
+                'body' => $data['body'],
+                'raw_body' => $data['raw_body'],
+                'tags' => $data['tags'],
+                'view' => $post->view,
+            ]);
+            if ($post->title != $data['title']) {
+                $user->logs()->create([
+                    'message' => 'You update the post with title: '. $post->title . ' to title: ' . $data['title']
+                 ]);
+            } else {
+                $user->logs()->create([
+                   'message' => 'You update the post with title: '. $data['title']
+                ]);
+            }
+            $result = true;
+        });
+        if ($result) {
+            NewUserLog::dispatch($user);
+            $this->dispatch('alert', 'success', 'Success, the selected post is updated')->to(Alert::class);
+            $this->dispatch('search')->to(PostManagementsPostSearch::class);
+        } else {
+            $this->dispatch('alert', 'error', 'Failed to update the post, try again later')->to(Alert::class);
+        }
     }
 }

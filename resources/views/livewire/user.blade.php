@@ -24,6 +24,26 @@
                     {{-- fandom --}}
                     @livewire(UsersFandomList::class, ['user' => $user->username, 'preferences' => $preferences], key('users-fandom-list'))
                 </div>
+                @if ($user->id == Auth::id())
+                    <div x-data="{ openLog: false }" class="w-full h-fit flex flex-col space-x-0 space-y-2">
+                        <div class="w-full h-fit flex flex-row space-x-2 space-y-0 justify-between items-center">
+                            <div class="w-full h-fit {{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                                <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+                                  Log
+                                </span>
+                            </div>
+                            <svg x-cloak x-show="! openLog" x-on:click="openLog = true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-10 {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">
+                                <path fill-rule="evenodd" d="M7.72 12.53a.75.75 0 0 1 0-1.06l7.5-7.5a.75.75 0 1 1 1.06 1.06L9.31 12l6.97 6.97a.75.75 0 1 1-1.06 1.06l-7.5-7.5Z" clip-rule="evenodd" />
+                            </svg>
+                            <svg x-cloak x-show="openLog" x-on:click="openLog = false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-10 {{ 'hover:text-' . $preferences['color_2'] . '-500' }} cursor-pointer animation-button">
+                                <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div x-cloak x-show="openLog" x-transition class="w-full h-fit">
+                            @livewire(UsersLog::class, ['user' => $user->username, 'preferences' => $preferences])
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
         {{-- post and gallery tabs --}}

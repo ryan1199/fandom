@@ -3,10 +3,13 @@
 namespace App\Livewire;
 
 use App\Events\DeleteDiscussion;
+use App\Events\NewFandomLog;
 use App\Events\ResetDiscussion;
 use App\Models\Discuss;
 use App\Models\Fandom;
 use App\Models\Message;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Locked;
 use Livewire\Attributes\On;
@@ -46,9 +49,7 @@ class DiscussDetails extends Component
                 ]
             ]
         ])->find($discuss->id);
-        // $this->discuss->load(['fandom', 'messages']);
         $this->fandom = $this->discuss->fandom;
-        // $this->fandom->members->load(['role', 'user']);
         $members = $this->fandom->members;
         $managers = $members->where('role.name', 'Manager');
         $this->managers = $managers->pluck('user.id')->toArray();
@@ -58,17 +59,17 @@ class DiscussDetails extends Component
     public function loadLatestMessages()
     {
         $this->messages = collect([]);
-        // $this->discuss->messages->load(['user.cover', 'user.avatar']);
         $this->messages = $this->discuss->messages->reverse();
-        // dd($this->messages);
-        // $this->messages->load('user');
-        // $this->messages->user->load(['avatar', 'cover']);
     }
     public function deleteDiscuss()
     {
         $this->authorize('delete', [Discuss::class, $this->discuss, $this->fandom]);
+        $user = User::find(Auth::id());
         $status = false;
-        DB::transaction(function () use (&$status) {
+        DB::transaction(function () use (&$status, $user) {
+            $this->fandom->logs()->create([
+                'message' => $user->username.' deletes a discussion with name: ' . $this->discuss->name
+            ]);
             $this->discuss->messages()->delete();
             $this->discuss->delete();
             $status = true;
@@ -76,6 +77,7 @@ class DiscussDetails extends Component
         if($status) {
             $this->dispatch('alert','success', 'Done, the discuss has been deleted');
             DeleteDiscussion::dispatch($this->fandom);
+            NewFandomLog::dispatch($this->fandom);
         } else {
             $this->dispatch('alert','error', 'Error, the discuss has not been deleted');
         }
@@ -83,14 +85,19 @@ class DiscussDetails extends Component
     public function resetDiscuss()
     {
         $this->authorize('reset', [Discuss::class, $this->discuss, $this->fandom]);
+        $user = User::find(Auth::id());
         $status = false;
-        DB::transaction(function () use (&$status) {
+        DB::transaction(function () use (&$status, $user) {
+            $this->fandom->logs()->create([
+                'message' => $user->username.' resets a discussion with name: ' . $this->discuss->name
+            ]);
             $this->discuss->messages()->delete();
             $status = true;
         });
         if($status) {
             $this->dispatch('alert','success', 'Done, the discuss has been reset');
             ResetDiscussion::dispatch($this->discuss);
+            NewFandomLog::dispatch($this->fandom);
         } else {
             $this->dispatch('alert','error', 'Error, the discuss has not been reseted');
         }

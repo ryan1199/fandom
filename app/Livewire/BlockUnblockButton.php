@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Events\UserBlocked;
 use App\Events\UserUnblocked;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -30,10 +31,24 @@ class BlockUnblockButton extends Component
         if($this->blocked) {
             $this->unblock();
         } else {
-            $this->user1->blocks()->attach($this->user2->id);
-            $this->user1->follows()->detach($this->user2->id);
-            UserBlocked::dispatch($this->user1, $this->user2);
-            $this->dispatch('alert', 'success', 'Successfully block ' . $this->user2->username);
+            $result = false;
+            DB::transaction(function () use (&$result) {
+                $this->user1->blocks()->attach($this->user2->id);
+                $this->user1->follows()->detach($this->user2->id);
+                $this->user1->logs()->create([
+                    'message' => 'You block '. $this->user2->username
+                ]);
+                $this->user2->logs()->create([
+                    'message' => $this->user1->username . ' blocks you'
+                ]);
+                $result = true;
+            });
+            if ($result) {
+                UserBlocked::dispatch($this->user1, $this->user2);
+                $this->dispatch('alert', 'success', 'Successfully block ' . $this->user2->username);
+            } else {
+                $this->dispatch('alert', 'error', 'Error, failed to block ' . $this->user2->username . ', please try again later');
+            }
         }
         $this->checkBlocking();
     }
@@ -42,9 +57,23 @@ class BlockUnblockButton extends Component
         if(! $this->blocked) {
             $this->block();
         } else {
-            $this->user1->blocks()->detach($this->user2->id);
-            UserUnblocked::dispatch($this->user1, $this->user2);
-            $this->dispatch('alert', 'success', 'Successfully unblock ' . $this->user2->username);
+            $result = false;
+            DB::transaction(function () use (&$result) {
+                $this->user1->blocks()->detach($this->user2->id);
+                $this->user1->logs()->create([
+                    'message' => 'You unblock '. $this->user2->username
+                ]);
+                $this->user2->logs()->create([
+                    'message' => $this->user1->username . ' unblocks you'
+                ]);
+                $result = true;
+            });
+            if ($result) {
+                UserUnblocked::dispatch($this->user1, $this->user2);
+                $this->dispatch('alert', 'success', 'Successfully unblock ' . $this->user2->username);
+            } else {
+                $this->dispatch('alert', 'error', 'Error, failed to unblock ' . $this->user2->username . ', please try again later');
+            }
         }
         $this->checkBlocking();
     }

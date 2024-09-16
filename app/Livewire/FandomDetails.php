@@ -73,6 +73,8 @@ class FandomDetails extends Component
         return [
             "echo-private:FandomDetails.{$this->fandom->id},DeleteDiscussion" => 'loadDiscussion',
             "echo-private:FandomDetails.{$this->fandom->id},CreateDiscussion" => 'loadDiscussion',
+            "echo-private:FandomDetails.{$this->fandom->id},UserJoined" => 'loadMembers',
+            "echo-private:FandomDetails.{$this->fandom->id},UserLeaved" => 'loadMembers',
         ];
     }
     public function loadDiscussion($event)
@@ -82,5 +84,14 @@ class FandomDetails extends Component
             $query->where('visible', '=', 'public');
         }])->where('name', $name)->first();
         $this->discusses = $fandom->discusses;
+    }
+    public function loadMembers($event)
+    {
+        $fandom = Fandom::find($event['fandom']['id']);
+        $users = $fandom->members;
+        $managers = $users->where('role.name', 'Manager');
+        $managers_id = $managers->pluck('user.id')->toArray();
+        $this->members = $users->pluck('user.id')->toArray();
+        $this->managers = $managers_id;
     }
 }

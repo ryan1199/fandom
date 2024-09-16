@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Events\FandomUpdated;
+use App\Events\NewFandomLog;
 use App\Models\Fandom;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -45,16 +46,20 @@ class FandomSetting extends Component
         ])->validate();
         
         $fandom = Fandom::with(['cover.image'])->find($this->fandom->id);
-        Storage::disk('public')->delete('covers/' . $fandom->cover->image->url);
+        Storage::deleteDirectory('covers/fandom/' . $this->fandom->slug);
 
         $cover_name = 'fandom/' . $fandom->slug . "/" . $this->cover->hashName();
         $fandom->cover->image()->update([
             'url' => $cover_name
         ]);
         $this->cover->storeAs('covers', $cover_name, 'public');
+        $this->fandom->logs()->create([
+            'message' => Auth::user()->username . ' changes the cover for ' . $this->fandom->name . ' to ' . $cover_name
+        ]);
 
         $this->reset(['cover']);
         FandomUpdated::dispatch($this->fandom);
+        NewFandomLog::dispatch($this->fandom);
         $this->loadPage(['status' => 'success', 'message' => 'Done, fandom cover has been updated']);
     }
     public function updatedAvatar($value)
@@ -68,16 +73,20 @@ class FandomSetting extends Component
         ])->validate();
         
         $fandom = Fandom::with(['avatar.image'])->find($this->fandom->id);
-        Storage::disk('public')->delete('avatars/' . $fandom->avatar->image->url);
+        Storage::deleteDirectory('avatars/fandom/' . $this->fandom->slug);
 
         $avatar_name = 'fandom/' . $fandom->slug . "/" . $this->avatar->hashName();
         $fandom->avatar->image()->update([
             'url' => $avatar_name
         ]);
         $this->avatar->storeAs('avatars', $avatar_name, 'public');
+        $this->fandom->logs()->create([
+            'message' => Auth::user()->username . ' changes the avatar for ' . $this->fandom->name . ' to ' . $avatar_name
+        ]);
 
         $this->reset(['avatar']);
         FandomUpdated::dispatch($this->fandom);
+        NewFandomLog::dispatch($this->fandom);
         $this->loadPage(['status' => 'success', 'message' => 'Done, fandom avatar has been updated']);
     }
     public function updatedDescription($value)
@@ -93,9 +102,13 @@ class FandomSetting extends Component
         Fandom::where('id', $this->fandom->id)->update([
             'description' => $this->description
         ]);
+        $this->fandom->logs()->create([
+            'message' => Auth::user()->username . ' changes the description for ' . $this->fandom->name . ' to ' . $this->description
+        ]);
 
         $this->reset(['description']);
         FandomUpdated::dispatch($this->fandom);
+        NewFandomLog::dispatch($this->fandom);
         $this->loadPage(['status' => 'success', 'message' => 'Done, fandom description has been updated']);
     }
     public function setCurrentRoute()

@@ -49,8 +49,8 @@ class ProfileSetting extends Component
         ], rules: [
             'cover' => 'required|image|max:10240'
         ])->validate();
-        Storage::deleteDirectory('covers/' . $this->user->username);
-        $cover_name = $this->user->username . "/" . $this->cover->hashName();
+        Storage::deleteDirectory('covers/user/' . $this->user->username);
+        $cover_name = 'user/' . $this->user->username . "/" . $this->cover->hashName();
         $this->cover->storeAs('covers', $cover_name, 'public');
 
         DB::transaction(function () use ($cover_name) {
@@ -78,8 +78,8 @@ class ProfileSetting extends Component
         ], rules: [
             'avatar' => 'required|image|max:10240'
         ]);
-        Storage::deleteDirectory('avatars/' . $this->user->username);
-        $avatar_name = $this->user->username . "/" . $this->avatar->hashName();
+        Storage::deleteDirectory('avatars/user/' . $this->user->username);
+        $avatar_name = 'user/' . $this->user->username . "/" . $this->avatar->hashName();
         $this->avatar->storeAs('avatars', $avatar_name, 'public');
         DB::transaction(function () use ($avatar_name) {
             $image = new Image(['url' => $avatar_name]);

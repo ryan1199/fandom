@@ -3,8 +3,12 @@
 namespace App\Livewire;
 
 use App\Events\CreateDiscussion;
+use App\Events\NewFandomLog;
 use App\Models\Discuss;
 use App\Models\Fandom;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Livewire\Attributes\Locked;
@@ -47,15 +51,28 @@ class DiscussCreate extends Component
                 'visible' => 'discussion visibility'
             ]
         )->validate();
-        $discuss = Discuss::create([
-            'name' => $validated['name'],
-            'visible' => $validated['visible'],
-            'fandom_id' => $this->fandom->id
-        ]);
+        $user = User::find(Auth::id());
+        $result = false;
+        DB::transaction(function () use ($validated, $user, &$result) {
+            $discuss = Discuss::create([
+                'name' => $validated['name'],
+                'visible' => $validated['visible'],
+                'fandom_id' => $this->fandom->id
+            ]);
+            $this->fandom->logs()->create([
+                'message' => $user->username . ' create a discussion with name: ' . $validated['name'] . ' and visibility: ' . $validated['visible']
+            ]);
+            $result = true;
+        });
         $this->reset('name');
         $this->resetValidation();
-        $this->dispatch('alert', 'success', 'Done, new discussion has been created');
-        CreateDiscussion::dispatch($this->fandom);
+        if ($result) {
+            $this->dispatch('alert', 'success', 'Done, new discussion has been created');
+            CreateDiscussion::dispatch($this->fandom);
+            NewFandomLog::dispatch($this->fandom);
+        } else {
+            $this->dispatch('alert', 'error', 'Error, discussion not created, please try again later');
+        }
     }
     public function updated()
     {

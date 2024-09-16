@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Events\NewFandomLog;
+use App\Events\NewUserLog;
 use App\Events\RequestClosed;
 use App\Events\RequestVoted;
 use App\Events\UserBanned;
@@ -116,8 +118,11 @@ class FandomsRequestCard extends Component
                                 $role = Role::where('name', 'Manager')->first();
                                 $fandom = Fandom::find($this->request->fandom_id);
                                 $result = false;
-                                DB::transaction(function () use ($role, $user, &$result) {
+                                DB::transaction(function () use ($role, $user, &$result, $fandom) {
                                     $user->members()->updateOrCreate(['fandom_id' => $this->request->fandom_id], ['role_id' => $role->id]);
+                                    $user->logs()->create([
+                                        'message' => 'You got promoted to manager in ' . $fandom->name
+                                    ]);
                                     $result = true;
                                 }, 10);
                                 if ($result) {
@@ -125,6 +130,7 @@ class FandomsRequestCard extends Component
                                     $this->dispatch('alert', 'success', 'Done, ' . $user->username . ' has been promoted to manager');
                                     UserJoined::dispatch($fandom, $user);
                                     RequestClosed::dispatch($this->fandom);
+                                    NewUserLog::dispatch($user);
                                 } else {
                                     $this->request->update([
                                         'result' => null,
@@ -142,15 +148,19 @@ class FandomsRequestCard extends Component
                                 $role = Role::where('name', 'Member')->first();
                                 $fandom = Fandom::find($this->request->fandom_id);
                                 $result = false;
-                                DB::transaction(function () use ($role, $user, &$resul) {
+                                DB::transaction(function () use ($role, $user, &$result, $fandom) {
                                     $user->members()->updateOrCreate(['fandom_id' => $this->request->fandom_id], ['role_id' => $role->id]);
-                                    $resul = true;
+                                    $user->logs()->create([
+                                       'message' => 'You got demoted to member in '. $fandom->name
+                                    ]);
+                                    $result = true;
                                 }, 10);
                                 if ($result) {
                                     $this->request->update(['status' => 'close']);
                                     $this->dispatch('alert', 'success', 'Done, ' . $user->username . ' has been demoted to member');
                                     UserJoined::dispatch($fandom, $user);
                                     RequestClosed::dispatch($this->fandom);
+                                    NewUserLog::dispatch($user);
                                 } else {
                                     $this->request->update([
                                         'result' => null,
@@ -186,16 +196,20 @@ class FandomsRequestCard extends Component
                                     ]);
                                 }
                                 Member::where('user_id', $user->id)->where('fandom_id', $fandom->id)->delete();
-                                $result = true;
                                 return $fandom->bans()->create([
                                     'user_id' => $user->id,
                                 ]);
+                                $user->logs()->create([
+                                    'message' => 'You got banned from '. $fandom->name
+                                ]);
+                                $result = true;
                             }, 10);
                             if ($result) {
                                 $this->request->update(['status' => 'close']);
                                 $this->dispatch('alert', 'success', 'Done, ' . $user->username . ' has been banned from ' . $fandom->name);
                                 UserBanned::dispatch($this->fandom);
                                 RequestClosed::dispatch($this->fandom);
+                                NewUserLog::dispatch($user);
                             } else {
                                 $this->request->update([
                                     'result' => null,
@@ -210,6 +224,9 @@ class FandomsRequestCard extends Component
                             $result = false;
                             DB::transaction(function () use ($fandom, $user, &$result) {
                                 Ban::where('user_id', $user->id)->where('fandom_id', $fandom->id)->delete();
+                                $user->logs()->create([
+                                    'message' => 'You got unbanned from '. $fandom->name
+                                ]);
                                 $result = true;
                             }, 10);
                             if ($result) {
@@ -217,6 +234,7 @@ class FandomsRequestCard extends Component
                                 $this->dispatch('alert', 'success', 'Done, ' . $user->username . ' has been unbanned from ' . $fandom->name);
                                 UserUnbanned::dispatch($this->fandom);
                                 RequestClosed::dispatch($this->fandom);
+                                NewUserLog::dispatch($user);
                             } else {
                                 $this->request->update([
                                     'result' => null,
@@ -231,6 +249,11 @@ class FandomsRequestCard extends Component
                     }
                 }
             }
+            $result = $this->request->result ? ' is accepted' : ' is rejected';
+            $this->fandom->logs()->create([
+                'message' => 'Request result' . $result . ' for title: ' . $this->request->title
+            ]);
+            NewFandomLog::dispatch($this->fandom);
         }
     }
     public function getListeners()

@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Events\FandomsGalleryUnpublished;
+use App\Events\NewFandomLog;
+use App\Events\NewUserLog;
 use App\Events\UsersGalleryUnpublished;
 use App\Models\Fandom;
 use App\Models\Gallery;
@@ -80,22 +82,31 @@ class GalleryManagementsGalleryList extends Component
         $result = false;
         if (class_basename($gallery->publish->publishable_type) === 'User') {
             $user = User::find($gallery->publish->publishable_id);
-            DB::transaction(function () use ($gallery, $image, &$result) {
+            DB::transaction(function () use ($gallery, $image, &$result, $user) {
+                $user->logs()->create([
+                    'message' => 'You unpublish and delete a gallery with id: ' . $gallery->slug
+                ]);
                 Publish::where('id', $gallery->publish_id)->delete();
                 Gallery::where('id', $gallery->id)->delete();
                 Image::where('id', $image->id)->delete();
                 $result = true;
             });
             UsersGalleryUnpublished::dispatch($user);
+            NewUserLog::dispatch($user);
         } else {
             $fandom = Fandom::find($gallery->publish->publishable_id);
-            DB::transaction(function () use ($gallery, $image, &$result) {
+            $user = User::find($gallery->user_id);
+            DB::transaction(function () use ($gallery, $image, &$result, $fandom, $user) {
+                $fandom->logs()->create([
+                   'message' => $user->username.' unpublish and delete a gallery with id: '. $gallery->slug
+                ]);
                 Publish::where('id', $gallery->publish_id)->delete();
                 Gallery::where('id', $gallery->id)->delete();
                 Image::where('id', $image->id)->delete();
                 $result = true;
             });
             FandomsGalleryUnpublished::dispatch($fandom);
+            NewFandomLog::dispatch($fandom);
         }
         if($result) {
             Storage::delete('galleries/' . $image->url);

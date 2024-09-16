@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Events\FandomsGalleryPublished;
+use App\Events\NewFandomLog;
+use App\Events\NewUserLog;
 use App\Events\UsersGalleryPublished;
 use App\Models\Fandom;
 use App\Models\Gallery;
@@ -203,7 +205,7 @@ class GalleryCreateEdit extends Component
         if (!in_array($data['visible'], $available_visible, true)) {
             $visible = 'public';
         }
-        $slug = 'G-' . Auth::user()->username . '-' . now()->year . now()->month . now()->day . '-';
+        $slug = 'G-' . $user->username . '-' . now()->year . now()->month . now()->day . '-';
         $galleries = Gallery::where('slug', 'like', '%' . $slug . '%')->get();
         if ($galleries->count() > 0) {
             $slug.= $galleries->count() + 1;
@@ -223,8 +225,12 @@ class GalleryCreateEdit extends Component
                     ]);
                     $image = new Image(['url' => $data['image_name']]);
                     $gallery->image()->save($image);
+                    $user->logs()->create([
+                        'message' => 'You create and publish a gallery with id: ' . $slug
+                    ]);
                 });
                 UsersGalleryPublished::dispatch($user);
+                NewUserLog::dispatch($user);
             }
         }
         if ($data['publish_on']['from'] == 'fandom') {
@@ -241,8 +247,12 @@ class GalleryCreateEdit extends Component
                     ]);
                     $image = new Image(['url' => $data['image_name']]);
                     $gallery->image()->save($image);
+                    $fandom->logs()->create([
+                        'message' => $user->username . ' create and publish a gallery with id: ' . $slug
+                    ]);
                 });
                 FandomsGalleryPublished::dispatch($fandom);
+                NewFandomLog::dispatch($fandom);
             }
         }
         $this->dispatch('alert', 'success', 'Success, the new image is stored')->to(Alert::class);
@@ -264,7 +274,17 @@ class GalleryCreateEdit extends Component
         }
         if ($data['publish_on']['from'] == 'user') {
             if ($user->id == $data['publish_on']['id']) {
-                DB::transaction(function () use ($visible, $user, $data, $gallery) {
+                $fandom = false;
+                DB::transaction(function () use ($visible, $user, $data, $gallery, &$fandom) {
+                    if ($gallery->publish->publishable_type == 'App\Models\Fandom') {
+                        $fandom = Fandom::find($gallery->publish->publishable_id);
+                        $fandom->logs()->create([
+                           'message' => $user->username .' unpublish and delete a gallery with id: ' . $gallery->slug
+                        ]);
+                    }
+                    $user->logs()->create([
+                        'message' => 'You update and publish a gallery with id: ' . $gallery->slug
+                    ]);
                     $publish_id = $gallery->publish_id;
                     $publish = new Publish(['visible' => $visible]);
                     $publish = $user->publishes()->save($publish);
@@ -276,12 +296,34 @@ class GalleryCreateEdit extends Component
                     Publish::where('id', $publish_id)->delete();
                 });
                 UsersGalleryPublished::dispatch($user);
+                NewUserLog::dispatch($user);
+                if ($fandom != false) {
+                    NewFandomLog::dispatch($fandom);
+                }
             }
         }
         if ($data['publish_on']['from'] == 'fandom') {
             if (in_array($data['publish_on']['id'], $fandoms_id, true)) {
                 $fandom = Fandom::find($data['publish_on']['id']);
-                DB::transaction(function () use ($visible, $fandom, $data, $gallery) {
+                $old_fandom = false;
+                DB::transaction(function () use ($visible, $fandom, &$old_fandom, $data, $gallery, $user) {
+                    if ($gallery->publish->publishable_type == 'App\Models\Fandom' && $gallery->publish->publishable_id != $fandom->id) {
+                        $old_fandom = Fandom::find($gallery->publish->publishable_id);
+                        $old_fandom->logs()->create([
+                           'message' => $user->username .' unpublish and delete a gallery with id: ' . $gallery->slug
+                        ]);
+                        $fandom->logs()->create([
+                            'message' => $user->username .' create and publish a gallery with id: ' . $gallery->slug
+                         ]);
+                    }
+                    if ($gallery->publish->publishable_type == 'App\Models\Fandom' && $gallery->publish->publishable_id == $fandom->id) {
+                        $fandom->logs()->create([
+                           'message' => $user->username .' update and publish a gallery with id: ' . $gallery->slug
+                        ]);
+                    }
+                    $user->logs()->create([
+                        'message' => 'You update and publish a gallery with id: ' . $gallery->slug
+                    ]);
                     $publish_id = $gallery->publish_id;
                     $publish = new Publish(['visible' => $visible]);
                     $publish = $fandom->publishes()->save($publish);
@@ -293,6 +335,13 @@ class GalleryCreateEdit extends Component
                     Publish::where('id', $publish_id)->delete();
                 });
                 FandomsGalleryPublished::dispatch($fandom);
+                NewUserLog::dispatch($user);
+                if ($old_fandom != false) {
+                    NewFandomLog::dispatch($old_fandom);
+                    NewFandomLog::dispatch($fandom);
+                } else {
+                    NewFandomLog::dispatch($fandom);
+                }
             }
         }
         $this->dispatch('alert', 'success', 'Success, the selected image is updated')->to(Alert::class);

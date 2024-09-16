@@ -105,4 +105,4 @@ Route::fallback(function () {
 // add feature to demote manager to member (done)
 // add banned user for fandom (done)
 // banned user cannot see fandom (done)
-// add logs for fandom details (not yet)
+// add logs for fandom and user (done)

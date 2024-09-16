@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Events\FandomsPostPublished;
 use App\Events\FandomsPostUnpublished;
+use App\Events\NewFandomLog;
+use App\Events\NewUserLog;
 use App\Events\UsersPostPublished;
 use App\Events\UsersPostUnpublished;
 use App\Models\Fandom;
@@ -104,24 +106,40 @@ class PostManagementsPostList extends Component
         if ($post->publish_id != null) {
             if (class_basename($post->publish->publishable_type) === 'User') {
                 $user = User::find($post->publish->publishable_id);
-                DB::transaction(function () use ($post, &$result) {
+                DB::transaction(function () use ($post, &$result, $user) {
                     Publish::where('id', $post->publish_id)->delete();
                     Post::where('id', $post->id)->delete();
+                    $user->logs()->create([
+                        'message' => 'You delete a post with title: ' . $post->title
+                    ]);
                     $result = true;
                 });
                 UsersPostUnpublished::dispatch($user);
+                NewUserLog::dispatch($user);
             } else {
                 $fandom = Fandom::find($post->publish->publishable_id);
-                DB::transaction(function () use ($post, &$result) {
+                $user = User::find($post->user_id);
+                DB::transaction(function () use ($post, &$result, $fandom, $user) {
                     Publish::where('id', $post->publish_id)->delete();
                     Post::where('id', $post->id)->delete();
+                    $fandom->logs()->create([
+                       'message' => $user->username . ' delete a post with title: ' . $post->title
+                    ]);
                     $result = true;
                 });
                 FandomsPostUnpublished::dispatch($fandom);
+                NewFandomLog::dispatch($fandom);
             }
         } else {
-            Post::where('id', $post->id)->delete();
-            $result = true;
+            $user = User::find($post->user_id);
+            DB::transaction(function () use ($post, &$result, $user) {
+                Post::where('id', $post->id)->delete();
+                $user->logs()->create([
+                   'message' => 'You delete a post with title: ' . $post->title
+                ]);
+                $result = true;
+            });
+            NewUserLog::dispatch($user);
         }
         if ($result == true) {
             $this->dispatch('alert', 'success', 'Success, the selected post is deleted')->to(Alert::class);
@@ -153,9 +171,13 @@ class PostManagementsPostList extends Component
                         'publish_id' => $publish->id,
                         'created_at' => $publish->created_at
                     ]);
+                    $user->logs()->create([
+                        'message' => 'You publish a post with title: ' . $post->title
+                    ]);
                 });
                 $this->dispatch('alert', 'success', 'Success, the selected post is published on user ' . $user->username)->to(Alert::class);
                 UsersPostPublished::dispatch($user);
+                NewUserLog::dispatch($user);
             }
         }
         if ($from == 'fandom') {
@@ -165,16 +187,20 @@ class PostManagementsPostList extends Component
                     $visible = 'public';
                 }
                 $fandom = Fandom::find($id);
-                DB::transaction(function () use ($visible, $fandom, $post) {
+                DB::transaction(function () use ($visible, $fandom, $post, $user) {
                     $publish = new Publish(['visible' => $visible]);
                     $publish = $fandom->publishes()->save($publish);
                     Post::where('id', $post->id)->update([
                         'publish_id' => $publish->id,
                         'created_at' => $publish->created_at
                     ]);
+                    $fandom->logs()->create([
+                        'message' => $user->username . ' publish a post with title: ' . $post->title
+                    ]);
                 });
                 $this->dispatch('alert', 'success', 'Success, the selected post is published on fandom ' . $fandom->name)->to(Alert::class);
                 FandomsPostPublished::dispatch($fandom);
+                NewFandomLog::dispatch($fandom);
             }
         }
         if ($from == 'user' || $from == 'fandom') {
@@ -189,24 +215,33 @@ class PostManagementsPostList extends Component
         if ($post->publish_id != null) {
             if (class_basename($post->publish->publishable_type) === 'User') {
                 $user = User::find($post->publish->publishable_id);
-                DB::transaction(function () use ($post) {
+                DB::transaction(function () use ($post, $user) {
                     $publish_id = $post->publish_id;
                     $post->update([
                         'publish_id' => null
                     ]);
                     Publish::where('id', $publish_id)->delete();
+                    $user->logs()->create([
+                       'message' => 'You unpublish a post with title: ' . $post->title
+                    ]);
                 });
                 UsersPostUnpublished::dispatch($user);
+                NewUserLog::dispatch($user);
             } else {
                 $fandom = Fandom::find($post->publish->publishable_id);
-                DB::transaction(function () use ($post) {
+                $user = User::find($post->user_id);
+                DB::transaction(function () use ($post, $fandom, $user) {
                     $publish_id = $post->publish_id;
                     $post->update([
                         'publish_id' => null
                     ]);
                     Publish::where('id', $publish_id)->delete();
+                    $fandom->logs()->create([
+                       'message' => $user->username . ' unpublish a post with title: ' . $post->title
+                    ]);
                 });
                 FandomsPostUnpublished::dispatch($fandom);
+                NewFandomLog::dispatch($fandom);
             }
             $this->dispatch('alert', 'success', 'Success, the selected post is unpublished')->to(Alert::class);
         } else {

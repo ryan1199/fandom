@@ -117,4 +117,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Ban::class);
     }
+    public function logs(): MorphMany
+    {
+        return $this->morphMany(Log::class, 'logable');
+    }
 }

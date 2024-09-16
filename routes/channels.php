@@ -75,6 +75,9 @@ Broadcast::channel('UsersFandomList.{id}', function ($id) {
 Broadcast::channel('UsersFollowedFollowing.{id}', function ($id) {
     return User::find($id) != null;
 });
+Broadcast::channel('UsersLog.{id}', function ($id) {
+    return User::find($id) != null;
+});
 Broadcast::channel('UsersFandomCard.{id}', function ($id) {
     return Fandom::find($id) != null;
 });
@@ -121,6 +124,9 @@ Broadcast::channel('FandomsRequestCard.{id}', function ($id) {
     return Request::find($id) != null;
 });
 Broadcast::channel('FandomsRequestForm.{id}', function ($id) {
+    return Fandom::find($id) != null;
+});
+Broadcast::channel('FandomsLog.{id}', function ($id) {
     return Fandom::find($id) != null;
 });
 Broadcast::channel('Comment.{id}', function ($id) {

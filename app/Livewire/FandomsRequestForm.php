@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\NewFandomLog;
 use App\Events\RequestOpened;
 use App\Models\Fandom;
 use App\Models\Request;
@@ -11,9 +12,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class FandomsRequestForm extends Component
 {
+    use WithPagination, WithoutUrlPagination;
     #[Locked]
     public $fandom;
     public $title = '';
@@ -31,15 +35,15 @@ class FandomsRequestForm extends Component
         $fandom_members = $this->fandom->members;
         $managers = $this->fandom->members()->whereHas('role', function (Builder $query) {
             $query->where('name', 'Manager');
-        })->with('user')->get();
+        })->with('user')->simplePaginate(5, pageName: 'managers-page');
         $members = $this->fandom->members()->whereHas('role', function (Builder $query) {
             $query->where('name', 'Member');
-        })->with('user')->get();
-        $banned_users = $this->fandom->bans()->with('user')->get();
+        })->with('user')->simplePaginate(5, pageName: 'members-page');
+        $banned_users = $this->fandom->bans()->with('user')->simplePaginate(5, pageName: 'banned-users-page');
         if ($banned_users->isNotEmpty()) {
-            $unbanned_users = User::whereNotIn('id', $fandom_members->pluck('user_id'))->whereNotIn('id', $banned_users->pluck('user_id'))->orderBy('username', 'ASC')->get();
+            $unbanned_users = User::whereNotIn('id', $fandom_members->pluck('user_id'))->whereNotIn('id', $banned_users->pluck('user_id'))->orderBy('username', 'ASC')->simplePaginate(5, pageName: 'unbanned-users-page');
         } else {
-            $unbanned_users = User::whereNotIn('id', $fandom_members->pluck('user_id'))->orderBy('username', 'ASC')->get();
+            $unbanned_users = User::whereNotIn('id', $fandom_members->pluck('user_id'))->orderBy('username', 'ASC')->simplePaginate(5, pageName: 'unbanned-users-page');
         }
         return view('livewire.fandoms-request-form', [
             'command_list_for_manager' => $command_list_for_manager,
@@ -85,10 +89,6 @@ class FandomsRequestForm extends Component
                     'status' => 'open',
                     'user_id' => Auth::id()
                 ]);
-                $this->title = '';
-                $this->description = '';
-                $this->user = null;
-                $this->command = null;
                 $this->dispatch('alert', 'success', 'Done, request successfully created');
                 RequestOpened::dispatch($this->fandom);
             } else {
@@ -101,11 +101,18 @@ class FandomsRequestForm extends Component
                 'status' => 'open',
                 'user_id' => Auth::id()
             ]);
-            $this->title = '';
-            $this->description = '';
             $this->dispatch('alert', 'success', 'Done, request successfully created');
             RequestOpened::dispatch($this->fandom);
         }
+        $this->fandom->logs()->create([
+            'message' => 'New request by ' . Auth::user()->username . ' with title: ' . $this->title
+        ]);
+        NewFandomLog::dispatch($this->fandom);
+        $this->reset(['title', 'description', 'user', 'command']);
+        $this->resetPage('managers-page');
+        $this->resetPage('members-page');
+        $this->resetPage('banned-users-page');
+        $this->resetPage('unbanned-users-page');
     }
     public function selectCommandForUser(User $user, $command)
     {
@@ -181,6 +188,10 @@ class FandomsRequestForm extends Component
             $this->dispatch('alert', 'error', $user->username.'not found');
         }
     }
+    public function selectCommandForFandom($command)
+    {
+        // delete fandom
+    }
     public function getListeners()
     {
         return [
@@ -195,5 +206,9 @@ class FandomsRequestForm extends Component
         $fandom = Fandom::find($event['fandom']['id']);
         $this->reset(['administration', 'user', 'command']);
         $this->fandom = $fandom;
+        $this->resetPage('managers-page');
+        $this->resetPage('members-page');
+        $this->resetPage('banned-users-page');
+        $this->resetPage('unbanned-users-page');
     }
 }

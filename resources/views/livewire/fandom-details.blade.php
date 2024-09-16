@@ -13,9 +13,11 @@
                             <div :class="tab == 'post' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'post'" class="p-4 font-semibold cursor-pointer">Post</div>
                             <div :class="tab == 'gallery' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'gallery'" class="p-4 font-semibold cursor-pointer">Galery</div>
                             <div :class="tab == 'member' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'member'" class="p-4 font-semibold cursor-pointer">Member</div>
+                            @if (in_array(Auth::id(), $members))
+                                <div :class="tab == 'log' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'log'" class="p-4 font-semibold cursor-pointer">Logs</div>
+                            @endif
                             @if (in_array(Auth::id(), $managers))
                                 <div :class="tab == 'setting' ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="tab = 'setting'" class="p-4 font-semibold cursor-pointer">Setting</div>
-                                {{-- logs --}}
                             @endif
                         </div>
                     </div>
@@ -127,6 +129,18 @@
                             @livewire(FandomMemberList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences])
                         </div>
                     </div>
+                    @if (in_array(Auth::id(), $members))
+                        <div x-transition x-cloak x-show="tab == 'log'" class="w-full h-fit">
+                            <div class="w-full h-fit p-4 flex flex-col space-x-0 space-y-4 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
+                                <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
+                                    <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
+                                    Logs
+                                    </span>
+                                </div>
+                                @livewire(FandomsLog::class, ['fandom' => $fandom->slug, 'preferences' => $preferences])
+                            </div>
+                        </div>
+                    @endif
                     @if (in_array(Auth::id(), $managers))
                         <div x-transition x-cloak x-show="tab == 'setting'" class="w-full h-fit">
                             @livewire(FandomSetting::class, ['fandom' => $fandom->slug, 'preferences' => $preferences], key('fandom-setting-for-fandom-' . $fandom->id))

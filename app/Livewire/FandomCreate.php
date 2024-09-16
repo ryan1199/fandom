@@ -3,10 +3,13 @@
 namespace App\Livewire;
 
 use App\Events\FandomCreated;
+use App\Events\NewFandomLog;
+use App\Events\NewUserLog;
 use App\Events\UserJoined;
 use App\Models\Fandom;
 use App\Models\Image;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Validate;
@@ -39,9 +42,8 @@ class FandomCreate extends Component
     public function createFandom()
     {
         $this->validate();
-        $fandom = '';
         $result = false;
-        DB::transaction(function() use (&$fandom, &$result) {
+        $fandom = DB::transaction(function() use (&$result) {
             $slug = Str::slug($this->name, '-');
             $fandom = Fandom::create([
                 'name' => $this->name,
@@ -53,9 +55,9 @@ class FandomCreate extends Component
                 'user_id' => Auth::id(),
                 'role_id' => $role->id
             ]);
-            $cover_name = 'fandom/' . $slug . "/cover-" . $slug . "." . $this->cover->extension();
+            $cover_name = 'fandom/' . $slug . "/" . $this->cover->hashName();
             $this->cover->storeAs('covers', $cover_name, 'public');
-            $avatar_name = 'fandom/' . $slug . "/avatar-" . $slug . "." . $this->avatar->extension();
+            $avatar_name = 'fandom/' . $slug . "/" . $this->avatar->hashName();
             $this->avatar->storeAs('avatars', $avatar_name, 'public');
             $image_cover = new Image(['url' => $cover_name]);
             $image_avatar = new Image(['url' => $avatar_name]);
@@ -64,12 +66,22 @@ class FandomCreate extends Component
             $cover->image()->save($image_cover);
             $avatar->image()->save($image_avatar);
             $result = true;
-        });
+            return $fandom;
+        }, 10);
         if ($result) {
+            $user = User::find(Auth::id());
+            $fandom->logs()->create([
+                'message' => 'Created by ' . $user->username
+            ]);
+            $user->logs()->create([
+                'message' => 'You create a fandom with name: ' . $fandom->name
+            ]);
             $this->reset(['avatar','cover','name','description']);
             $this->dispatch('alert','success','New fandom created')->to(Alert::class);
             FandomCreated::dispatch($fandom);
             UserJoined::dispatch($fandom, Auth::user());
+            NewFandomLog::dispatch($fandom);
+            NewUserLog::dispatch($user);
         } else {
             $this->dispatch('alert', 'error', 'Error, fandom not created');
         }

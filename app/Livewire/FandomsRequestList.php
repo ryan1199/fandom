@@ -5,17 +5,19 @@ namespace App\Livewire;
 use App\Models\Fandom;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 class FandomsRequestList extends Component
 {
+    use WithPagination, WithoutUrlPagination;
     #[Locked]
     public $fandom;
     public $preferences = [];
     public function render()
     {
-        $requests = $this->fandom->requests()->latest()->get();
-        $open_requests = $requests->where('status', 'open')->all();
-        $close_requests = $requests->where('status', 'close')->all();
+        $open_requests = $this->fandom->requests()->where('status', 'open')->latest()->simplePaginate(5, pageName: 'open-requests-page');
+        $close_requests = $this->fandom->requests()->where('status', 'close')->latest()->simplePaginate(5, pageName: 'close-requests-page');
         return view('livewire.fandoms-request-list', [
             'open_requests' => $open_requests,
             'close_requests' => $close_requests,

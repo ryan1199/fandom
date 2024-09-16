@@ -2,11 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Events\NewUserLog;
 use App\Events\UserFollowed;
 use App\Events\UserUnfollowed;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -32,10 +34,26 @@ class FollowUnfollowButton extends Component
         if($this->followed) {
             $this->unfollow();
         } else {
-            $this->user1->follows()->attach($this->user2->id);
-            $this->user1->blocks()->detach($this->user2->id);
-            UserFollowed::dispatch($this->user1, $this->user2);
-            $this->dispatch('alert', 'success', 'Successfully follow ' . $this->user2->username);
+            $result = false;
+            DB::transaction(function () use (&$result) {
+                $this->user1->follows()->attach($this->user2->id);
+                $this->user1->blocks()->detach($this->user2->id);
+                $this->user1->logs()->create([
+                    'message' => 'You follow '. $this->user2->username
+                ]);
+                $this->user2->logs()->create([
+                    'message' => $this->user1->username . ' follows you'
+                ]);
+                $result = true;
+            });
+            if ($result) {
+                UserFollowed::dispatch($this->user1, $this->user2);
+                NewUserLog::dispatch($this->user1);
+                NewUserLog::dispatch($this->user2);
+                $this->dispatch('alert', 'success', 'Successfully follow ' . $this->user2->username);
+            } else {
+                $this->dispatch('alert', 'error', 'Error, failed to follow ' . $this->user2->username . ' , please try again later');
+            }
         }
         $this->checkFollowing();
     }
@@ -44,9 +62,25 @@ class FollowUnfollowButton extends Component
         if(! $this->followed) {
             $this->follow();
         } else {
-            $this->user1->follows()->detach($this->user2->id);
-            UserUnfollowed::dispatch($this->user1, $this->user2);
-            $this->dispatch('alert', 'success', 'Successfully unfollow ' . $this->user2->username);
+            $result = false;
+            DB::transaction(function () use (&$result) {
+                $this->user1->follows()->detach($this->user2->id);
+                $this->user1->logs()->create([
+                    'message' => 'You unfollow '. $this->user2->username
+                ]);
+                $this->user2->logs()->create([
+                    'message' => $this->user1->username . ' unfollows you'
+                ]);
+                $result = true;
+            });
+            if ($result) {
+                UserUnfollowed::dispatch($this->user1, $this->user2);
+                NewUserLog::dispatch($this->user1);
+                NewUserLog::dispatch($this->user2);
+                $this->dispatch('alert', 'success', 'Successfully unfollow ' . $this->user2->username);
+            } else {
+                $this->dispatch('alert', 'error', 'Error, failed to unfollow ' . $this->user2->username . ' , please try again later');
+            }
         }
         $this->checkFollowing();
     }

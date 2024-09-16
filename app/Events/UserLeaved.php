@@ -34,6 +34,7 @@ class UserLeaved implements ShouldBroadcast
         return [
             new Channel('FandomMemberList.' . $this->fandom->id),
             new PrivateChannel('FandomsRequestForm.' . $this->fandom->id),
+            new PrivateChannel('FandomDetails.' . $this->fandom->id),
             new PrivateChannel('UsersFandomList.' . $this->user->id),
             new PrivateChannel('LeftSideNavigationBar.' . $this->user->id),
         ];
