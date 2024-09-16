@@ -6,6 +6,7 @@ use App\Events\FandomCreated;
 use App\Events\NewFandomLog;
 use App\Events\NewUserLog;
 use App\Events\UserJoined;
+use App\Models\Discuss;
 use App\Models\Fandom;
 use App\Models\Image;
 use App\Models\Role;
@@ -54,6 +55,21 @@ class FandomCreate extends Component
             $fandom->members()->create([
                 'user_id' => Auth::id(),
                 'role_id' => $role->id
+            ]);
+            Discuss::createMany([
+                [
+                    'name' => 'Public',
+                    'visible' => 'public',
+                    'fandom_id' => $fandom->id
+                ], [
+                    'name' => 'Member',
+                    'visible' => 'member',
+                    'fandom_id' => $fandom->id
+                ], [
+                    'name' => 'Manager',
+                    'visible' => 'manager',
+                    'fandom_id' => $fandom->id
+                ]
             ]);
             $cover_name = 'fandom/' . $slug . "/" . $this->cover->hashName();
             $this->cover->storeAs('covers', $cover_name, 'public');

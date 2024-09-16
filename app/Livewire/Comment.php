@@ -45,7 +45,6 @@ class Comment extends Component
             $this->gallery->load(['comments']);
             $this->comments = $this->gallery->comments->load(['user.cover.image', 'user.avatar.image', 'message', 'rates.user']);
         }
-        // $this->comments = ModelsComment::with(['user.cover.image', 'user.avatar.image', 'message', 'rates.user'])->where('commentable_id', $this->id)->where('commentable_type', $this->from)->get();
         $this->sortComments();
     }
     public function loadMissingComments()

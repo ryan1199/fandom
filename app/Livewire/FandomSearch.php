@@ -64,7 +64,6 @@ class FandomSearch extends Component
     {
         return [
             "echo:FandomSearch,FandomCreated" => 'search',
-            // "echo:FandomSearch,FandomRemoved" => 'search',
         ];
     }
 }

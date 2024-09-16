@@ -128,10 +128,4 @@ class ProfileSetting extends Component
         $this->dispatch('alert', 'success', 'Done, profile saved')->to(Alert::class);
         UserProfileUpdated::dispatch($this->user);
     }
-    public function updated($property)
-    {
-        if (Auth::check()) {
-            session()->put('last-active-' . $this->user->username, now());
-        }
-    }
 }

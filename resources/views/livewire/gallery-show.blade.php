@@ -24,7 +24,7 @@
                         <a wire:navigate href="{{ route('user', $gallery->publish->publishable) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center" draggable="false">
                             <div class="flex flex-col">
                                 <span>Published on: </span>
-                                <span class="w-fit overflow-x-scroll max-w-40 text-nowrap">{{ $gallery->publish->publishable->username }}</span>
+                                <span class="w-fit overflow-x-auto max-w-40 text-nowrap">{{ $gallery->publish->publishable->username }}</span>
                             </div>
                             @if ($gallery->publish->publishable->avatar != null)
                                 <img src="{{ asset('storage/avatars/'.$gallery->publish->publishable->avatar->image->url) }}" alt="{{ asset('storage/avatars/'.$gallery->publish->publishable->avatar->image->url) }}" class="w-10 h-auto aspect-square object-cover rounded-full" draggable="false">
@@ -38,7 +38,7 @@
                         <a wire:navigate href="{{ route('fandom-details', $gallery->publish->publishable) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center" draggable="false">
                             <div class="flex flex-col">
                                 <span>Published on: </span>
-                                <span class="w-fit overflow-x-scroll max-w-40 text-nowrap">{{ $gallery->publish->publishable->name }}</span>
+                                <span class="w-fit overflow-x-auto max-w-40 text-nowrap">{{ $gallery->publish->publishable->name }}</span>
                             </div>
                             @if ($gallery->publish->publishable->avatar != null)
                                 <img src="{{ asset('storage/avatars/'.$gallery->publish->publishable->avatar->image->url) }}" alt="{{ asset('storage/avatars/'.$gallery->publish->publishable->avatar->image->url) }}" class="w-10 h-auto aspect-square object-cover rounded-full" draggable="false">
@@ -54,7 +54,7 @@
                     <a wire:navigate href="{{ route('user', $gallery->user) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center" draggable="false">
                         <div class="flex flex-col">
                             <span>Published by: </span>
-                            <span class="w-fit overflow-x-scroll max-w-40 text-nowrap">{{ $gallery->user->username }}</span>
+                            <span class="w-fit overflow-x-auto max-w-40 text-nowrap">{{ $gallery->user->username }}</span>
                         </div>
                         @if ($gallery->user->avatar != null)
                             <img src="{{ asset('storage/avatars/'.$gallery->user->avatar->image->url) }}" alt="{{ asset('storage/avatars/'.$gallery->user->avatar->image->url) }}"
@@ -138,7 +138,6 @@
                 @endauth
             </div>
         </div>
-        {{-- recommend --}}
         @if ($recommends['tags'] != null)
             <div class="w-full sm:w-11/12 md:w-10/12 lg:w-8/12 h-fit mx-auto p-4 flex flex-col space-x-0 space-y-4 tracking-widest {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <div class="w-fit h-fit {{ 'text-[calc(theme(fontSize.2xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.2xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">

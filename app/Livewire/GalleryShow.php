@@ -89,11 +89,9 @@ class GalleryShow extends Component
         if(Auth::check()) {
             if(class_basename($this->gallery->publish->publishable_type) === 'User') {
                 if(Auth::id() == $this->gallery->user->id) {
-                    // all visible
                     $user = User::with(['publishes'])->find($this->gallery->user->id);
                     $this->recommends['user'] = collect(Gallery::with(['image','user.profile','user.avatar.image','user.cover.image','publish.publishable'])->whereIn('publish_id', $user->publishes->pluck('id'))->get())->shuffle()->take(10);
                 } else {
-                    // friend or public visibility
                     $user = User::find(Auth::id());
                     $user->load('follows');
                     $user->load('blocks');

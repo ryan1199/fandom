@@ -1,6 +1,5 @@
 <div class="w-full h-screen max-h-[100vh] {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }} select-none overflow-clip">
     <div class="w-full container h-screen max-h-[100vh] mx-auto flex flex-col lg:flex-row space-x-0 lg:space-x-2 space-y-2 lg:space-y-0 items-center lg:items-start overflow-y-auto lg:overflow-clip">
-        {{-- profile --}}
         <div class="w-full max-w-xl h-fit lg:max-h-[100vh] lg:pb-14 p-2 lg:overflow-y-auto">
             <div class="w-full h-fit mt-14 p-4 flex flex-col space-x-0 space-y-8 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <div class="w-full h-fit flex flex-col space-x-0 space-y-2 break-inside-avoid-column">
@@ -19,9 +18,7 @@
                     </div>
                 @endif
                 <div class="w-full h-fit flex flex-col space-x-0 space-y-1 text-center break-inside-avoid-column">
-                    {{-- following and follower --}}
                     @livewire(UsersFollowedFollowing::class, ['user' => $user->username, 'preferences' => $preferences], key('users-followed-and-following'))
-                    {{-- fandom --}}
                     @livewire(UsersFandomList::class, ['user' => $user->username, 'preferences' => $preferences], key('users-fandom-list'))
                 </div>
                 @if ($user->id == Auth::id())
@@ -46,7 +43,6 @@
                 @endif
             </div>
         </div>
-        {{-- post and gallery tabs --}}
         <div x-data="{ tab: 'post' }" class="w-full max-w-xl lg:max-w-full h-fit lg:max-h-[100vh] pb-14 p-2 break-inside-avoid-column lg:overflow-y-auto">
             <div class="w-full h-fit lg:mt-14 p-4 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <div class="w-full h-fit p-2 flex flex-row space-x-4 space-y-0 items-center">

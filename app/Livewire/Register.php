@@ -50,8 +50,8 @@ class Register extends Component
     public function register()
     {
         $validated = $this->validate();
-        $user = null;
-        DB::transaction(function () use ($validated, &$user) {
+        $result = false;
+        $user = DB::transaction(function () use ($validated, &$result) {
             $user = User::create([
                 'username' => $validated['username'],
                 'email' => $validated['email'],
@@ -61,8 +61,10 @@ class Register extends Component
             Profile::create([
                 'user_id' => $user->id
             ]);
-        });
-        if ($user != null) {
+            $result = true;
+            return $user;
+        }, 10);
+        if ($result) {
             Mail::to($user->email)->queue(new VerificationRequest($user));
             return redirect()->route('home')->with('success', 'Done, now you need to verify your email address, check your email address');
         }

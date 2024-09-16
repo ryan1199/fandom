@@ -1,7 +1,7 @@
 <div class="w-full max-w-full h-fit bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }} {{ 'selection:bg-' . $preferences['color_2'] . '-50' }} {{ 'selection:text-' . $preferences['color_2'] . '-500' }} shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
     <div style="background-image: url('{{ asset('cover-black.svg') }}')" class="w-full h-fit p-4 bg-repeat bg-center rounded-lg">
         <div class="w-full max-w-full h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/10' }} backdrop-blur-xl {{ 'text-' . $preferences['color_2'] . '-100' }} rounded-lg">
-            <h2 class="w-full h-fit overflow-x-scroll max-w-full text-nowrap {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-semibold">{{ $post->title }}</h2>
+            <h2 class="w-full h-fit overflow-x-auto max-w-full text-nowrap {{ 'text-[calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-semibold">{{ $post->title }}</h2>
             <p class="w-full h-fit max-h-20 overflow-y-auto">
                 {{ $post->description }}
             </p>
@@ -16,7 +16,7 @@
                 @endforeach
             </div>
             <div class="w-full h-fit flex flex-row space-x-2 space-y-0 items-center justify-between">
-                <div x-data="{ open_views: false, open_likes: false, open_dislikes: false }" class="max-w-full text-nowrap flex flex-row space-x-2 space-y-0 items-center select-none overflow-x-scroll">
+                <div x-data="{ open_views: false, open_likes: false, open_dislikes: false }" class="max-w-full text-nowrap flex flex-row space-x-2 space-y-0 items-center select-none overflow-x-auto">
                     <p class="max-w-full overflow-x-auto text-nowrap">Unpublished</p>
                     <p x-on:click="open_views = ! open_views, open_likes = false, open_dislikes = false" class="w-fit h-fit p-1 flex flex-row space-x-1 space-y-0 items-center {{ 'bg-' . $preferences['color_2'] . '-50/10' }} rounded-full" title="{{ $views }} views">
                         <span>

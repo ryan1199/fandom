@@ -1,11 +1,8 @@
 <div class="w-full h-screen {{ 'text-[' . $preferences['font_size'] . 'px]' }} {{ 'leading-[calc(' . $preferences['font_size'] . 'px*1.2)]' }} {{ 'font-[' . $preferences['selected_font_family'] . ']' }} {{ 'text-' . $preferences['color_2'] . '-900' }}">
     <div class="w-full container h-screen mx-auto grid grid-cols-12 grid-flow-row-dense auto-rows-max auto-cols-max gap-2">
-        {{-- fandom details --}}
         <div class="w-full h-fit max-h-[100vh] pb-14 p-2 col-span-12 lg:col-span-6 overflow-y-auto">
             <div x-data="{ tab: @entangle('tab').live }" class="w-full h-fit mt-14 p-4 flex flex-col space-x-0 space-y-4 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
-                {{-- header --}}
                 @livewire(FandomProfile::class, ['fandom' => $fandom, 'preferences' => $preferences])
-                {{-- nav --}}
                 <div>
                     <div class="w-full h-fit {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg select-none">
                         <div class="w-fit max-w-full flex flex-row text-nowrap overflow-x-auto overflow-y-clip">
@@ -22,10 +19,8 @@
                         </div>
                     </div>
                 </div>
-                {{-- content --}}
                 <div class="w-full h-fit {{ 'selection:bg-' . $preferences['color_2'] . '-500' }} {{ 'selection:text-' . $preferences['color_2'] . '-50' }}">
                     <div x-transition x-cloak x-show="tab == 'home'" class="w-full h-fit flex flex-col space-x-0 space-y-4">
-                        {{-- post --}}
                         <div class="w-full h-fit p-4 flex flex-col space-x-0 space-y-4 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                             <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                 <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
@@ -34,7 +29,6 @@
                             </div>
                             @livewire(FandomsPostList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences, 'static' => true], key('static-post-list'))
                         </div>
-                        {{-- gallery --}}
                         <div class="w-full h-fit p-4 flex flex-col space-x-0 space-y-4 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                             <div class="{{ 'text-[calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)]' }} {{ 'leading-[calc(calc(theme(fontSize.4xl)-theme(fontSize.base)+' . $preferences['font_size'] . 'px)*1.2)]' }} font-extrabold">
                                 <span class="bg-clip-text text-transparent bg-gradient-to-tr {{ 'from-' . $preferences['color_1'] . '-900' }} {{ 'via-' . $preferences['color_2'] . '-900' }} {{ 'to-' . $preferences['color_3'] . '-900' }}">
@@ -43,7 +37,6 @@
                             </div>
                             @livewire(FandomsGalleryList::class, ['fandom' => $fandom->slug, 'preferences' => $preferences, 'static' => true], key('static-gallery-list'))
                         </div>
-                        {{-- votes --}}
                         <div
                             @auth
                                 @if (in_array(Auth::id(), $members))
@@ -149,7 +142,6 @@
                 </div>
             </div>
         </div>
-        {{-- discusses --}}
         <div @if (in_array(Auth::id(), $managers)) x-data="{ open_discuss_create_component: false }" @endif class="w-full h-fit max-h-[100vh] pb-14 p-2 col-span-12 lg:col-span-6 overflow-y-auto">
             <div class="w-full h-fit mt-14 p-4 flex flex-col space-x-0 space-y-4 {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
                 <div class="w-full h-fit p-2 flex flex-row justify-between items-center shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg select-none">

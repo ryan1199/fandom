@@ -188,10 +188,6 @@ class FandomsRequestForm extends Component
             $this->dispatch('alert', 'error', $user->username.'not found');
         }
     }
-    public function selectCommandForFandom($command)
-    {
-        // delete fandom
-    }
     public function getListeners()
     {
         return [

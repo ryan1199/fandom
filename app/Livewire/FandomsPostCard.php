@@ -46,7 +46,6 @@ class FandomsPostCard extends Component
         $this->fandom = $fandom;
         $this->preferences = $preferences;
     }
-    // updated fandom profile
     public function getListeners()
     {
         return [

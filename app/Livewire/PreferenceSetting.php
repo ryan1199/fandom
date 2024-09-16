@@ -41,12 +41,6 @@ class PreferenceSetting extends Component
     public function rules()
     {
         return [
-            // 'color_1' => ['required', 'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
-            // 'color_2' => ['required', 'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
-            // 'color_3' => ['required', 'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
-            // 'color_primary' => ['required', 'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
-            // 'color_secondary' => ['required', 'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
-            // 'color_text' => ['required', 'regex:/^#([a-f0-9]{6}|[a-f0-9]{3})$/i'],
             'font_size' => ['required', 'numeric', 'min:11', 'max:127'],
             'selected_font_family' => ['required', Rule::in($this->available_font_families)],
             'dark_mode' => ['boolean']
@@ -189,13 +183,6 @@ class PreferenceSetting extends Component
             return redirect()->route($this->current_route_name, $this->current_route_parameter)->with($alert['status'], $alert['message']);
         } else {
             return redirect()->route($this->current_route_name)->with($alert['status'], $alert['message']);
-        }
-    }
-    public function updated($property)
-    {
-        if(Auth::check())
-        {
-            session()->put('last-active-' . $this->user->username, now());
         }
     }
 }

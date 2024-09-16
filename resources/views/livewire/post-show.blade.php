@@ -57,7 +57,7 @@
                                 <a wire:navigate href="{{ route('user', $post->publish->publishable) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center" draggable="false">
                                     <div class="flex flex-col">
                                         <span>Published on: </span>
-                                        <span class="w-fit overflow-x-scroll max-w-40 text-nowrap">{{ $post->publish->publishable->username }}</span>
+                                        <span class="w-fit overflow-x-auto max-w-40 text-nowrap">{{ $post->publish->publishable->username }}</span>
                                     </div>
                                     @if ($post->publish->publishable->avatar != null)
                                         <img src="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}"
@@ -72,7 +72,7 @@
                                 <a wire:navigate href="{{ route('fandom-details', $post->publish->publishable) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center" draggable="false">
                                     <div class="flex flex-col">
                                         <span>Published on: </span>
-                                        <span class="w-fit overflow-x-scroll max-w-40 text-nowrap">{{ $post->publish->publishable->name }}</span>
+                                        <span class="w-fit overflow-x-auto max-w-40 text-nowrap">{{ $post->publish->publishable->name }}</span>
                                     </div>
                                     @if ($post->publish->publishable->avatar != null)
                                         <img src="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}" alt="{{ asset('storage/avatars/'.$post->publish->publishable->avatar->image->url) }}" class="w-10 h-auto aspect-square object-cover rounded-full" draggable="false">
@@ -88,7 +88,7 @@
                             <a wire:navigate href="{{ route('user', $post->user) }}" class="w-fit h-fit p-2 flex flex-row space-x-2 items-center" draggable="false">
                                 <div class="flex flex-col">
                                     <span>Published by: </span>
-                                    <span class="w-fit overflow-x-scroll max-w-40 text-nowrap">{{ $post->user->username }}</span>
+                                    <span class="w-fit overflow-x-auto max-w-40 text-nowrap">{{ $post->user->username }}</span>
                                 </div>
                                 @if ($post->user->avatar != null)
                                     <img src="{{ asset('storage/avatars/'.$post->user->avatar->image->url) }}" alt="{{ asset('storage/avatars/'.$post->user->avatar->image->url) }}"

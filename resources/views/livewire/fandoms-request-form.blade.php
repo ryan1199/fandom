@@ -22,7 +22,6 @@
                 </ul>
             </div>
         @endif
-        {{-- administration --}}
         <div class="w-full h-fit flex flex-col space-x-0 space-y-4">
             <div class="w-full h-fit p-2 flex flex-row space-x-4 space-y-0 items-center border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg select-none">
                 <div :class="administration == false ? '{{ 'text-' . $preferences['color_2'] . '-500' }}' : ''" x-on:click="administration = false" class="w-full h-fit p-2 text-center font-semibold border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg cursor-pointer">Non Administration</div>

@@ -55,10 +55,4 @@ class AccountSetting extends Component
         // delete all related
         session()->forget('preference-' . $this->user->username);
     }
-    public function updated($property)
-    {
-        if (Auth::check()) {
-            session()->put('last-active-' . $this->user->username, now());
-        }
-    }
 }

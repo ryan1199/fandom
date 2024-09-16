@@ -17,29 +17,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // \App\Models\User::factory(10)->create();
-
-        // $user = \App\Models\User::factory()->create([
-        //     'username' => 'ryan111199',
-        //     'email' => 'ryanzulkarnaen99@gmail.com',
-        //     'password' => Hash::make('password'),
-        //     'ticket' => null,
-        //     'email_verified_at' => now()
-        // ]);
-        // Profile::create([
-        //     'user_id' => $user->id
-        // ]);
-        for ($i = 0;$i < 10;$i++) {
-            $user = \App\Models\User::factory()->create([
-                'username' => fake()->userName(),
-                'email' => fake()->safeEmail(),
-                'password' => Hash::make('password'),
-                'ticket' => null,
-                'email_verified_at' => now()
-            ]);
-            Profile::create([
-                'user_id' => $user->id
-            ]);
-        }
         Role::insert([
             ['name' => 'Member', 'created_at' => now(), 'updated_at' => now()],
             ['name' => 'Manager', 'created_at' => now(), 'updated_at' => now()]

@@ -3,8 +3,8 @@
         <path fill-rule="evenodd" d="M10.5 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Zm0 6a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0Z" clip-rule="evenodd" />
     </svg>
     @if (in_array(Auth::id(), $members))
-        <div wire:click="leave" wire:confirm="Are you sure you want to leave this fandom?" x-cloak x-show="open_leave_join_button" class="w-fit h-fit mx-auto px-2 py-1 bg-inherit {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl border {{ 'border-' . $preferences['color_2'] . '-100' }} rounded-full select-none cursor-pointer">Leave</div>
+        <div wire:click="leave" wire:confirm="Are you sure you want to leave this fandom?" x-cloak x-show="open_leave_join_button" class="w-fit h-fit mx-auto px-2 py-1 backdrop-blur-3xl border {{ 'border-' . $preferences['color_2'] . '-100' }} rounded-full select-none cursor-pointer">Leave</div>
     @else
-        <div wire:click="join" wire:confirm="Are you sure you want to join this fandom?" x-cloak x-show="open_leave_join_button" class="w-fit h-fit mx-auto px-2 py-1 bg-inherit {{ 'bg-' . $preferences['color_2'] . '-50/50' }} backdrop-blur-3xl border {{ 'border-' . $preferences['color_2'] . '-100' }} rounded-full select-none cursor-pointer">Join</div>
+        <div wire:click="join" wire:confirm="Are you sure you want to join this fandom?" x-cloak x-show="open_leave_join_button" class="w-fit h-fit mx-auto px-2 py-1 backdrop-blur-3xl border {{ 'border-' . $preferences['color_2'] . '-100' }} rounded-full select-none cursor-pointer">Join</div>
     @endif
 </div>

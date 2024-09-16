@@ -46,5 +46,4 @@ class FandomsGalleryCard extends Component
         $this->fandom = $fandom;
         $this->preferences = $preferences;
     }
-    // updated fandom profile
 }

@@ -1,5 +1,4 @@
 <div class="w-full h-fit flex flex-col space-x-0 space-y-4">
-    {{-- manager --}}
     <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-1 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
         <h3 class="text-center">Managers</h3>
         <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
@@ -20,7 +19,6 @@
             @endforelse
         </div>
     </div>
-    {{-- member --}}
     <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-1 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
         <h3 class="text-center">Members</h3>
         <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">
@@ -41,7 +39,6 @@
             @endforelse
         </div>
     </div>
-    {{-- ban --}}
     <div class="w-full h-fit p-1 flex flex-col space-x-0 space-y-1 border {{ 'border-' . $preferences['color_2'] . '-200' }} rounded-lg">
         <h3 class="text-center">Banned Users</h3>
         <hr class="{{ 'border-' . $preferences['color_2'] . '-200' }}">

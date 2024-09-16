@@ -1,7 +1,7 @@
 <div style="background-image: url('{{ asset('storage/galleries/'.$gallery->image->url) }}')" class="w-screen max-w-full h-screen max-h-[calc(100vh/3)] p-4 bg-local bg-cover bg-no-repeat bg-center shadow {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg relative">
     <div class="w-full max-w-[calc(100%-2rem)] h-fit p-2 flex flex-col space-x-0 space-y-2 {{ 'bg-' . $preferences['color_2'] . '-50/10' }} backdrop-blur-xl {{ 'text-' . $preferences['color_2'] . '-100' }} rounded-lg absolute bottom-4">
         <div class="w-full h-fit flex flex-row space-x-2 space-y-0 items-center justify-between">
-            <div x-data="{ open_views: false, open_likes: false, open_dislikes: false }" class="max-w-full text-nowrap flex flex-row space-x-2 space-y-0 items-center select-none overflow-x-scroll">
+            <div x-data="{ open_views: false, open_likes: false, open_dislikes: false }" class="max-w-full text-nowrap flex flex-row space-x-2 space-y-0 items-center select-none overflow-x-auto">
                 <p class="w-fit max-w-full overflow-x-auto text-nowrap">{{ $publisher }}</p>
                 <p x-on:click="open_views = ! open_views, open_likes = false, open_dislikes = false" class="w-fit h-fit p-1 flex flex-row space-x-1 space-y-0 items-center {{ 'bg-' . $preferences['color_2'] . '-50/10' }} rounded-full" title="{{ $views }} views">
                     <span>

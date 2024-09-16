@@ -46,5 +46,4 @@ class UsersGalleryCard extends Component
         $this->user = $user;
         $this->preferences = $preferences;
     }
-    // updated user profile
 }

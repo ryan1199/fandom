@@ -85,7 +85,6 @@
                 {!! $comment->message->text !!}
             </div>
             <div class="w-fit h-fit flex flex-col space-x-0 space-y-2 p-2 shadow-sm {{ 'shadow-' . $preferences['color_2'] . '-900' }} rounded-lg">
-                {{-- like dislike button --}}
                 <div class="flex flex-row space-x-2 space-y-0 items-stretch">
                     <div class="flex flex-row space-x-2 space-y-0 items-center justify-center">
                         @if (in_array(Auth::id(), collect($comment->rates)->where('like', true)->pluck('user_id')->toArray()))
